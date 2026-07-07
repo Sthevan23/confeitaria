@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gimarry Bolos e Doces — Confeitaria artesanal. Bolos personalizados, doces e pronta entrega diária. Bairro Manoel Valinhas.">
+  <meta name="keywords" content="gimarry, confeitosgimarry, bolos, doces, pronta entrega, confeitaria artesanal, Manoel Valinhas">
+  <meta name="author" content="Gimarry Bolos e Doces">
+  <meta property="og:title" content="Gimarry Bolos e Doces — Confeitaria Artesanal">
+  <meta property="og:description" content="Não é só sobre bolos e sim memórias afetivas. Peça pelo WhatsApp!">
+  <meta property="og:type" content="website">
+  <title>Gimarry Bolos e Doces — Confeitaria Artesanal</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Loading inicial -->
+  <div id="loader" class="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <div class="loader__icon"><i class="fas fa-birthday-cake"></i></div>
+      <p class="loader__text" id="loader-text">Gimarry Bolos e Doces</p>
+      <div class="loader__bar"><div class="loader__progress"></div></div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="header" class="header">
+    <div class="container header__container">
+      <a href="#inicio" class="header__logo">
+        <i class="fas fa-birthday-cake"></i>
+        <span id="logo-text">Gimarry Bolos e Doces</span>
+      </a>
+
+      <nav class="header__nav" id="nav-menu" aria-label="Menu principal">
+        <ul class="header__list">
+          <li><a href="#inicio" class="header__link active">Início</a></li>
+          <li><a href="#sobre" class="header__link">Sobre</a></li>
+          <li><a href="#produtos" class="header__link">Cardápio</a></li>
+          <li><a href="#destaques" class="header__link">Destaques</a></li>
+          <li><a href="#galeria" class="header__link">Galeria</a></li>
+          <li><a href="#avaliacoes" class="header__link">Avaliações</a></li>
+          <li><a href="#contato" class="header__link">Contato</a></li>
+        </ul>
+      </nav>
+
+      <a href="#produtos" class="btn btn--primary header__cta">Fazer Pedido</a>
+
+      <button class="header__toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section id="inicio" class="hero">
+      <div class="hero__bg" id="hero-bg"></div>
+      <div class="hero__overlay"></div>
+      <div class="container hero__content reveal">
+        <span class="hero__badge" id="hero-badge"><i class="fas fa-star"></i> Confeitaria artesanal · Pronta entrega diária</span>
+        <h1 class="hero__title">Não é só sobre bolos e sim <em>memórias afetivas</em></h1>
+        <div class="hero__story" id="hero-story">
+          <p>Tudo começou como um complemento de salário, uma vontade de passar mais tempo com a minha filha e sem muita pretensão, mas o que fazemos com o coração o universo dá um jeito de fazer dar certo.</p>
+          <p>Alguns anos depois estamos aqui com muita gratidão, continuando a fazer cada bolo com todo carinho e respeito, pois sabemos que estamos levando alegria em forma de bolo.</p>
+          <p>Só tenho a agradecer cada cliente que confia no meu trabalho e a várias que estão comigo desde o começo <span class="hero__hearts">♥ ♥</span></p>
+        </div>
+        <div class="hero__actions">
+          <a href="#produtos" class="btn btn--primary btn--lg"><i class="fas fa-book-open"></i> Ver Cardápio</a>
+          <a href="#" class="btn btn--outline btn--lg" id="hero-whatsapp"><i class="fab fa-whatsapp"></i> Pedir Agora</a>
+        </div>
+        <div class="hero__stats">
+          <div class="hero__stat"><strong id="stat-followers">17,8 mil</strong><span>Seguidores no Instagram</span></div>
+          <div class="hero__stat"><strong id="stat-posts">1.352</strong><span>Posts de inspiração</span></div>
+          <div class="hero__stat"><strong>Diária</strong><span>Pronta entrega</span></div>
+        </div>
+      </div>
+      <div class="hero__scroll"><a href="#sobre" aria-label="Rolar para baixo"><i class="fas fa-chevron-down"></i></a></div>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre" class="section sobre">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__tag">Nossa História</span>
+          <h2 class="section__title">Paixão em cada <em>detalhe</em></h2>
+          <p class="section__subtitle">Confeitaria artesanal no Bairro Manoel Valinhas</p>
+        </div>
+
+        <div class="sobre__grid">
+          <div class="sobre__content reveal">
+            <p class="sobre__text" id="sobre-text1">A <strong>Gimarry Bolos e Doces</strong> é uma confeitaria artesanal dedicada a criar bolos que vão muito além do sabor — são memórias afetivas em forma de doce.</p>
+            <p class="sobre__text" id="sobre-text2">Trabalhamos com bolos personalizados, doces especiais e <strong>bolos de pronta entrega disponíveis diariamente</strong>. Siga <strong>@confeitosgimarry</strong> no Instagram!</p>
+
+            <div class="sobre__cards">
+              <div class="sobre__card">
+                <div class="sobre__card-icon"><i class="fas fa-home"></i></div>
+                <h3>Confeitaria Artesanal</h3>
+                <p>Bolos feitos à mão com dedicação, criatividade e ingredientes selecionados.</p>
+              </div>
+              <div class="sobre__card">
+                <div class="sobre__card-icon"><i class="fas fa-clock"></i></div>
+                <h3>Pronta Entrega</h3>
+                <p>Bolos de pronta entrega disponíveis diariamente. Consulte as opções do dia!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="sobre__image reveal">
+            <img id="sobre-img" src="fotos_bolos/bolo-matelasse-brigadeiro.png" alt="Bolos artesanais Gimarry" loading="lazy">
+            <div class="sobre__image-badge">
+              <strong><i class="fab fa-instagram"></i></strong>
+              <span>@confeitosgimarry</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Produtos -->
+    <section id="produtos" class="section produtos">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__tag">Cardápio</span>
+          <h2 class="section__title">Nossos <em>Produtos</em></h2>
+          <p class="section__subtitle">Delícias artesanais para todos os momentos</p>
+        </div>
+
+        <!-- Filtro de categorias -->
+        <div class="produtos__filter reveal" id="category-filter">
+          <button class="filter-btn active" data-category="all">Todos</button>
+        </div>
+
+        <!-- Grid de produtos -->
+        <div class="produtos__grid" id="products-grid"></div>
+      </div>
+    </section>
+
+    <!-- Destaques -->
+    <section id="destaques" class="section destaques">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__tag">Mais Vendidos</span>
+          <h2 class="section__title">Nossos <em>Destaques</em></h2>
+          <p class="section__subtitle">Os favoritos dos nossos clientes</p>
+        </div>
+        <div class="destaques__grid" id="featured-grid"></div>
+      </div>
+    </section>
+
+    <!-- Galeria -->
+    <section id="galeria" class="section galeria">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__tag">Inspiração</span>
+          <h2 class="section__title">Nossa <em>Galeria</em></h2>
+          <p class="section__subtitle">Um vislumbre das nossas criações</p>
+        </div>
+        <div class="galeria__grid" id="gallery-grid"></div>
+      </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button class="lightbox__close" id="lightbox-close" aria-label="Fechar"><i class="fas fa-times"></i></button>
+      <button class="lightbox__prev" id="lightbox-prev" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
+      <img class="lightbox__img" id="lightbox-img" src="" alt="Imagem ampliada da galeria">
+      <button class="lightbox__next" id="lightbox-next" aria-label="Próxima"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Avaliações -->
+    <section id="avaliacoes" class="section avaliacoes">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__tag">Depoimentos</span>
+          <h2 class="section__title">O que dizem nossos <em>clientes</em></h2>
+          <p class="section__subtitle">A satisfação de quem provou nossas delícias</p>
+        </div>
+
+        <div class="avaliacoes__carousel reveal">
+          <div class="avaliacoes__track" id="reviews-track"></div>
+          <div class="avaliacoes__controls">
+            <button class="avaliacoes__btn" id="reviews-prev" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
+            <div class="avaliacoes__dots" id="reviews-dots"></div>
+            <button class="avaliacoes__btn" id="reviews-next" aria-label="Próximo"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Como Funciona -->
+    <section id="como-funciona" class="section como-funciona">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__tag">Simples e Rápido</span>
+          <h2 class="section__title">Como <em>Funciona</em></h2>
+          <p class="section__subtitle">Seu pedido em 3 passos fáceis</p>
+        </div>
+
+        <div class="passos">
+          <div class="passo reveal">
+            <div class="passo__number">1</div>
+            <div class="passo__icon"><i class="fas fa-shopping-basket"></i></div>
+            <h3>Escolha os produtos</h3>
+            <p>Navegue pelo nosso cardápio e selecione suas delícias favoritas.</p>
+          </div>
+          <div class="passo__line reveal"></div>
+          <div class="passo reveal">
+            <div class="passo__number">2</div>
+            <div class="passo__icon"><i class="fas fa-mobile-alt"></i></div>
+            <h3>Faça o pedido</h3>
+            <p>Entre em contato pelo WhatsApp e confirme seu pedido com nossa equipe.</p>
+          </div>
+          <div class="passo__line reveal"></div>
+          <div class="passo reveal">
+            <div class="passo__number">3</div>
+            <div class="passo__icon"><i class="fas fa-truck"></i></div>
+            <h3>Receba em casa</h3>
+            <p>Entregamos com cuidado e pontualidade, direto na sua porta.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section faq">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__tag">Dúvidas</span>
+          <h2 class="section__title">Perguntas <em>Frequentes</em></h2>
+          <p class="section__subtitle">Tudo o que você precisa saber</p>
+        </div>
+        <div class="faq__list" id="faq-list"></div>
+      </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato" class="section contato">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__tag">Fale Conosco</span>
+          <h2 class="section__title">Entre em <em>Contato</em></h2>
+          <p class="section__subtitle">Estamos prontos para atender você</p>
+        </div>
+
+        <div class="contato__grid">
+          <div class="contato__info reveal">
+            <div class="contato__item">
+              <div class="contato__icon"><i class="fab fa-whatsapp"></i></div>
+              <div>
+                <h4>WhatsApp</h4>
+                <a href="#" id="contact-whatsapp">(11) 99999-9999</a>
+              </div>
+            </div>
+            <div class="contato__item">
+              <div class="contato__icon"><i class="fab fa-instagram"></i></div>
+              <div>
+                <h4>Instagram</h4>
+                <a href="#" id="contact-instagram" target="_blank" rel="noopener">@confeitosgimarry</a>
+              </div>
+            </div>
+            <div class="contato__item" id="contact-facebook-wrap">
+              <div class="contato__icon"><i class="fab fa-facebook"></i></div>
+              <div>
+                <h4>Facebook</h4>
+                <a href="#" id="contact-facebook" target="_blank" rel="noopener">Facebook</a>
+              </div>
+            </div>
+            <div class="contato__item">
+              <div class="contato__icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div>
+                <h4>Localização</h4>
+                <p id="contact-address">Bairro Manoel Valinhas</p>
+              </div>
+            </div>
+            <div class="contato__item">
+              <div class="contato__icon"><i class="fas fa-clock"></i></div>
+              <div>
+                <h4>Pronta Entrega</h4>
+                <p id="contact-hours">Bolos de pronta entrega disponíveis diariamente</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="contato__map reveal">
+            <iframe id="contact-map" src="" title="Localização Gimarry Bolos e Doces" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="#inicio" class="footer__logo">
+            <i class="fas fa-birthday-cake"></i>
+            <span id="footer-logo-text">Gimarry Bolos e Doces</span>
+          </a>
+          <p id="footer-tagline">Não é só sobre bolos e sim memórias afetivas. Confeitaria artesanal no Bairro Manoel Valinhas.</p>
+          <div class="footer__social">
+            <a href="#" id="footer-whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" id="footer-instagram" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+            <a href="#" id="footer-facebook" aria-label="Facebook" target="_blank" rel="noopener" style="display:none"><i class="fab fa-facebook"></i></a>
+          </div>
+        </div>
+
+        <div class="footer__links">
+          <h4>Links Úteis</h4>
+          <ul>
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#produtos">Cardápio</a></li>
+            <li><a href="#galeria">Galeria</a></li>
+            <li><a href="#contato">Contato</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__links">
+          <h4>Categorias</h4>
+          <ul id="footer-categories">
+            <li><a href="#produtos">Bolos Personalizados</a></li>
+            <li><a href="#produtos">Doces</a></li>
+            <li><a href="#produtos">Pronta Entrega</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__newsletter">
+          <h4>Newsletter</h4>
+          <p>Receba novidades e promoções exclusivas.</p>
+          <form class="footer__form" id="newsletter-form">
+            <input type="email" placeholder="Seu e-mail" required aria-label="E-mail para newsletter">
+            <button type="submit" aria-label="Inscrever"><i class="fas fa-paper-plane"></i></button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>&copy; <span id="footer-year"></span> <span id="footer-name">Gimarry Bolos e Doces</span>. Todos os direitos reservados.</p>
+        <a href="admin/login.html" class="footer__admin"><i class="fas fa-lock"></i> Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botão WhatsApp flutuante -->
+  <a href="#" class="whatsapp-float" id="whatsapp-float" aria-label="Falar no WhatsApp" target="_blank" rel="noopener">
+    <i class="fab fa-whatsapp"></i>
+    <span class="whatsapp-float__tooltip">Fale conosco!</span>
+  </a>
+
+  <!-- Botão voltar ao topo -->
+  <button class="back-to-top" id="back-to-top" aria-label="Voltar ao topo">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
