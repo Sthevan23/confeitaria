@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Gimarry Bolos e Doces — Confeitaria artesanal. Bolos personalizados, doces e pronta entrega diária. Bairro Manoel Valinhas.">
+  <meta name="description" content="Gimarry Bolos e Doces — Rua Nossa Senhora das Graças, 361, Bairro Manoel Valinhas. Bolos artesanais e pronta entrega diária.">
   <meta name="keywords" content="gimarry, confeitosgimarry, bolos, doces, pronta entrega, confeitaria artesanal, Manoel Valinhas">
   <meta name="author" content="Gimarry Bolos e Doces">
   <meta property="og:title" content="Gimarry Bolos e Doces — Confeitaria Artesanal">
@@ -38,7 +38,7 @@
     <div class="container header__container">
       <a href="#inicio" class="header__logo">
         <i class="fas fa-birthday-cake"></i>
-        <span id="logo-text">Gimarry Bolos e Doces</span>
+        <span id="logo-text" class="logo-text">Gimarry Bolos e Doces</span>
       </a>
 
       <nav class="header__nav" id="nav-menu" aria-label="Menu principal">
@@ -50,6 +50,7 @@
           <li><a href="#galeria" class="header__link">Galeria</a></li>
           <li><a href="#avaliacoes" class="header__link">Avaliações</a></li>
           <li><a href="#contato" class="header__link">Contato</a></li>
+          <li class="header__nav-cta"><a href="#produtos" class="btn btn--primary btn--full">Fazer Pedido</a></li>
         </ul>
       </nav>
 
@@ -60,6 +61,9 @@
       </button>
     </div>
   </header>
+
+  <!-- Overlay menu mobile -->
+  <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
 
   <main>
     <!-- Hero -->
@@ -77,6 +81,7 @@
         <div class="hero__actions">
           <a href="#produtos" class="btn btn--primary btn--lg"><i class="fas fa-book-open"></i> Ver Cardápio</a>
           <a href="#" class="btn btn--outline btn--lg" id="hero-whatsapp"><i class="fab fa-whatsapp"></i> Pedir Agora</a>
+          <a href="https://www.instagram.com/confeitosgimarry/" class="btn btn--outline btn--lg" id="hero-instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> @confeitosgimarry</a>
         </div>
         <div class="hero__stats">
           <div class="hero__stat"><strong id="stat-followers">17,8 mil</strong><span>Seguidores no Instagram</span></div>
@@ -93,7 +98,7 @@
         <div class="section__header reveal">
           <span class="section__tag">Nossa História</span>
           <h2 class="section__title">Paixão em cada <em>detalhe</em></h2>
-          <p class="section__subtitle">Confeitaria artesanal no Bairro Manoel Valinhas</p>
+          <p class="section__subtitle">Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas</p>
         </div>
 
         <div class="sobre__grid">
@@ -118,8 +123,10 @@
           <div class="sobre__image reveal">
             <img id="sobre-img" src="fotos_bolos/bolo-matelasse-brigadeiro.png" alt="Bolos artesanais Gimarry" loading="lazy">
             <div class="sobre__image-badge">
-              <strong><i class="fab fa-instagram"></i></strong>
-              <span>@confeitosgimarry</span>
+              <a href="https://www.instagram.com/confeitosgimarry/" id="sobre-instagram" target="_blank" rel="noopener">
+                <strong><i class="fab fa-instagram"></i></strong>
+                <span>@confeitosgimarry</span>
+              </a>
             </div>
           </div>
         </div>
@@ -141,7 +148,119 @@
         </div>
 
         <!-- Grid de produtos -->
-        <div class="produtos__grid" id="products-grid"></div>
+        <div class="produtos__grid" id="products-grid">
+
+          <article class="product-card" data-category="cat3">
+            <div class="product-card__img">
+              <img src="fotos_bolos/bolo-elegante-flores.png" alt="Bolo Elegante com Flores" loading="lazy">
+              <span class="product-card__badge product-card__badge--ready">Pronta Entrega</span>
+            </div>
+            <div class="product-card__body">
+              <span class="product-card__category">Pronta Entrega</span>
+              <h3 class="product-card__name">Bolo Elegante com Flores</h3>
+              <p class="product-card__desc">Bolo branco com textura rústica, flores naturais, pérolas comestíveis e monograma dourado personalizado.</p>
+              <div class="product-card__footer">
+                <span class="product-card__price">R$ 189,90</span>
+                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Elegante com Flores" data-price="189.90" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-category="cat3">
+            <div class="product-card__img">
+              <img src="fotos_bolos/bolo-matelasse-brigadeiro.png" alt="Bolo Matelassê com Brigadeiros" loading="lazy">
+              <span class="product-card__badge product-card__badge--ready">Pronta Entrega</span>
+            </div>
+            <div class="product-card__body">
+              <span class="product-card__category">Pronta Entrega</span>
+              <h3 class="product-card__name">Bolo Matelassê com Brigadeiros</h3>
+              <p class="product-card__desc">Acabamento matelassê em buttercream, laço de cetim e brigadeiros gourmet no topo.</p>
+              <div class="product-card__footer">
+                <span class="product-card__price">R$ 169,90</span>
+                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Matelassê com Brigadeiros" data-price="169.90" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-category="cat3">
+            <div class="product-card__img">
+              <img src="fotos_bolos/bolo-listras-pastel.png" alt="Bolo Listras Pastel" loading="lazy">
+              <span class="product-card__badge product-card__badge--ready">Pronta Entrega</span>
+            </div>
+            <div class="product-card__body">
+              <span class="product-card__category">Pronta Entrega</span>
+              <h3 class="product-card__name">Bolo Listras Pastel</h3>
+              <p class="product-card__desc">Bolo alto com listras coloridas, perlas comestíveis e acabamento em rosetas de buttercream.</p>
+              <div class="product-card__footer">
+                <span class="product-card__price">R$ 149,90</span>
+                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Listras Pastel" data-price="149.90" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-category="cat2">
+            <div class="product-card__img">
+              <img src="fotos_bolos/bento-cake-plantao.png" alt="Bentô Cake Personalizado" loading="lazy">
+            </div>
+            <div class="product-card__body">
+              <span class="product-card__category">Doces</span>
+              <h3 class="product-card__name">Bentô Cake Personalizado</h3>
+              <p class="product-card__desc">Mini bolo artesanal com desenho exclusivo e frase personalizada. Perfeito para presentear.</p>
+              <div class="product-card__footer">
+                <span class="product-card__price">R$ 45,00</span>
+                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bentô Cake Personalizado" data-price="45.00" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-category="cat1">
+            <div class="product-card__img">
+              <img src="fotos_bolos/bolo-bob-esponja.png" alt="Bolo Temático Bob Esponja" loading="lazy">
+              <span class="product-card__badge">Destaque</span>
+            </div>
+            <div class="product-card__body">
+              <span class="product-card__category">Bolos Personalizados</span>
+              <h3 class="product-card__name">Bolo Temático Bob Esponja</h3>
+              <p class="product-card__desc">Bolo personalizado com tema Bob Esponja, topo com nome e idade. Ideal para festas infantis.</p>
+              <div class="product-card__footer">
+                <span class="product-card__price">R$ 199,90</span>
+                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Temático Bob Esponja" data-price="199.90" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-category="cat1">
+            <div class="product-card__img">
+              <img src="fotos_bolos/bolo-mario-mesversario.png" alt="Bolo Mesversário Super Mario" loading="lazy">
+              <span class="product-card__badge">Destaque</span>
+            </div>
+            <div class="product-card__body">
+              <span class="product-card__category">Bolos Personalizados</span>
+              <h3 class="product-card__name">Bolo Mesversário Super Mario</h3>
+              <p class="product-card__desc">Bolo temático Super Mario para mesversário, com nome personalizado e detalhes em pasta.</p>
+              <div class="product-card__footer">
+                <span class="product-card__price">R$ 129,90</span>
+                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Mesversário Super Mario" data-price="129.90" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-category="cat1">
+            <div class="product-card__img">
+              <img src="fotos_bolos/bolo-barril-heineken.png" alt="Bolo Temático Barril" loading="lazy">
+            </div>
+            <div class="product-card__body">
+              <span class="product-card__category">Bolos Personalizados</span>
+              <h3 class="product-card__name">Bolo Temático Barril</h3>
+              <p class="product-card__desc">Bolo personalizado em formato de barril com tema exclusivo, ideal para festas adultas.</p>
+              <div class="product-card__footer">
+                <span class="product-card__price">R$ 249,90</span>
+                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Temático Barril" data-price="249.90" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
       </div>
     </section>
 
@@ -173,7 +292,19 @@
     <div class="lightbox" id="lightbox" aria-hidden="true">
       <button class="lightbox__close" id="lightbox-close" aria-label="Fechar"><i class="fas fa-times"></i></button>
       <button class="lightbox__prev" id="lightbox-prev" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
-      <img class="lightbox__img" id="lightbox-img" src="" alt="Imagem ampliada da galeria">
+      <div class="lightbox__panel">
+        <div class="lightbox__media">
+          <img class="lightbox__img" id="lightbox-img" src="" alt="Imagem ampliada da galeria">
+        </div>
+        <div class="lightbox__info">
+          <span class="lightbox__category" id="lightbox-category"></span>
+          <h3 class="lightbox__title" id="lightbox-title"></h3>
+          <p class="lightbox__price" id="lightbox-price"></p>
+          <a href="#" class="btn btn--primary btn--full" id="lightbox-order" target="_blank" rel="noopener">
+            <i class="fab fa-whatsapp"></i> Encomendar Bolo
+          </a>
+        </div>
+      </div>
       <button class="lightbox__next" id="lightbox-next" aria-label="Próxima"><i class="fas fa-chevron-right"></i></button>
     </div>
 
@@ -258,14 +389,14 @@
               <div class="contato__icon"><i class="fab fa-whatsapp"></i></div>
               <div>
                 <h4>WhatsApp</h4>
-                <a href="#" id="contact-whatsapp">(11) 99999-9999</a>
+                <a href="https://wa.me/5537988554691" id="contact-whatsapp">(37) 98855-4691</a>
               </div>
             </div>
             <div class="contato__item">
               <div class="contato__icon"><i class="fab fa-instagram"></i></div>
               <div>
                 <h4>Instagram</h4>
-                <a href="#" id="contact-instagram" target="_blank" rel="noopener">@confeitosgimarry</a>
+                <a href="https://www.instagram.com/confeitosgimarry/" id="contact-instagram" target="_blank" rel="noopener">@confeitosgimarry</a>
               </div>
             </div>
             <div class="contato__item" id="contact-facebook-wrap">
@@ -279,7 +410,7 @@
               <div class="contato__icon"><i class="fas fa-map-marker-alt"></i></div>
               <div>
                 <h4>Localização</h4>
-                <p id="contact-address">Bairro Manoel Valinhas</p>
+                <p id="contact-address">Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas</p>
               </div>
             </div>
             <div class="contato__item">
@@ -308,10 +439,10 @@
             <i class="fas fa-birthday-cake"></i>
             <span id="footer-logo-text">Gimarry Bolos e Doces</span>
           </a>
-          <p id="footer-tagline">Não é só sobre bolos e sim memórias afetivas. Confeitaria artesanal no Bairro Manoel Valinhas.</p>
+          <p id="footer-tagline">Não é só sobre bolos e sim memórias afetivas. Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas.</p>
           <div class="footer__social">
             <a href="#" id="footer-whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-            <a href="#" id="footer-instagram" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.instagram.com/confeitosgimarry/" id="footer-instagram" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
             <a href="#" id="footer-facebook" aria-label="Facebook" target="_blank" rel="noopener" style="display:none"><i class="fab fa-facebook"></i></a>
           </div>
         </div>

@@ -4,7 +4,7 @@
  */
 const Storage = (() => {
   const KEY = 'confeitaria_premium_data';
-  const DATA_VERSION = 5;
+  const DATA_VERSION = 9;
   const REMOVED_CATEGORIES = ['cat4', 'cat5', 'cat6'];
   const REMOVED_PRODUCTS = ['p4', 'p5', 'p6', 'p10', 'p11', 'p12'];
   const FOTOS = 'fotos_bolos';
@@ -16,16 +16,16 @@ const Storage = (() => {
       logo: '',
       banner: `${FOTOS}/bolo-elegante-flores.png`,
       sobreImage: `${FOTOS}/bolo-matelasse-brigadeiro.png`,
-      whatsapp: '5511999999999',
+      whatsapp: '5537988554691',
       instagram: 'https://www.instagram.com/confeitosgimarry/',
       instagramUser: '@confeitosgimarry',
       facebook: '',
       email: 'confeitosgimarry@email.com',
-      address: 'Bairro Manoel Valinhas',
+      address: 'Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas',
       hours: 'Bolos de pronta entrega disponíveis diariamente',
       followers: '17,8 mil',
       posts: '1.352',
-      mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d37500!2d-45.0!3d-22.0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zQmFpcnJvJTIwTWFub2VsJTIwVmFsaW5oYXM!5e0!3m2!1spt-BR!2sbr!4v1',
+      mapEmbed: 'https://www.google.com/maps?q=Rua+Nossa+Senhora+das+Gra%C3%A7as,+361,+Manoel+Valinhas&output=embed',
       heroBadge: 'Confeitaria artesanal · Pronta entrega diária',
       heroStory: [
         'Tudo começou como um complemento de salário, uma vontade de passar mais tempo com a minha filha e sem muita pretensão, mas o que fazemos com o coração o universo dá um jeito de fazer dar certo.',
@@ -33,7 +33,7 @@ const Storage = (() => {
         'Só tenho a agradecer cada cliente que confia no meu trabalho e a várias que estão comigo desde o começo ♥ ♥'
       ],
       sobreText1: 'A <strong>Gimarry Bolos e Doces</strong> é uma confeitaria artesanal dedicada a criar bolos que vão muito além do sabor — são memórias afetivas em forma de doce. Cada receita carrega dedicação, criatividade e amor.',
-      sobreText2: 'Trabalhamos com bolos personalizados para festas e eventos, doces especiais e <strong>bolos de pronta entrega disponíveis diariamente</strong>. Estamos no Bairro Manoel Valinhas e atendemos pelo WhatsApp e Instagram.'
+      sobreText2: 'Trabalhamos com bolos personalizados, doces especiais e <strong>bolos de pronta entrega disponíveis diariamente</strong>. Siga @confeitosgimarry no Instagram!',
     },
     auth: {
       email: 'admin@gimarry.com.br',
@@ -77,7 +77,7 @@ const Storage = (() => {
       { id: 'f2', question: 'Vocês têm bolos de pronta entrega?', answer: 'Sim! Trabalhamos com bolos de pronta entrega disponíveis diariamente. Consulte as opções do dia pelo WhatsApp ou Instagram.' },
       { id: 'f3', question: 'Vocês fazem bolos personalizados?', answer: 'Sim! Criamos bolos temáticos e personalizados para aniversários, mesversários e festas. Entre em contato com antecedência para encomendas especiais.' },
       { id: 'f4', question: 'Quais formas de pagamento aceitam?', answer: 'Aceitamos PIX, cartão de crédito/débito e dinheiro na entrega. Consulte as opções no momento do pedido.' },
-      { id: 'f5', question: 'Onde vocês ficam?', answer: 'Estamos no Bairro Manoel Valinhas. Atendemos por delivery e retirada — confirme disponibilidade pelo WhatsApp.' }
+      { id: 'f5', question: 'Onde vocês ficam?', answer: 'Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas. Atendemos por delivery e retirada — confirme disponibilidade pelo WhatsApp.' }
     ],
     gallery: [
       `${FOTOS}/bolo-elegante-flores.png`,
@@ -138,6 +138,36 @@ const Storage = (() => {
     if (currentVersion < 5) {
       data.settings = { ...data.settings, heroStory: defaultData.settings.heroStory };
       data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 6) {
+      data.settings = {
+        ...data.settings,
+        address: defaultData.settings.address,
+        mapEmbed: defaultData.settings.mapEmbed,
+        sobreText2: defaultData.settings.sobreText2
+      };
+      data.faq = defaultData.faq;
+    }
+
+    if (currentVersion < 7) {
+      data.settings = {
+        ...data.settings,
+        instagram: defaultData.settings.instagram,
+        instagramUser: defaultData.settings.instagramUser,
+        sobreText2: defaultData.settings.sobreText2
+      };
+    }
+
+    if (currentVersion < 8) {
+      data.settings = {
+        ...data.settings,
+        whatsapp: defaultData.settings.whatsapp
+      };
+    }
+
+    if (currentVersion < 9) {
+      data.products = defaultData.products;
     }
 
     if (currentVersion < DATA_VERSION) {

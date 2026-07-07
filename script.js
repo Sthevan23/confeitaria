@@ -66,9 +66,15 @@ function initSettings() {
   if (settings.followers) setText('stat-followers', settings.followers);
   if (settings.posts) setText('stat-posts', settings.posts);
 
+  const instaUrl = settings.instagram || 'https://www.instagram.com/confeitosgimarry/';
+  const instaUser = settings.instagramUser || '@confeitosgimarry';
+
   // Sobre
   if (settings.sobreText1) setHtml('sobre-text1', settings.sobreText1);
-  if (settings.sobreText2) setHtml('sobre-text2', settings.sobreText2);
+  if (settings.sobreText2) {
+    const instaLink = `<a href="${instaUrl}" target="_blank" rel="noopener" class="sobre__insta-link"><strong>${instaUser}</strong></a>`;
+    setHtml('sobre-text2', settings.sobreText2.replace(instaUser, instaLink).replace('@confeitosgimarry', instaLink));
+  }
   const sobreImg = document.getElementById('sobre-img');
   if (sobreImg && settings.sobreImage) {
     sobreImg.src = settings.sobreImage;
@@ -84,9 +90,11 @@ function initSettings() {
   setText('contact-whatsapp', formatPhone(settings.whatsapp));
 
   // Instagram
-  setHref('contact-instagram', settings.instagram);
-  setHref('footer-instagram', settings.instagram);
-  setText('contact-instagram', settings.instagramUser || '@confeitosgimarry');
+  setHref('contact-instagram', instaUrl);
+  setHref('footer-instagram', instaUrl);
+  setHref('hero-instagram', instaUrl);
+  setHref('sobre-instagram', instaUrl);
+  setText('contact-instagram', instaUser);
 
   // Facebook (ocultar se não configurado)
   const fbWrap = document.getElementById('contact-facebook-wrap');
@@ -138,6 +146,7 @@ function setHref(id, url) {
 function formatPhone(num) {
   const n = num.replace(/\D/g, '');
   if (n.length === 13) return `(${n.slice(2, 4)}) ${n.slice(4, 9)}-${n.slice(9)}`;
+  if (n.length === 11) return `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}`;
   return num;
 }
 
@@ -154,53 +163,70 @@ function initHeader() {
 function initMobileMenu() {
   const toggle = document.getElementById('nav-toggle');
   const nav = document.getElementById('nav-menu');
-  const links = nav.querySelectorAll('.header__link');
+  const overlay = document.getElementById('nav-overlay');
+  const links = nav.querySelectorAll('.header__link, .header__nav-cta a');
+
+  function closeMenu() {
+    nav.classList.remove('open');
+    toggle.classList.remove('active');
+    overlay.classList.remove('active');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  function openMenu() {
+    nav.classList.add('open');
+    toggle.classList.add('active');
+    overlay.classList.add('active');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
 
   toggle.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('open');
-    toggle.classList.toggle('active');
-    toggle.setAttribute('aria-expanded', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    nav.classList.contains('open') ? closeMenu() : openMenu();
   });
 
+  overlay.addEventListener('click', closeMenu);
+
   links.forEach(link => {
-    link.addEventListener('click', () => {
-      nav.classList.remove('open');
-      toggle.classList.remove('active');
-      toggle.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-    });
+    link.addEventListener('click', closeMenu);
   });
 }
 
 /* --- Scroll Reveal --- */
-function initScrollReveal() {
-  const reveals = document.querySelectorAll('.reveal');
+function observeRevealElements(container) {
+  const parent = typeof container === 'string' ? document.querySelector(container) : container;
+  if (!parent) return;
 
+  const reveals = parent.querySelectorAll('.reveal:not(.visible)');
   const observer = new IntersectionObserver(
     (entries) => {
-      entries.forEach((entry, i) => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          entry.target.classList.add('visible');
           observer.unobserve(entry.target);
         }
       });
     },
-    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    { threshold: 0.08, rootMargin: '0px 0px -20px 0px' }
   );
 
   reveals.forEach(el => observer.observe(el));
 }
 
+function initScrollReveal() {
+  observeRevealElements(document);
+}
+
 /* --- Produtos --- */
 function initProducts() {
   const categories = Storage.getCategories();
-  const products = Storage.getProducts();
   const filterContainer = document.getElementById('category-filter');
   const grid = document.getElementById('products-grid');
   const settings = Storage.getSettings();
+  const cards = grid.querySelectorAll('.product-card');
 
-  // Renderizar filtros
+  // Filtros de categoria
   categories.forEach(cat => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn';
@@ -209,57 +235,31 @@ function initProducts() {
     filterContainer.appendChild(btn);
   });
 
-  // Renderizar produtos
-  function renderProducts(filter = 'all') {
-    const filtered = filter === 'all'
-      ? products
-      : products.filter(p => p.categoryId === filter);
+  // Links WhatsApp nos botões Pedir
+  document.querySelectorAll('.btn-pedir').forEach(btn => {
+    const name = btn.dataset.product;
+    const price = parseFloat(btn.dataset.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const msg = encodeURIComponent(`Olá! Vi no site da ${settings.name} e gostaria de pedir: ${name} — ${price}`);
+    btn.href = `https://wa.me/${settings.whatsapp}?text=${msg}`;
+  });
 
-    grid.innerHTML = filtered.map(p => createProductCard(p, settings)).join('');
+  function filterProducts(category = 'all') {
+    cards.forEach(card => {
+      const match = category === 'all' || card.dataset.category === category;
+      card.style.display = match ? '' : 'none';
+    });
   }
 
-  renderProducts();
+  filterProducts();
 
-  // Filtro por categoria
   filterContainer.addEventListener('click', (e) => {
     if (!e.target.classList.contains('filter-btn')) return;
     filterContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     e.target.classList.add('active');
-    renderProducts(e.target.dataset.category);
+    filterProducts(e.target.dataset.category);
   });
-}
 
-function createProductCard(product, settings) {
-  const category = Storage.getCategoryName(product.categoryId);
-  const waMsg = encodeURIComponent(`Olá! Vi no site da ${settings.name} e gostaria de pedir: ${product.name} — ${Storage.formatCurrency(product.price)}`);
-  const waLink = `https://wa.me/${settings.whatsapp}?text=${waMsg}`;
-  const readyBadge = product.categoryId === 'cat3'
-    ? '<span class="product-card__badge product-card__badge--ready">Pronta Entrega</span>'
-    : '';
-  const featuredBadge = product.featured && product.categoryId !== 'cat3'
-    ? '<span class="product-card__badge">Destaque</span>'
-    : '';
-
-  return `
-    <article class="product-card reveal">
-      <div class="product-card__img">
-        <img src="${product.image}" alt="${product.name} — ${settings.name}" loading="lazy">
-        ${featuredBadge}
-        ${readyBadge}
-      </div>
-      <div class="product-card__body">
-        <span class="product-card__category">${category}</span>
-        <h3 class="product-card__name">${product.name}</h3>
-        <p class="product-card__desc">${product.description}</p>
-        <div class="product-card__footer">
-          <span class="product-card__price">${Storage.formatCurrency(product.price)}</span>
-          <a href="${waLink}" class="btn btn--primary btn--sm" target="_blank" rel="noopener">
-            <i class="fab fa-whatsapp"></i> Pedir
-          </a>
-        </div>
-      </div>
-    </article>
-  `;
+  observeRevealElements(grid);
 }
 
 /* --- Destaques --- */
@@ -273,9 +273,9 @@ function initFeatured() {
     const waLink = `https://wa.me/${settings.whatsapp}?text=${waMsg}`;
 
     return `
-      <div class="featured-card reveal">
+      <div class="featured-card reveal visible">
         <div class="featured-card__img">
-          <img src="${p.image}" alt="${p.name}" loading="lazy">
+          <img src="${p.image}" alt="${p.name}" loading="lazy" width="160" height="200">
         </div>
         <div class="featured-card__body">
           <span class="featured-card__rank">#${i + 1} Mais Vendido</span>
@@ -289,40 +289,29 @@ function initFeatured() {
     `;
   }).join('');
 
-  // Re-observe novos elementos reveal
-  document.querySelectorAll('#featured-grid .reveal').forEach(el => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    }, { threshold: 0.1 });
-    observer.observe(el);
-  });
+  observeRevealElements(grid);
 }
 
 /* --- Galeria --- */
-let galleryImages = [];
+let galleryItems = [];
 
 function initGallery() {
-  const fromStorage = Storage.getGallery();
-  const fromProducts = Storage.getProducts().map(p => p.image);
-  const settings = Storage.getSettings();
-  const extras = [settings.banner, settings.sobreImage].filter(Boolean);
-
-  galleryImages = [...new Set([...fromStorage, ...fromProducts, ...extras])];
+  galleryItems = Storage.getProducts().map(p => ({
+    src: p.image,
+    product: p
+  }));
 
   const grid = document.getElementById('gallery-grid');
 
-  grid.innerHTML = galleryImages.map((src, i) => `
+  grid.innerHTML = galleryItems.map((item, i) => `
     <div class="galeria__item reveal" data-index="${i}">
-      <img src="${src}" alt="Bolo artesanal Gimarry ${i + 1}" loading="lazy">
+      <img src="${item.src}" alt="${item.product.name}" loading="lazy">
     </div>
   `).join('');
 
   grid.addEventListener('click', (e) => {
-    const item = e.target.closest('.galeria__item');
-    if (item) openLightbox(parseInt(item.dataset.index));
+    const el = e.target.closest('.galeria__item');
+    if (el) openLightbox(parseInt(el.dataset.index));
   });
 
   document.querySelectorAll('#gallery-grid .reveal').forEach(el => {
@@ -348,6 +337,8 @@ function initLightbox() {
     if (e.target.id === 'lightbox') closeLightbox();
   });
 
+  document.querySelector('.lightbox__panel')?.addEventListener('click', (e) => e.stopPropagation());
+
   document.addEventListener('keydown', (e) => {
     const lb = document.getElementById('lightbox');
     if (!lb.classList.contains('active')) return;
@@ -357,9 +348,28 @@ function initLightbox() {
   });
 }
 
+function updateLightboxContent(index) {
+  const item = galleryItems[index];
+  if (!item) return;
+
+  const { product } = item;
+  const settings = Storage.getSettings();
+
+  document.getElementById('lightbox-img').src = item.src;
+  document.getElementById('lightbox-img').alt = product.name;
+  document.getElementById('lightbox-category').textContent = Storage.getCategoryName(product.categoryId);
+  document.getElementById('lightbox-title').textContent = product.name;
+  document.getElementById('lightbox-price').textContent = Storage.formatCurrency(product.price);
+
+  const waMsg = encodeURIComponent(
+    `Olá! Vi na galeria do site e gostaria de encomendar: ${product.name} — ${Storage.formatCurrency(product.price)}`
+  );
+  document.getElementById('lightbox-order').href = `https://wa.me/${settings.whatsapp}?text=${waMsg}`;
+}
+
 function openLightbox(index) {
   currentLightboxIndex = index;
-  document.getElementById('lightbox-img').src = galleryImages[index];
+  updateLightboxContent(index);
   document.getElementById('lightbox').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -370,8 +380,8 @@ function closeLightbox() {
 }
 
 function navigateLightbox(dir) {
-  currentLightboxIndex = (currentLightboxIndex + dir + galleryImages.length) % galleryImages.length;
-  document.getElementById('lightbox-img').src = galleryImages[currentLightboxIndex];
+  currentLightboxIndex = (currentLightboxIndex + dir + galleryItems.length) % galleryItems.length;
+  updateLightboxContent(currentLightboxIndex);
 }
 
 /* --- Avaliações (Carrossel) --- */
