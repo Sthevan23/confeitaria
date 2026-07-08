@@ -246,7 +246,7 @@ function initProducts() {
   const settings = Storage.getSettings();
   const products = Storage.getProducts();
   const categoriesWithProducts = categories.filter(cat => products.some(product => product.categoryId === cat.id));
-  const categoryOrder = ['cat3', 'cat2', 'cat1'];
+  const categoryOrder = ['cat3', 'cat4', 'cat2', 'cat1'];
   const orderedCategories = [
     ...categoryOrder.map(id => categoriesWithProducts.find(cat => cat.id === id)).filter(Boolean),
     ...categoriesWithProducts.filter(cat => !categoryOrder.includes(cat.id))
@@ -263,6 +263,9 @@ function initProducts() {
   function getBadge(product) {
     if (product.categoryId === 'cat3') {
       return ['p16', 'p17', 'p18'].includes(product.id) ? 'Linha Celebre' : 'Pronta Entrega';
+    }
+    if (product.categoryId === 'cat4') {
+      return 'Bento Cake';
     }
     return product.featured ? 'Destaque' : '';
   }
@@ -333,7 +336,7 @@ function initProducts() {
     return `
       <div class="products-group-title reveal visible" data-category="${category.id}">
         <span>${category.name}</span>
-        <p>${category.id === 'cat3' ? 'Bolos prontos, kits e opção de montar para retirar no mesmo dia.' : 'Opções feitas sob encomenda para momentos especiais.'}</p>
+        <p>${category.id === 'cat3' ? 'Bolos prontos, kits e opção de montar para retirar no mesmo dia.' : category.id === 'cat4' ? 'Escolha o modelo e monte a frase que vai no topo do seu Bento Cake.' : 'Opções feitas sob encomenda para momentos especiais.'}</p>
       </div>
       ${category.id === 'cat3' ? renderReadyDeliveryInfo() : ''}
       ${categoryProducts.map(renderProductCard).join('')}
@@ -522,18 +525,42 @@ function initFeatured() {
 let galleryItems = [];
 
 function initGallery() {
-  galleryItems = Storage.getProducts().map(p => ({
-    src: p.image,
-    product: p
-  }));
+  const products = Storage.getProducts();
+  const galleryImages = Storage.getGallery().map((src, index) => {
+    const product = products.find(p => p.image === src);
+    return {
+      src,
+      product: product || {
+        name: `Bolo de Amostra ${index + 1}`,
+        description: 'Modelo de bolo para inspirar sua encomenda personalizada.',
+        price: 0,
+        categoryId: 'cat1',
+        categoryName: 'Galeria',
+        image: src
+      }
+    };
+  });
+
+  galleryItems = galleryImages.filter((item, index, items) =>
+    items.findIndex(candidate => candidate.src === item.src) === index
+  );
 
   const grid = document.getElementById('gallery-grid');
 
   grid.innerHTML = galleryItems.map((item, i) => `
     <div class="galeria__item reveal" data-index="${i}">
-      <img src="${item.src}" alt="${item.product.name}" loading="lazy">
+      <img src="${item.src}" alt="${item.product.name}" decoding="async">
     </div>
   `).join('');
+
+  grid.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', () => {
+      const item = img.closest('.galeria__item');
+      const index = Number(item?.dataset.index);
+      if (Number.isInteger(index)) galleryItems[index] = null;
+      item?.remove();
+    });
+  });
 
   grid.addEventListener('click', (e) => {
     const el = e.target.closest('.galeria__item');
@@ -590,6 +617,8 @@ function initLightbox() {
   ['order-massa', 'order-tamanho'].forEach(id => {
     document.getElementById(id)?.addEventListener('change', updateOrderLink);
   });
+
+  document.getElementById('order-frase')?.addEventListener('input', updateOrderLink);
 
   document.getElementById('order-sabor')?.addEventListener('change', (event) => {
     if (event.target.matches('input[type="checkbox"]')) {
@@ -680,6 +709,16 @@ function resetFlavorSelection() {
   enforceFlavorLimit();
 }
 
+function getPublicAssetUrl(path) {
+  if (!path) return '';
+
+  try {
+    return new URL(path, window.location.href).href;
+  } catch {
+    return path;
+  }
+}
+
 function updateOrderLink() {
   if (!currentOrderProduct) return;
 
@@ -689,9 +728,15 @@ function updateOrderLink() {
   const size = getSelectedSize();
   const price = size?.price || currentOrderProduct.price || 0;
   const priceText = Number(price) > 0 ? Storage.formatCurrency(price) : 'Consultar';
+  const frase = document.getElementById('order-frase')?.value.trim() || '';
   const readyDeliveryText = currentOrderProduct.categoryName === 'Pronta Entrega'
     ? '\nObservação: consulte a disponibilidade dos recheios de pronta entrega. Para montar e retirar no mesmo dia, pedido com no mínimo 40 min de antecedência.'
     : '';
+  const phraseText = currentOrderProduct.categoryId === 'cat4'
+    ? `\nFrase no Bento Cake: ${frase || 'Vou enviar/combinar a frase'}`
+    : '';
+  const imageUrl = getPublicAssetUrl(currentOrderProduct.image);
+  const imageText = imageUrl ? `\nFoto/modelo escolhido: ${imageUrl}` : '';
 
   document.getElementById('lightbox-price').textContent = priceText;
 
@@ -702,6 +747,8 @@ function updateOrderLink() {
     `Sabor/recheio: ${sabores.join(' + ')}\n` +
     `Tamanho: ${size?.label || 'A combinar'} (${size?.detail || 'fatias a combinar'})\n` +
     `Valor: ${priceText}` +
+    imageText +
+    phraseText +
     readyDeliveryText
   );
 
@@ -726,6 +773,12 @@ function openProductConfigurator(product, fallbackImage = '', shouldOpen = true,
   document.getElementById('lightbox-category').textContent = categoryName;
   document.getElementById('lightbox-title').textContent = product.name;
   document.getElementById('lightbox-desc').textContent = product.description || 'Escolha massa, sabor e tamanho para montar seu pedido.';
+
+  const phraseField = document.getElementById('order-phrase-field');
+  const phraseInput = document.getElementById('order-frase');
+  const isBentoCake = product.categoryId === 'cat4' || categoryName === 'Bento Cake';
+  if (phraseField) phraseField.style.display = isBentoCake ? 'grid' : 'none';
+  if (phraseInput) phraseInput.value = '';
 
   fillSizeOptions(product);
   resetFlavorSelection();

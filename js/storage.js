@@ -4,10 +4,46 @@
  */
 const Storage = (() => {
   const KEY = 'confeitaria_premium_data';
-  const DATA_VERSION = 18;
+  const DATA_VERSION = 25;
   const REMOVED_CATEGORIES = ['cat4', 'cat5', 'cat6'];
   const REMOVED_PRODUCTS = ['p4', 'p5', 'p6', 'p10', 'p11', 'p12'];
   const FOTOS = 'fotos_bolos';
+  const AMOSTRA = `${FOTOS}/bolos_amostra`;
+
+  function imageSet(time, lastNumber) {
+    const base = `${AMOSTRA}/WhatsApp Image 2026-07-08 at ${time}.jpeg`;
+    const numbered = Array.from({ length: lastNumber }, (_, index) =>
+      `${AMOSTRA}/WhatsApp Image 2026-07-08 at ${time} (${index + 1}).jpeg`
+    );
+
+    return [base, ...numbered];
+  }
+
+  const amostraGallery = [
+    ...imageSet('13.08.11', 1),
+    ...imageSet('13.08.12', 4),
+    ...imageSet('13.08.13', 3),
+    ...imageSet('13.08.14', 4),
+    ...imageSet('13.08.15', 4),
+    ...imageSet('13.08.16', 5),
+    ...imageSet('13.08.17', 1),
+    ...imageSet('13.10.04', 1),
+    ...imageSet('13.10.05', 4),
+    ...imageSet('13.10.06', 4),
+    ...imageSet('13.10.07', 4),
+    ...imageSet('13.10.08', 4),
+    ...imageSet('13.10.09', 4),
+    ...imageSet('13.10.10', 3),
+    ...imageSet('13.13.05', 0),
+    ...imageSet('13.13.06', 3),
+    ...imageSet('13.13.07', 5),
+    ...imageSet('13.13.08', 4),
+    ...imageSet('13.13.09', 4),
+    ...imageSet('13.13.10', 4),
+    ...imageSet('13.13.11', 4),
+    ...imageSet('13.13.12', 4),
+    ...imageSet('13.13.13', 2)
+  ];
 
   const defaultData = {
     settings: {
@@ -15,7 +51,7 @@ const Storage = (() => {
       tagline: 'Não é só sobre bolos e sim memórias afetivas',
       logo: '',
       banner: `${FOTOS}/bolo-elegante-flores.png`,
-      sobreImage: `${FOTOS}/bolo-matelasse-brigadeiro.png`,
+      sobreImage: `${FOTOS}/foto_da_loja.jpeg`,
       whatsapp: '5537988554691',
       instagram: 'https://www.instagram.com/confeitosgimarry/',
       instagramUser: '@confeitosgimarry',
@@ -42,11 +78,12 @@ const Storage = (() => {
     categories: [
       { id: 'cat1', name: 'Bolos Personalizados', slug: 'bolos' },
       { id: 'cat2', name: 'Doces', slug: 'doces' },
-      { id: 'cat3', name: 'Pronta Entrega', slug: 'pronta-entrega' }
+      { id: 'cat3', name: 'Pronta Entrega', slug: 'pronta-entrega' },
+      { id: 'cat4', name: 'Bento Cake', slug: 'bento-cake' }
     ],
     products: [
       { id: 'p1', name: 'Bolo Elegante com Flores', description: 'Bolo branco com textura rústica, flores naturais, pérolas comestíveis e monograma dourado personalizado.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-elegante-flores.png`, featured: true },
-      { id: 'p7', name: 'Bolo Matelassê com Brigadeiros', description: 'Acabamento matelassê em buttercream, laço de cetim e brigadeiros gourmet no topo.', price: 0, categoryId: 'cat3', image: `${FOTOS}/bolo-matelasse-brigadeiro.png`, featured: true },
+      { id: 'p7', name: 'Bolo Matelassê com Brigadeiros', description: 'Acabamento matelassê em buttercream, laço de cetim e brigadeiros gourmet no topo.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-matelasse-brigadeiro.png`, featured: true },
       { id: 'p9', name: 'Bolo Listras Pastel', description: 'Bolo alto com listras coloridas, perlas comestíveis e acabamento em rosetas de buttercream.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-listras-pastel.png`, featured: true },
       { id: 'p16', name: 'Bolo Parabéns', description: 'Bolo da Linha Celebre, ideal para comemorações rápidas. Serve aproximadamente 7 fatias.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`, featured: true },
       { id: 'p17', name: 'Bolo Comemore', description: 'Bolo da Linha Celebre com acabamento especial. Serve aproximadamente 9 fatias.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`, featured: true },
@@ -68,7 +105,18 @@ const Storage = (() => {
       { id: 'p10', name: 'Bolo Mesversário Super Mario', description: 'Bolo temático Super Mario para mesversário, com nome personalizado e detalhes em pasta.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-mario-mesversario.png`, featured: true },
       { id: 'p11', name: 'Bolo Temático Barril', description: 'Bolo personalizado em formato de barril com tema exclusivo, ideal para festas adultas.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-barril-heineken.png`, featured: true },
       { id: 'p29', name: 'Bolo Happy Birthday', description: 'Bolo personalizado com acabamento branco, detalhes em vermelho e topo Happy Birthday.', price: 0, categoryId: 'cat1', image: `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37.jpeg`, featured: false },
-      { id: 'p30', name: 'Bolo Cereja Personalizado', description: 'Bolo personalizado com decoração vermelha, laços verdes e mensagem especial no topo.', price: 0, categoryId: 'cat1', image: `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37 (5).jpeg`, featured: false }
+      { id: 'p30', name: 'Bolo Cereja Personalizado', description: 'Bolo personalizado com decoração vermelha, laços verdes e mensagem especial no topo.', price: 0, categoryId: 'cat1', image: `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37 (5).jpeg`, featured: false },
+      { id: 'p31', name: 'Bento Cake com Frase', description: 'Bento cake personalizado para escrever uma frase especial no topo.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27.jpeg`, featured: false },
+      { id: 'p32', name: 'Bento Cake Romântico', description: 'Bento cake com frase personalizada para presentear com carinho.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (1).jpeg`, featured: false },
+      { id: 'p33', name: 'Bento Cake Divertido', description: 'Bento cake com desenho e frase divertida escolhida por você.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (2).jpeg`, featured: false },
+      { id: 'p34', name: 'Bento Cake Minimalista', description: 'Bento cake delicado com frase curta e acabamento personalizado.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (3).jpeg`, featured: false },
+      { id: 'p35', name: 'Bento Cake Aniversário', description: 'Bento cake para aniversário com mensagem feita do seu jeito.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (4).jpeg`, featured: false },
+      { id: 'p36', name: 'Bento Cake Presente', description: 'Bento cake para presentear com uma frase especial.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28.jpeg`, featured: false },
+      { id: 'p37', name: 'Bento Cake Carinhoso', description: 'Bento cake personalizado com frase afetiva para datas especiais.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (1).jpeg`, featured: false },
+      { id: 'p38', name: 'Bento Cake Especial', description: 'Bento cake com decoração e mensagem personalizada.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (2).jpeg`, featured: false },
+      { id: 'p39', name: 'Bento Cake Fofo', description: 'Bento cake com desenho simples e frase escolhida pelo cliente.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (3).jpeg`, featured: false },
+      { id: 'p40', name: 'Bento Cake Criativo', description: 'Bento cake personalizado para frases engraçadas ou especiais.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (4).jpeg`, featured: false },
+      { id: 'p41', name: 'Bento Cake Surpresa', description: 'Bento cake para surpresa com mensagem personalizada no topo.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.29.jpeg`, featured: false }
     ],
     clients: [
       { id: 'c1', name: 'Ana Paula Silva', email: 'ana@email.com', phone: '11987654321', address: 'Bairro Manoel Valinhas' },
@@ -97,10 +145,6 @@ const Storage = (() => {
       { id: 'f5', question: 'Onde vocês ficam?', answer: 'Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas. Atendemos por delivery e retirada — confirme disponibilidade pelo WhatsApp.' }
     ],
     gallery: [
-      `${FOTOS}/bolo-elegante-flores.png`,
-      `${FOTOS}/bolo-matelasse-brigadeiro.png`,
-      `${FOTOS}/bolo-bob-esponja.png`,
-      `${FOTOS}/bolo-listras-pastel.png`,
       `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.36.jpeg`,
       `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`,
       `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (2).jpeg`,
@@ -111,11 +155,18 @@ const Storage = (() => {
       `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`,
       `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (4).jpeg`,
       `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.39.jpeg`,
-      `${FOTOS}/bolo-mario-mesversario.png`,
-      `${FOTOS}/bento-cake-plantao.png`,
-      `${FOTOS}/bolo-barril-heineken.png`,
-      `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37.jpeg`,
-      `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37 (5).jpeg`
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27.jpeg`,
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (1).jpeg`,
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (2).jpeg`,
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (3).jpeg`,
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (4).jpeg`,
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28.jpeg`,
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (1).jpeg`,
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (2).jpeg`,
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (3).jpeg`,
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (4).jpeg`,
+      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.29.jpeg`,
+      ...amostraGallery
     ]
   };
 
@@ -241,6 +292,47 @@ const Storage = (() => {
 
     if (currentVersion < 18) {
       data.products = defaultData.products;
+    }
+
+    if (currentVersion < 19) {
+      data.categories = defaultData.categories;
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 20) {
+      data.products = (data.products || defaultData.products).map(product =>
+        product.id === 'p7' ? { ...product, categoryId: 'cat1' } : product
+      );
+    }
+
+    if (currentVersion < 21) {
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 22) {
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 23) {
+      data.settings = {
+        ...data.settings,
+        banner: defaultData.settings.banner
+      };
+    }
+
+    if (currentVersion < 24) {
+      data.settings = {
+        ...data.settings,
+        banner: defaultData.settings.banner
+      };
+    }
+
+    if (currentVersion < 25) {
+      data.settings = {
+        ...data.settings,
+        sobreImage: defaultData.settings.sobreImage
+      };
     }
 
     if (currentVersion < DATA_VERSION) {

@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="style.css?v=18">
+  <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 
@@ -126,7 +126,7 @@
           </div>
 
           <div class="sobre__image reveal">
-            <img id="sobre-img" src="fotos_bolos/bolo-matelasse-brigadeiro.png" alt="Bolos artesanais Gimarry" loading="lazy">
+            <img id="sobre-img" src="fotos_bolos/foto_da_loja.jpeg" alt="Loja Gimarry Bolos e Doces" loading="lazy">
             <div class="sobre__image-badge">
               <a href="https://www.instagram.com/confeitosgimarry/" id="sobre-instagram" target="_blank" rel="noopener">
                 <strong><i class="fab fa-instagram"></i></strong>
@@ -171,13 +171,13 @@
             </div>
           </article>
 
-          <article class="product-card" data-category="cat3">
+          <article class="product-card" data-category="cat1">
             <div class="product-card__img">
               <img src="fotos_bolos/bolo-matelasse-brigadeiro.png" alt="Bolo Matelassê com Brigadeiros">
-              <span class="product-card__badge product-card__badge--ready">Pronta Entrega</span>
+              <span class="product-card__badge">Destaque</span>
             </div>
             <div class="product-card__body">
-              <span class="product-card__category">Pronta Entrega</span>
+              <span class="product-card__category">Bolos Personalizados</span>
               <h3 class="product-card__name">Bolo Matelassê com Brigadeiros</h3>
               <p class="product-card__desc">Acabamento matelassê em buttercream, laço de cetim e brigadeiros gourmet no topo.</p>
               <div class="product-card__footer">
@@ -499,6 +499,12 @@
               <legend>Tamanho e fatias <small>toque em uma opção</small></legend>
               <div class="size-options" id="order-tamanho"></div>
             </fieldset>
+
+            <label class="order-field order-phrase-field" id="order-phrase-field">
+              Monte sua frase
+              <textarea id="order-frase" rows="3" maxlength="90" placeholder="Digite a frase que você quer no Bento Cake"></textarea>
+              <small>Exemplo: Feliz aniversário, te amo!</small>
+            </label>
           </form>
 
           <a href="#" class="btn btn--primary btn--full" id="lightbox-order" target="_blank" rel="noopener">
@@ -697,7 +703,7 @@
   </button>
 
   <!-- Scripts -->
-  <script src="js/storage.js?v=18"></script>
-  <script src="script.js?v=19"></script>
+  <script src="js/storage.js?v=25"></script>
+  <script src="script.js?v=23"></script>
 </body>
 </html>
