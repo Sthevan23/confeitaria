@@ -3,7 +3,10 @@
  * Interatividade, renderização dinâmica e animações
  */
 
+forceStartAtTop();
+
 document.addEventListener('DOMContentLoaded', () => {
+  forceStartAtTop();
   initLoader();
   initSettings();
   initHeader();
@@ -19,6 +22,23 @@ document.addEventListener('DOMContentLoaded', () => {
   initNewsletter();
   initActiveNav();
 });
+
+window.addEventListener('load', () => {
+  forceStartAtTop();
+  requestAnimationFrame(() => window.scrollTo(0, 0));
+});
+
+function forceStartAtTop() {
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+
+  if (window.location.hash) {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+
+  window.scrollTo(0, 0);
+}
 
 /* --- Loading inicial --- */
 function initLoader() {
@@ -224,10 +244,107 @@ function initProducts() {
   const filterContainer = document.getElementById('category-filter');
   const grid = document.getElementById('products-grid');
   const settings = Storage.getSettings();
+  const products = Storage.getProducts();
+  const categoriesWithProducts = categories.filter(cat => products.some(product => product.categoryId === cat.id));
+  const categoryOrder = ['cat3', 'cat2', 'cat1'];
+  const orderedCategories = [
+    ...categoryOrder.map(id => categoriesWithProducts.find(cat => cat.id === id)).filter(Boolean),
+    ...categoriesWithProducts.filter(cat => !categoryOrder.includes(cat.id))
+  ];
+
+  function getCategoryName(categoryId) {
+    return categories.find(cat => cat.id === categoryId)?.name || 'Cardápio';
+  }
+
+  function getPriceLabel(price) {
+    return Number(price) > 0 ? Storage.formatCurrency(price) : 'Consultar';
+  }
+
+  function getBadge(product) {
+    if (product.categoryId === 'cat3') {
+      return ['p16', 'p17', 'p18'].includes(product.id) ? 'Linha Celebre' : 'Pronta Entrega';
+    }
+    return product.featured ? 'Destaque' : '';
+  }
+
+  function getImageClass(product) {
+    const classes = ['product-card__img'];
+    if (product.id === 'p16') classes.push('product-card__img--celebre-left');
+    if (product.id === 'p17') classes.push('product-card__img--celebre-center');
+    if (product.id === 'p18') classes.push('product-card__img--celebre-right');
+    return classes.join(' ');
+  }
+
+  function renderReadyDeliveryInfo() {
+    return `
+      <div class="ready-delivery-info reveal visible" data-category="cat3">
+        <article>
+          <i class="fas fa-store"></i>
+          <h4>Bolos prontos do dia</h4>
+          <p>Todos os dias temos bolos à pronta entrega, feitos com sabores escolhidos pela confeitaria conforme o que mais vende no dia.</p>
+        </article>
+        <article>
+          <i class="fas fa-list-check"></i>
+          <h4>Consulte os recheios</h4>
+          <p>Consulte a disponibilidade dos recheios de pronta entrega antes de reservar seu bolo.</p>
+        </article>
+        <article>
+          <i class="fas fa-wand-magic-sparkles"></i>
+          <h4>Monte o seu bolo</h4>
+          <p>Você pode montar seu bolo para retirar no mesmo dia. Pedido com no mínimo 4 horas de antecedência.</p>
+        </article>
+        <article>
+          <i class="fas fa-gift"></i>
+          <h4>Modelos de kit</h4>
+          <p>Escolha entre bolo individual, kit com 6 docinhos ou kit com 16 doces.</p>
+        </article>
+      </div>
+    `;
+  }
+
+  function renderProductCard(product) {
+    const categoryName = getCategoryName(product.categoryId);
+    const badge = getBadge(product);
+    const badgeClass = product.categoryId === 'cat3' ? ' product-card__badge--ready' : '';
+
+    return `
+      <article class="product-card reveal visible" data-category="${product.categoryId}">
+        <div class="${getImageClass(product)}">
+          <img src="${product.image}" alt="${product.name}">
+          ${badge ? `<span class="product-card__badge${badgeClass}">${badge}</span>` : ''}
+        </div>
+        <div class="product-card__body">
+          <span class="product-card__category">${categoryName}</span>
+          <h3 class="product-card__name">${product.name}</h3>
+          <p class="product-card__desc">${product.description}</p>
+          <div class="product-card__footer">
+            <span class="product-card__price">${getPriceLabel(product.price)}</span>
+            <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="${product.name}" data-price="${product.price}" data-category="${product.categoryId}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  grid.innerHTML = orderedCategories.map(category => {
+    const categoryProducts = products.filter(product => product.categoryId === category.id);
+    if (!categoryProducts.length) return '';
+
+    return `
+      <div class="products-group-title reveal visible" data-category="${category.id}">
+        <span>${category.name}</span>
+        <p>${category.id === 'cat3' ? 'Bolos prontos, kits e opção de montar para retirar no mesmo dia.' : 'Opções feitas sob encomenda para momentos especiais.'}</p>
+      </div>
+      ${category.id === 'cat3' ? renderReadyDeliveryInfo() : ''}
+      ${categoryProducts.map(renderProductCard).join('')}
+    `;
+  }).join('');
+
   const cards = grid.querySelectorAll('.product-card');
+  const groupTitles = grid.querySelectorAll('.products-group-title, .ready-delivery-info');
 
   // Filtros de categoria
-  categories.forEach(cat => {
+  orderedCategories.forEach(cat => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn';
     btn.dataset.category = cat.id;
@@ -238,15 +355,18 @@ function initProducts() {
   // Links WhatsApp nos botões Pedir
   document.querySelectorAll('.btn-pedir').forEach(btn => {
     const name = btn.dataset.product;
-    const price = parseFloat(btn.dataset.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    const msg = encodeURIComponent(`Olá! Vi no site da ${settings.name} e gostaria de pedir: ${name} — ${price}`);
+    const price = Number(btn.dataset.price);
+    const priceText = price > 0 ? ` — ${Storage.formatCurrency(price)}` : ' — consultar valor e disponibilidade';
+    const readyDeliveryText = btn.dataset.category === 'cat3'
+      ? '\nConsulte a disponibilidade dos recheios de pronta entrega. Se eu quiser montar para retirar hoje, sei que o pedido precisa ser feito com no mínimo 4 horas de antecedência.'
+      : '';
+    const msg = encodeURIComponent(`Olá! Vi no site da ${settings.name} e gostaria de pedir: ${name}${priceText}${readyDeliveryText}`);
     btn.href = `https://wa.me/${settings.whatsapp}?text=${msg}`;
   });
 
   const menuWhatsapp = document.getElementById('menu-whatsapp');
   if (menuWhatsapp) {
-    const msg = encodeURIComponent('Olá! Vi a tabela de opções no site e gostaria de fazer um pedido.');
-    menuWhatsapp.href = `https://wa.me/${settings.whatsapp}?text=${msg}`;
+    setupExtraMenu(settings);
     menuWhatsapp.target = '_blank';
     menuWhatsapp.rel = 'noopener';
   }
@@ -255,6 +375,10 @@ function initProducts() {
     cards.forEach(card => {
       const match = category === 'all' || card.dataset.category === category;
       card.style.display = match ? '' : 'none';
+    });
+    groupTitles.forEach(title => {
+      const match = category === 'all' || title.dataset.category === category;
+      title.style.display = match ? '' : 'none';
     });
   }
 
@@ -267,7 +391,79 @@ function initProducts() {
     filterProducts(e.target.dataset.category);
   });
 
+  grid.addEventListener('click', (e) => {
+    const image = e.target.closest('.product-card__img');
+    if (!image) return;
+
+    const card = image.closest('.product-card');
+    const orderButton = card.querySelector('.btn-pedir');
+    const product = {
+      name: card.querySelector('.product-card__name')?.textContent.trim() || image.querySelector('img')?.alt || 'Bolo',
+      description: card.querySelector('.product-card__desc')?.textContent.trim() || '',
+      price: parseFloat(orderButton?.dataset.price || '0'),
+      categoryId: card.dataset.category,
+      categoryName: card.querySelector('.product-card__category')?.textContent.trim() || 'Cardápio',
+      image: image.querySelector('img')?.getAttribute('src') || ''
+    };
+
+    openProductConfigurator(product);
+  });
+
   observeRevealElements(grid);
+}
+
+function setupExtraMenu(settings) {
+  const section = document.querySelector('.cardapio-extra');
+  const menuWhatsapp = document.getElementById('menu-whatsapp');
+  if (!section || !menuWhatsapp) return;
+
+  function getCheckedValues(name) {
+    return [...section.querySelectorAll(`input[name="${name}"]:checked`)].map(input => input.value);
+  }
+
+  function getSelectedSizeText() {
+    const selected = section.querySelector('input[name="extra-tamanho"]:checked');
+    if (!selected) return 'A combinar';
+    return `${selected.value} (${selected.dataset.detail}) - ${selected.dataset.price}`;
+  }
+
+  function enforceExtraRecheioLimit() {
+    const inputs = [...section.querySelectorAll('input[name="extra-recheio"]')];
+    const checked = inputs.filter(input => input.checked);
+    const limitReached = checked.length >= 2;
+
+    inputs.forEach(input => {
+      input.disabled = limitReached && !input.checked;
+    });
+  }
+
+  function updateExtraMenuLink() {
+    const massa = getCheckedValues('extra-massa')[0] || 'Branca';
+    const recheios = getCheckedValues('extra-recheio');
+    const bombons = getCheckedValues('extra-bombom');
+    const docinhos = getCheckedValues('extra-docinho');
+
+    const msg = encodeURIComponent(
+      `Olá! Vi as Opções para Encomenda no site da ${settings.name} e gostaria de fazer um pedido:\n` +
+      `Tamanho do bolo: ${getSelectedSizeText()}\n` +
+      `Massa: ${massa}\n` +
+      `Recheio(s): ${(recheios.length ? recheios : ['Brigadeiro']).join(' + ')}\n` +
+      `Bombons: ${bombons.length ? bombons.join(', ') : 'Não selecionado'}\n` +
+      `Docinhos: ${docinhos.length ? docinhos.join(', ') : 'Não selecionado'}`
+    );
+
+    menuWhatsapp.href = `https://wa.me/${settings.whatsapp}?text=${msg}`;
+  }
+
+  section.addEventListener('change', (event) => {
+    if (event.target.matches('input[name="extra-recheio"]')) {
+      enforceExtraRecheioLimit();
+    }
+    updateExtraMenuLink();
+  });
+
+  enforceExtraRecheioLimit();
+  updateExtraMenuLink();
 }
 
 /* --- Destaques --- */
@@ -277,7 +473,8 @@ function initFeatured() {
   const featured = Storage.getProducts().filter(p => p.featured);
 
   grid.innerHTML = featured.map((p, i) => {
-    const waMsg = encodeURIComponent(`Olá! Gostaria de pedir: ${p.name}`);
+    const priceText = Number(p.price) > 0 ? ` — ${Storage.formatCurrency(p.price)}` : ' — consultar valor e disponibilidade';
+    const waMsg = encodeURIComponent(`Olá! Gostaria de pedir: ${p.name}${priceText}`);
     const waLink = `https://wa.me/${settings.whatsapp}?text=${waMsg}`;
 
     return `
@@ -288,7 +485,7 @@ function initFeatured() {
         <div class="featured-card__body">
           <span class="featured-card__rank">#${i + 1} Mais Vendido</span>
           <h3 class="featured-card__name">${p.name}</h3>
-          <span class="featured-card__price">${Storage.formatCurrency(p.price)}</span>
+          <span class="featured-card__price">${Number(p.price) > 0 ? Storage.formatCurrency(p.price) : 'Consultar'}</span>
           <a href="${waLink}" class="btn btn--primary btn--sm" target="_blank" rel="noopener">
             <i class="fab fa-whatsapp"></i> Pedir
           </a>
@@ -296,6 +493,15 @@ function initFeatured() {
       </div>
     `;
   }).join('');
+
+  grid.addEventListener('click', (e) => {
+    const image = e.target.closest('.featured-card__img');
+    if (!image) return;
+
+    const index = Array.from(grid.querySelectorAll('.featured-card__img')).indexOf(image);
+    const product = featured[index];
+    if (product) openProductConfigurator(product);
+  });
 
   observeRevealElements(grid);
 }
@@ -335,6 +541,20 @@ function initGallery() {
 
 /* --- Lightbox --- */
 let currentLightboxIndex = 0;
+const ORDER_SIZES = [
+  { label: 'Bolo Parabéns', detail: 'serve 7 fatias', price: 65 },
+  { label: 'Bolo Comemore', detail: 'serve 9 fatias', price: 75 },
+  { label: 'Bolo Celebrar', detail: 'serve 13 fatias', price: 95 },
+  { label: '1 kg', detail: '12 fatias · 15 cm', price: 95 },
+  { label: '1,5 kg', detail: '17 fatias · 15 cm', price: 140 },
+  { label: '2 kg', detail: '22 fatias · 20 cm', price: 180 },
+  { label: '2,5 kg', detail: '27 fatias · 20 cm', price: 225 },
+  { label: '3 kg', detail: '32 fatias · 30 cm', price: 270 },
+  { label: '3,5 kg', detail: '37 fatias · 30 cm', price: 315 },
+  { label: '4 kg', detail: '42 fatias · 35 cm', price: 360 },
+  { label: '4,5 kg', detail: '47 fatias · 35 cm', price: 405 }
+];
+let currentOrderProduct = null;
 
 function initLightbox() {
   document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
@@ -354,25 +574,158 @@ function initLightbox() {
     if (e.key === 'ArrowLeft') navigateLightbox(-1);
     if (e.key === 'ArrowRight') navigateLightbox(1);
   });
+
+  ['order-massa', 'order-tamanho'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', updateOrderLink);
+  });
+
+  document.getElementById('order-sabor')?.addEventListener('change', (event) => {
+    if (event.target.matches('input[type="checkbox"]')) {
+      enforceFlavorLimit();
+      updateOrderLink();
+    }
+  });
 }
 
 function updateLightboxContent(index) {
   const item = galleryItems[index];
   if (!item) return;
 
-  const { product } = item;
-  const settings = Storage.getSettings();
+  openProductConfigurator(item.product, item.src, false, true);
+}
 
-  document.getElementById('lightbox-img').src = item.src;
-  document.getElementById('lightbox-img').alt = product.name;
-  document.getElementById('lightbox-category').textContent = Storage.getCategoryName(product.categoryId);
-  document.getElementById('lightbox-title').textContent = product.name;
-  document.getElementById('lightbox-price').textContent = Storage.formatCurrency(product.price);
+function fillSizeOptions(product) {
+  const container = document.getElementById('order-tamanho');
+  if (!container) return;
+
+  const selectedSize = getInitialSize(product);
+  const sizeOptions = Number(product.price) > 0
+    ? ORDER_SIZES
+    : [
+        { label: 'Consultar disponibilidade', detail: 'valor e fatias a confirmar', price: 0 },
+        ...ORDER_SIZES
+      ];
+
+  container.innerHTML = sizeOptions.map((size, index) => (
+    `<label class="${size.price === 0 ? 'size-option size-option--consult' : 'size-option'}">
+      <input type="radio" name="order-tamanho" value="${size.label}" data-detail="${size.detail}" data-price="${size.price}" ${size.label === selectedSize.label || (!selectedSize.label && index === 0) ? 'checked' : ''}>
+      <span>
+        <strong>${size.label}</strong>
+        <small>${size.detail}</small>
+        <b>${size.price > 0 ? Storage.formatCurrency(size.price) : 'Consultar'}</b>
+      </span>
+    </label>`
+  )).join('');
+}
+
+function getInitialSize(product) {
+  if (Number(product.price) <= 0) {
+    return { label: 'Consultar disponibilidade' };
+  }
+
+  const normalizedName = (product.name || '').toLowerCase();
+  const selectedIndex = ORDER_SIZES.findIndex(size => normalizedName.includes(size.label.toLowerCase().replace('bolo ', '')));
+  if (selectedIndex >= 0) {
+    return ORDER_SIZES[selectedIndex];
+  }
+
+  const priceIndex = ORDER_SIZES.findIndex(size => Number(size.price) === Number(product.price));
+  return ORDER_SIZES[priceIndex >= 0 ? priceIndex : 3];
+}
+
+function getSelectedSize() {
+  const input = document.querySelector('#order-tamanho input:checked');
+  if (!input) return null;
+
+  return {
+    label: input.value,
+    detail: input.dataset.detail,
+    price: parseFloat(input.dataset.price || '0')
+  };
+}
+
+function getSelectedFlavors() {
+  const checked = [...document.querySelectorAll('#order-sabor input:checked')].map(input => input.value);
+  return checked.length ? checked : ['Brigadeiro'];
+}
+
+function enforceFlavorLimit() {
+  const inputs = [...document.querySelectorAll('#order-sabor input')];
+  const checked = inputs.filter(input => input.checked);
+  const limitReached = checked.length >= 2;
+
+  inputs.forEach(input => {
+    input.disabled = limitReached && !input.checked;
+  });
+}
+
+function resetFlavorSelection() {
+  const inputs = [...document.querySelectorAll('#order-sabor input')];
+  inputs.forEach((input, index) => {
+    input.checked = index === 0;
+    input.disabled = false;
+  });
+  enforceFlavorLimit();
+}
+
+function updateOrderLink() {
+  if (!currentOrderProduct) return;
+
+  const settings = Storage.getSettings();
+  const massa = document.getElementById('order-massa')?.value || 'Branca';
+  const sabores = getSelectedFlavors();
+  const size = getSelectedSize();
+  const price = size?.price || currentOrderProduct.price || 0;
+  const priceText = Number(price) > 0 ? Storage.formatCurrency(price) : 'Consultar';
+  const readyDeliveryText = currentOrderProduct.categoryName === 'Pronta Entrega'
+    ? '\nObservação: consulte a disponibilidade dos recheios de pronta entrega. Para montar e retirar no mesmo dia, pedido com no mínimo 4 horas de antecedência.'
+    : '';
+
+  document.getElementById('lightbox-price').textContent = priceText;
 
   const waMsg = encodeURIComponent(
-    `Olá! Vi na galeria do site e gostaria de encomendar: ${product.name} — ${Storage.formatCurrency(product.price)}`
+    `Olá! Vi no site da ${settings.name} e gostaria de encomendar:\n` +
+    `Bolo: ${currentOrderProduct.name}\n` +
+    `Massa: ${massa}\n` +
+    `Sabor/recheio: ${sabores.join(' + ')}\n` +
+    `Tamanho: ${size?.label || 'A combinar'} (${size?.detail || 'fatias a combinar'})\n` +
+    `Valor: ${priceText}` +
+    readyDeliveryText
   );
+
   document.getElementById('lightbox-order').href = `https://wa.me/${settings.whatsapp}?text=${waMsg}`;
+}
+
+function openProductConfigurator(product, fallbackImage = '', shouldOpen = true, showNavigation = false) {
+  const categoryName = product.categoryName || Storage.getCategoryName(product.categoryId);
+  const image = fallbackImage || product.image || '';
+
+  currentOrderProduct = {
+    name: product.name,
+    description: product.description || '',
+    price: product.price || 0,
+    image,
+    categoryId: product.categoryId || '',
+    categoryName
+  };
+
+  document.getElementById('lightbox-img').src = image;
+  document.getElementById('lightbox-img').alt = product.name;
+  document.getElementById('lightbox-category').textContent = categoryName;
+  document.getElementById('lightbox-title').textContent = product.name;
+  document.getElementById('lightbox-desc').textContent = product.description || 'Escolha massa, sabor e tamanho para montar seu pedido.';
+
+  fillSizeOptions(product);
+  resetFlavorSelection();
+  updateOrderLink();
+
+  document.getElementById('lightbox-prev').style.display = showNavigation ? '' : 'none';
+  document.getElementById('lightbox-next').style.display = showNavigation ? '' : 'none';
+
+  if (shouldOpen) {
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
 }
 
 function openLightbox(index) {

@@ -4,7 +4,7 @@
  */
 const Storage = (() => {
   const KEY = 'confeitaria_premium_data';
-  const DATA_VERSION = 10;
+  const DATA_VERSION = 15;
   const REMOVED_CATEGORIES = ['cat4', 'cat5', 'cat6'];
   const REMOVED_PRODUCTS = ['p4', 'p5', 'p6', 'p10', 'p11', 'p12'];
   const FOTOS = 'fotos_bolos';
@@ -22,7 +22,7 @@ const Storage = (() => {
       facebook: '',
       email: 'confeitosgimarry@email.com',
       address: 'Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas',
-      hours: 'Bolos de pronta entrega disponíveis diariamente',
+      hours: 'Bolos de pronta entrega disponíveis diariamente. Consulte os recheios do dia.',
       followers: '17,8 mil',
       posts: '1.352',
       mapEmbed: 'https://www.google.com/maps?q=Rua+Nossa+Senhora+das+Gra%C3%A7as,+361,+Manoel+Valinhas&output=embed',
@@ -33,7 +33,7 @@ const Storage = (() => {
         'Só tenho a agradecer cada cliente que confia no meu trabalho e a várias que estão comigo desde o começo ♥ ♥'
       ],
       sobreText1: 'A <strong>Gimarry Bolos e Doces</strong> é uma confeitaria artesanal dedicada a criar bolos que vão muito além do sabor — são memórias afetivas em forma de doce. Cada receita carrega dedicação, criatividade e amor.',
-      sobreText2: 'Trabalhamos com bolos personalizados, doces especiais e <strong>bolos de pronta entrega disponíveis diariamente</strong>. Siga @confeitosgimarry no Instagram!',
+      sobreText2: 'Trabalhamos com bolos personalizados, doces especiais e <strong>bolos de pronta entrega todos os dias</strong>. Você também pode montar seu bolo para retirar no mesmo dia, com pedido feito com no mínimo 4 horas de antecedência. Siga @confeitosgimarry no Instagram!',
     },
     auth: {
       email: 'admin@gimarry.com.br',
@@ -48,12 +48,27 @@ const Storage = (() => {
       { id: 'p1', name: 'Bolo Elegante com Flores', description: 'Bolo branco com textura rústica, flores naturais, pérolas comestíveis e monograma dourado personalizado.', price: 189.90, categoryId: 'cat3', image: `${FOTOS}/bolo-elegante-flores.png`, featured: true },
       { id: 'p7', name: 'Bolo Matelassê com Brigadeiros', description: 'Acabamento matelassê em buttercream, laço de cetim e brigadeiros gourmet no topo.', price: 169.90, categoryId: 'cat3', image: `${FOTOS}/bolo-matelasse-brigadeiro.png`, featured: true },
       { id: 'p9', name: 'Bolo Listras Pastel', description: 'Bolo alto com listras coloridas, perlas comestíveis e acabamento em rosetas de buttercream.', price: 149.90, categoryId: 'cat3', image: `${FOTOS}/bolo-listras-pastel.png`, featured: true },
-      { id: 'p2', name: 'Bento Cake na Marmita', description: 'Bento cake personalizado na marmita. Sugestão: 2 a 3 fatias, peso aproximado de 300g.', price: 40.00, categoryId: 'cat2', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
-      { id: 'p14', name: 'Kit Bento + 6 Doces', description: 'Bento cake personalizado acompanhado de 6 docinhos sortidos.', price: 55.00, categoryId: 'cat2', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
-      { id: 'p15', name: 'Kit Bento Cake + 16 Doces', description: 'Kit especial com bento cake personalizado e 16 docinhos para presentear ou comemorar.', price: 65.00, categoryId: 'cat2', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
+      { id: 'p16', name: 'Bolo Parabéns', description: 'Bolo da Linha Celebre, ideal para comemorações rápidas. Serve aproximadamente 7 fatias.', price: 65.00, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`, featured: true },
+      { id: 'p17', name: 'Bolo Comemore', description: 'Bolo da Linha Celebre com acabamento especial. Serve aproximadamente 9 fatias.', price: 75.00, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`, featured: true },
+      { id: 'p18', name: 'Bolo Celebrar', description: 'Bolo da Linha Celebre para celebrações especiais. Serve aproximadamente 13 fatias.', price: 95.00, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (2).jpeg`, featured: true },
+      { id: 'p19', name: 'Bolo Brigadeiro com Morango', description: 'Bolo de pronta entrega com cobertura de chocolate, brigadeiros e morangos frescos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.36.jpeg`, featured: false },
+      { id: 'p20', name: 'Kit Bento Amor + Doces', description: 'Kit de pronta entrega com bento personalizado e docinhos sortidos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`, featured: false },
+      { id: 'p21', name: 'Bolo Ninho com Morango', description: 'Bolo de pronta entrega com acabamento branco, creme ninho e morangos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (2).jpeg`, featured: false },
+      { id: 'p22', name: 'Bolo Dois Amores com Morango', description: 'Bolo de pronta entrega com brigadeiros, leite ninho e morangos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (3).jpeg`, featured: false },
+      { id: 'p23', name: 'Bolo Brigadeiro Chocolate', description: 'Bolo de pronta entrega com acabamento em chocolate e brigadeiros no topo.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38.jpeg`, featured: false },
+      { id: 'p24', name: 'Bolo Ninho Cremoso', description: 'Bolo de pronta entrega com cobertura branca e docinhos de leite ninho.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (1).jpeg`, featured: false },
+      { id: 'p25', name: 'Kit Bento + Brigadeiros', description: 'Kit de pronta entrega com bento personalizado e brigadeiros.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (2).jpeg`, featured: false },
+      { id: 'p26', name: 'Bento Cake Personalizado', description: 'Bento cake de pronta entrega na marmita, ideal para presentear.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`, featured: false },
+      { id: 'p27', name: 'Bolo Chocolate com Morango', description: 'Bolo de pronta entrega com brigadeiros e morangos no topo.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (4).jpeg`, featured: false },
+      { id: 'p28', name: 'Bolo Brigadeiro com Amendoim', description: 'Bolo de pronta entrega com chocolate e brigadeiros de amendoim.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.39.jpeg`, featured: false },
+      { id: 'p2', name: 'Bolo Individual', description: 'Modelo individual de pronta entrega. Consulte os recheios disponíveis do dia.', price: 40.00, categoryId: 'cat3', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
+      { id: 'p14', name: 'Kit com 6 Docinhos', description: 'Bolo individual acompanhado de 6 docinhos. Consulte disponibilidade e recheios do dia.', price: 55.00, categoryId: 'cat3', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
+      { id: 'p15', name: 'Kit com 16 Doces', description: 'Kit especial com bolo individual e 16 doces para presentear ou comemorar.', price: 65.00, categoryId: 'cat3', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
       { id: 'p8', name: 'Bolo Temático Bob Esponja', description: 'Bolo personalizado com tema Bob Esponja, topo com nome e idade. Ideal para festas infantis.', price: 199.90, categoryId: 'cat1', image: `${FOTOS}/bolo-bob-esponja.png`, featured: true },
       { id: 'p10', name: 'Bolo Mesversário Super Mario', description: 'Bolo temático Super Mario para mesversário, com nome personalizado e detalhes em pasta.', price: 129.90, categoryId: 'cat1', image: `${FOTOS}/bolo-mario-mesversario.png`, featured: true },
-      { id: 'p11', name: 'Bolo Temático Barril', description: 'Bolo personalizado em formato de barril com tema exclusivo, ideal para festas adultas.', price: 249.90, categoryId: 'cat1', image: `${FOTOS}/bolo-barril-heineken.png`, featured: true }
+      { id: 'p11', name: 'Bolo Temático Barril', description: 'Bolo personalizado em formato de barril com tema exclusivo, ideal para festas adultas.', price: 249.90, categoryId: 'cat1', image: `${FOTOS}/bolo-barril-heineken.png`, featured: true },
+      { id: 'p29', name: 'Bolo Happy Birthday', description: 'Bolo personalizado com acabamento branco, detalhes em vermelho e topo Happy Birthday.', price: 0, categoryId: 'cat1', image: `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37.jpeg`, featured: false },
+      { id: 'p30', name: 'Bolo Cereja Personalizado', description: 'Bolo personalizado com decoração vermelha, laços verdes e mensagem especial no topo.', price: 0, categoryId: 'cat1', image: `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37 (5).jpeg`, featured: false }
     ],
     clients: [
       { id: 'c1', name: 'Ana Paula Silva', email: 'ana@email.com', phone: '11987654321', address: 'Bairro Manoel Valinhas' },
@@ -76,7 +91,7 @@ const Storage = (() => {
     ],
     faq: [
       { id: 'f1', question: 'Como faço meu pedido?', answer: 'Faça seu pedido pelo WhatsApp (link no Instagram @confeitosgimarry) ou pelo botão "Pedir Agora" aqui no site. Confirmamos disponibilidade e prazo na hora.' },
-      { id: 'f2', question: 'Vocês têm bolos de pronta entrega?', answer: 'Sim! Trabalhamos com bolos de pronta entrega disponíveis diariamente. Consulte as opções do dia pelo WhatsApp ou Instagram.' },
+      { id: 'f2', question: 'Vocês têm bolos de pronta entrega?', answer: 'Sim! Temos bolos prontos todos os dias, com sabores escolhidos pela confeitaria conforme a disponibilidade. Você também pode montar seu bolo para retirar no mesmo dia, fazendo o pedido com no mínimo 4 horas de antecedência.' },
       { id: 'f3', question: 'Vocês fazem bolos personalizados?', answer: 'Sim! Criamos bolos temáticos e personalizados para aniversários, mesversários e festas. Entre em contato com antecedência para encomendas especiais.' },
       { id: 'f4', question: 'Quais formas de pagamento aceitam?', answer: 'Aceitamos PIX, cartão de crédito/débito e dinheiro na entrega. Consulte as opções no momento do pedido.' },
       { id: 'f5', question: 'Onde vocês ficam?', answer: 'Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas. Atendemos por delivery e retirada — confirme disponibilidade pelo WhatsApp.' }
@@ -86,9 +101,21 @@ const Storage = (() => {
       `${FOTOS}/bolo-matelasse-brigadeiro.png`,
       `${FOTOS}/bolo-bob-esponja.png`,
       `${FOTOS}/bolo-listras-pastel.png`,
+      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.36.jpeg`,
+      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`,
+      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (2).jpeg`,
+      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (3).jpeg`,
+      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38.jpeg`,
+      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (1).jpeg`,
+      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (2).jpeg`,
+      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`,
+      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (4).jpeg`,
+      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.39.jpeg`,
       `${FOTOS}/bolo-mario-mesversario.png`,
       `${FOTOS}/bento-cake-plantao.png`,
-      `${FOTOS}/bolo-barril-heineken.png`
+      `${FOTOS}/bolo-barril-heineken.png`,
+      `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37.jpeg`,
+      `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37 (5).jpeg`
     ]
   };
 
@@ -175,6 +202,32 @@ const Storage = (() => {
     if (currentVersion < 10) {
       data.products = defaultData.products;
       data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 11) {
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 12) {
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 13) {
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 14) {
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 15) {
+      data.settings = { ...data.settings, hours: defaultData.settings.hours, sobreText2: defaultData.settings.sobreText2 };
+      data.products = defaultData.products;
+      data.faq = defaultData.faq;
     }
 
     if (currentVersion < DATA_VERSION) {

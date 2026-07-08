@@ -10,6 +10,13 @@
   <meta property="og:description" content="Não é só sobre bolos e sim memórias afetivas. Peça pelo WhatsApp!">
   <meta property="og:type" content="website">
   <title>Gimarry Bolos e Doces — Confeitaria Artesanal</title>
+  <script>
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    window.scrollTo(0, 0);
+  </script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -102,7 +109,7 @@
         <div class="sobre__grid">
           <div class="sobre__content reveal">
             <p class="sobre__text" id="sobre-text1">A <strong>Gimarry Bolos e Doces</strong> é uma confeitaria artesanal dedicada a criar bolos que vão muito além do sabor — são memórias afetivas em forma de doce.</p>
-            <p class="sobre__text" id="sobre-text2">Trabalhamos com bolos personalizados, doces especiais e <strong>bolos de pronta entrega disponíveis diariamente</strong>. Siga <strong>@confeitosgimarry</strong> no Instagram!</p>
+            <p class="sobre__text" id="sobre-text2">Trabalhamos com bolos personalizados, doces especiais e <strong>bolos de pronta entrega todos os dias</strong>. Você também pode montar seu bolo para retirar no mesmo dia, com pedido feito com no mínimo 4 horas de antecedência. Siga <strong>@confeitosgimarry</strong> no Instagram!</p>
 
             <div class="sobre__cards">
               <div class="sobre__card">
@@ -113,7 +120,7 @@
               <div class="sobre__card">
                 <div class="sobre__card-icon"><i class="fas fa-clock"></i></div>
                 <h3>Pronta Entrega</h3>
-                <p>Bolos de pronta entrega disponíveis diariamente. Consulte as opções do dia!</p>
+                <p>Bolos prontos todos os dias. Consulte os recheios disponíveis ou monte o seu bolo com 4 horas de antecedência.</p>
               </div>
             </div>
           </div>
@@ -137,7 +144,7 @@
         <div class="section__header reveal">
           <span class="section__tag">Cardápio</span>
           <h2 class="section__title">Nossos <em>Produtos</em></h2>
-          <p class="section__subtitle">Delícias artesanais para todos os momentos</p>
+          <p class="section__subtitle">Bolos prontos do dia, kits e encomendas para todos os momentos</p>
         </div>
 
         <!-- Filtro de categorias -->
@@ -192,6 +199,54 @@
               <div class="product-card__footer">
                 <span class="product-card__price">R$ 149,90</span>
                 <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Listras Pastel" data-price="149.90" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-category="cat3">
+            <div class="product-card__img product-card__img--celebre-left">
+              <img src="fotos_bolos/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg" alt="Bolo Parabéns da Linha Celebre">
+              <span class="product-card__badge product-card__badge--ready">Linha Celebre</span>
+            </div>
+            <div class="product-card__body">
+              <span class="product-card__category">Pronta Entrega</span>
+              <h3 class="product-card__name">Bolo Parabéns</h3>
+              <p class="product-card__desc">Bolo da Linha Celebre, ideal para comemorações rápidas. Serve aproximadamente 7 fatias.</p>
+              <div class="product-card__footer">
+                <span class="product-card__price">R$ 65,00</span>
+                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Parabéns - Linha Celebre" data-price="65.00" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-category="cat3">
+            <div class="product-card__img product-card__img--celebre-center">
+              <img src="fotos_bolos/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg" alt="Bolo Comemore da Linha Celebre">
+              <span class="product-card__badge product-card__badge--ready">Linha Celebre</span>
+            </div>
+            <div class="product-card__body">
+              <span class="product-card__category">Pronta Entrega</span>
+              <h3 class="product-card__name">Bolo Comemore</h3>
+              <p class="product-card__desc">Bolo da Linha Celebre com acabamento especial. Serve aproximadamente 9 fatias.</p>
+              <div class="product-card__footer">
+                <span class="product-card__price">R$ 75,00</span>
+                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Comemore - Linha Celebre" data-price="75.00" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-category="cat3">
+            <div class="product-card__img product-card__img--celebre-right">
+              <img src="fotos_bolos/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (2).jpeg" alt="Bolo Celebrar da Linha Celebre">
+              <span class="product-card__badge product-card__badge--ready">Linha Celebre</span>
+            </div>
+            <div class="product-card__body">
+              <span class="product-card__category">Pronta Entrega</span>
+              <h3 class="product-card__name">Bolo Celebrar</h3>
+              <p class="product-card__desc">Bolo da Linha Celebre para celebrações especiais. Serve aproximadamente 13 fatias.</p>
+              <div class="product-card__footer">
+                <span class="product-card__price">R$ 95,00</span>
+                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Celebrar - Linha Celebre" data-price="95.00" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
               </div>
             </div>
           </article>
@@ -301,66 +356,68 @@
             <article class="menu-panel menu-panel--wide">
               <h4><i class="fas fa-birthday-cake"></i> Tabela de Bolos</h4>
               <div class="menu-table">
-                <div><strong>1 kg</strong><span>12 fatias · 15 cm</span><b>R$ 95,00</b></div>
-                <div><strong>1,5 kg</strong><span>17 fatias · 15 cm</span><b>R$ 140,00</b></div>
-                <div><strong>2 kg</strong><span>22 fatias · 20 cm</span><b>R$ 180,00</b></div>
-                <div><strong>2,5 kg</strong><span>27 fatias · 20 cm</span><b>R$ 225,00</b></div>
-                <div><strong>3 kg</strong><span>32 fatias · 30 cm</span><b>R$ 270,00</b></div>
-                <div><strong>3,5 kg</strong><span>37 fatias · 30 cm</span><b>R$ 315,00</b></div>
-                <div><strong>4 kg</strong><span>42 fatias · 35 cm</span><b>R$ 360,00</b></div>
-                <div><strong>4,5 kg</strong><span>47 fatias · 35 cm</span><b>R$ 405,00</b></div>
+                <label><input type="radio" name="extra-tamanho" value="1 kg" data-detail="12 fatias · 15 cm" data-price="R$ 95,00" checked><strong>1 kg</strong><span>12 fatias · 15 cm</span><b>R$ 95,00</b></label>
+                <label><input type="radio" name="extra-tamanho" value="1,5 kg" data-detail="17 fatias · 15 cm" data-price="R$ 140,00"><strong>1,5 kg</strong><span>17 fatias · 15 cm</span><b>R$ 140,00</b></label>
+                <label><input type="radio" name="extra-tamanho" value="2 kg" data-detail="22 fatias · 20 cm" data-price="R$ 180,00"><strong>2 kg</strong><span>22 fatias · 20 cm</span><b>R$ 180,00</b></label>
+                <label><input type="radio" name="extra-tamanho" value="2,5 kg" data-detail="27 fatias · 20 cm" data-price="R$ 225,00"><strong>2,5 kg</strong><span>27 fatias · 20 cm</span><b>R$ 225,00</b></label>
+                <label><input type="radio" name="extra-tamanho" value="3 kg" data-detail="32 fatias · 30 cm" data-price="R$ 270,00"><strong>3 kg</strong><span>32 fatias · 30 cm</span><b>R$ 270,00</b></label>
+                <label><input type="radio" name="extra-tamanho" value="3,5 kg" data-detail="37 fatias · 30 cm" data-price="R$ 315,00"><strong>3,5 kg</strong><span>37 fatias · 30 cm</span><b>R$ 315,00</b></label>
+                <label><input type="radio" name="extra-tamanho" value="4 kg" data-detail="42 fatias · 35 cm" data-price="R$ 360,00"><strong>4 kg</strong><span>42 fatias · 35 cm</span><b>R$ 360,00</b></label>
+                <label><input type="radio" name="extra-tamanho" value="4,5 kg" data-detail="47 fatias · 35 cm" data-price="R$ 405,00"><strong>4,5 kg</strong><span>47 fatias · 35 cm</span><b>R$ 405,00</b></label>
               </div>
               <p class="menu-note">Topo personalizado: <strong>R$ 25,00</strong></p>
             </article>
 
             <article class="menu-panel">
               <h4><i class="fas fa-layer-group"></i> Massas</h4>
-              <div class="tag-list">
-                <span>Branca</span>
-                <span>Chocolate</span>
+              <p class="menu-helper">Escolha 1 opção de massa</p>
+              <div class="tag-list tag-list--choice" data-choice-group="extra-massa">
+                <label><input type="radio" name="extra-massa" value="Branca" checked><span>Branca</span></label>
+                <label><input type="radio" name="extra-massa" value="Chocolate"><span>Chocolate</span></label>
               </div>
             </article>
 
             <article class="menu-panel">
               <h4><i class="fas fa-fill-drip"></i> Recheios</h4>
-              <div class="tag-list tag-list--compact">
-                <span>Brigadeiro</span>
-                <span>Brigadeiro branco</span>
-                <span>Brigadeiro & morango</span>
-                <span>Doce de leite</span>
-                <span>Doce de leite/abacaxi</span>
-                <span>Paçoca</span>
-                <span>Coco</span>
-                <span>Ninho</span>
-                <span>Caramelo salgado</span>
-                <span>Creme de avelã</span>
-                <span>Ouro Branco</span>
-                <span>Pistache</span>
-                <span>Ferrero</span>
+              <p class="menu-helper">Escolha até 2 opções de recheio</p>
+              <div class="tag-list tag-list--compact tag-list--choice" data-choice-group="extra-recheio">
+                <label><input type="checkbox" name="extra-recheio" value="Brigadeiro" checked><span>Brigadeiro</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Brigadeiro branco"><span>Brigadeiro branco</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Brigadeiro & morango"><span>Brigadeiro & morango</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Doce de leite"><span>Doce de leite</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Doce de leite/abacaxi"><span>Doce de leite/abacaxi</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Paçoca"><span>Paçoca</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Coco"><span>Coco</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Ninho"><span>Ninho</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Caramelo salgado"><span>Caramelo salgado</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Creme de avelã"><span>Creme de avelã</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Ouro Branco"><span>Ouro Branco</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Pistache"><span>Pistache</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Ferrero"><span>Ferrero</span></label>
               </div>
             </article>
 
             <article class="menu-panel">
               <h4><i class="fas fa-candy-cane"></i> Bombons</h4>
               <ul class="price-list">
-                <li><span>Brigadeiro</span><strong>R$ 190,00</strong></li>
-                <li><span>Maracujá</span><strong>R$ 190,00</strong></li>
-                <li><span>Leite em pó</span><strong>R$ 190,00</strong></li>
-                <li><span>Coco</span><strong>R$ 190,00</strong></li>
-                <li><span>Morango</span><strong>R$ 190,00</strong></li>
-                <li><span>Nutella</span><strong>R$ 230,00</strong></li>
+                <li><label><input type="checkbox" name="extra-bombom" value="Brigadeiro"><span>Brigadeiro</span><strong>R$ 190,00</strong></label></li>
+                <li><label><input type="checkbox" name="extra-bombom" value="Maracujá"><span>Maracujá</span><strong>R$ 190,00</strong></label></li>
+                <li><label><input type="checkbox" name="extra-bombom" value="Leite em pó"><span>Leite em pó</span><strong>R$ 190,00</strong></label></li>
+                <li><label><input type="checkbox" name="extra-bombom" value="Coco"><span>Coco</span><strong>R$ 190,00</strong></label></li>
+                <li><label><input type="checkbox" name="extra-bombom" value="Morango"><span>Morango</span><strong>R$ 190,00</strong></label></li>
+                <li><label><input type="checkbox" name="extra-bombom" value="Nutella"><span>Nutella</span><strong>R$ 230,00</strong></label></li>
               </ul>
             </article>
 
             <article class="menu-panel">
               <h4><i class="fas fa-cookie-bite"></i> Docinhos</h4>
               <ul class="price-list">
-                <li><span>Brigadeiro</span><strong>R$ 130,00</strong></li>
-                <li><span>Beijinho</span><strong>R$ 130,00</strong></li>
-                <li><span>Leite em pó</span><strong>R$ 130,00</strong></li>
-                <li><span>Ele/Ela</span><strong>R$ 130,00</strong></li>
-                <li><span>Morango</span><strong>R$ 130,00</strong></li>
-                <li><span>Amendoim</span><strong>R$ 130,00</strong></li>
+                <li><label><input type="checkbox" name="extra-docinho" value="Brigadeiro"><span>Brigadeiro</span><strong>R$ 130,00</strong></label></li>
+                <li><label><input type="checkbox" name="extra-docinho" value="Beijinho"><span>Beijinho</span><strong>R$ 130,00</strong></label></li>
+                <li><label><input type="checkbox" name="extra-docinho" value="Leite em pó"><span>Leite em pó</span><strong>R$ 130,00</strong></label></li>
+                <li><label><input type="checkbox" name="extra-docinho" value="Ele/Ela"><span>Ele/Ela</span><strong>R$ 130,00</strong></label></li>
+                <li><label><input type="checkbox" name="extra-docinho" value="Morango"><span>Morango</span><strong>R$ 130,00</strong></label></li>
+                <li><label><input type="checkbox" name="extra-docinho" value="Amendoim"><span>Amendoim</span><strong>R$ 130,00</strong></label></li>
               </ul>
             </article>
           </div>
@@ -408,8 +465,44 @@
           <span class="lightbox__category" id="lightbox-category"></span>
           <h3 class="lightbox__title" id="lightbox-title"></h3>
           <p class="lightbox__price" id="lightbox-price"></p>
+          <p class="lightbox__desc" id="lightbox-desc"></p>
+
+          <form class="order-options" id="order-options">
+            <label class="order-field">
+              Tipo de massa
+              <select id="order-massa">
+                <option value="Branca">Branca</option>
+                <option value="Chocolate">Chocolate</option>
+              </select>
+            </label>
+
+            <fieldset class="flavor-field">
+              <legend>Sabor / recheio <small>escolha até 2</small></legend>
+              <div class="flavor-options" id="order-sabor">
+                <label><input type="checkbox" value="Brigadeiro" checked><span>Brigadeiro</span></label>
+                <label><input type="checkbox" value="Brigadeiro branco"><span>Brigadeiro branco</span></label>
+                <label><input type="checkbox" value="Brigadeiro & morango"><span>Brigadeiro & morango</span></label>
+                <label><input type="checkbox" value="Doce de leite"><span>Doce de leite</span></label>
+                <label><input type="checkbox" value="Doce de leite/abacaxi"><span>Doce de leite/abacaxi</span></label>
+                <label><input type="checkbox" value="Paçoca"><span>Paçoca</span></label>
+                <label><input type="checkbox" value="Coco"><span>Coco</span></label>
+                <label><input type="checkbox" value="Ninho"><span>Ninho</span></label>
+                <label><input type="checkbox" value="Caramelo salgado"><span>Caramelo salgado</span></label>
+                <label><input type="checkbox" value="Creme de avelã"><span>Creme de avelã</span></label>
+                <label><input type="checkbox" value="Ouro Branco"><span>Ouro Branco</span></label>
+                <label><input type="checkbox" value="Pistache"><span>Pistache</span></label>
+                <label><input type="checkbox" value="Ferrero"><span>Ferrero</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset class="size-field">
+              <legend>Tamanho e fatias <small>toque em uma opção</small></legend>
+              <div class="size-options" id="order-tamanho"></div>
+            </fieldset>
+          </form>
+
           <a href="#" class="btn btn--primary btn--full" id="lightbox-order" target="_blank" rel="noopener">
-            <i class="fab fa-whatsapp"></i> Encomendar Bolo
+            <i class="fab fa-whatsapp"></i> Encomendar com essas opções
           </a>
         </div>
       </div>
@@ -525,7 +618,7 @@
               <div class="contato__icon"><i class="fas fa-clock"></i></div>
               <div>
                 <h4>Pronta Entrega</h4>
-                <p id="contact-hours">Bolos de pronta entrega disponíveis diariamente</p>
+                <p id="contact-hours">Bolos de pronta entrega disponíveis diariamente. Consulte os recheios do dia.</p>
               </div>
             </div>
           </div>
