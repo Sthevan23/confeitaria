@@ -243,6 +243,14 @@ function initProducts() {
     btn.href = `https://wa.me/${settings.whatsapp}?text=${msg}`;
   });
 
+  const menuWhatsapp = document.getElementById('menu-whatsapp');
+  if (menuWhatsapp) {
+    const msg = encodeURIComponent('Olá! Vi a tabela de opções no site e gostaria de fazer um pedido.');
+    menuWhatsapp.href = `https://wa.me/${settings.whatsapp}?text=${msg}`;
+    menuWhatsapp.target = '_blank';
+    menuWhatsapp.rel = 'noopener';
+  }
+
   function filterProducts(category = 'all') {
     cards.forEach(card => {
       const match = category === 'all' || card.dataset.category === category;

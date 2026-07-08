@@ -4,7 +4,7 @@
  */
 const Storage = (() => {
   const KEY = 'confeitaria_premium_data';
-  const DATA_VERSION = 9;
+  const DATA_VERSION = 10;
   const REMOVED_CATEGORIES = ['cat4', 'cat5', 'cat6'];
   const REMOVED_PRODUCTS = ['p4', 'p5', 'p6', 'p10', 'p11', 'p12'];
   const FOTOS = 'fotos_bolos';
@@ -48,7 +48,9 @@ const Storage = (() => {
       { id: 'p1', name: 'Bolo Elegante com Flores', description: 'Bolo branco com textura rústica, flores naturais, pérolas comestíveis e monograma dourado personalizado.', price: 189.90, categoryId: 'cat3', image: `${FOTOS}/bolo-elegante-flores.png`, featured: true },
       { id: 'p7', name: 'Bolo Matelassê com Brigadeiros', description: 'Acabamento matelassê em buttercream, laço de cetim e brigadeiros gourmet no topo.', price: 169.90, categoryId: 'cat3', image: `${FOTOS}/bolo-matelasse-brigadeiro.png`, featured: true },
       { id: 'p9', name: 'Bolo Listras Pastel', description: 'Bolo alto com listras coloridas, perlas comestíveis e acabamento em rosetas de buttercream.', price: 149.90, categoryId: 'cat3', image: `${FOTOS}/bolo-listras-pastel.png`, featured: true },
-      { id: 'p2', name: 'Bentô Cake Personalizado', description: 'Mini bolo artesanal com desenho exclusivo e frase personalizada. Perfeito para presentear.', price: 45.00, categoryId: 'cat2', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
+      { id: 'p2', name: 'Bento Cake na Marmita', description: 'Bento cake personalizado na marmita. Sugestão: 2 a 3 fatias, peso aproximado de 300g.', price: 40.00, categoryId: 'cat2', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
+      { id: 'p14', name: 'Kit Bento + 6 Doces', description: 'Bento cake personalizado acompanhado de 6 docinhos sortidos.', price: 55.00, categoryId: 'cat2', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
+      { id: 'p15', name: 'Kit Bento Cake + 16 Doces', description: 'Kit especial com bento cake personalizado e 16 docinhos para presentear ou comemorar.', price: 65.00, categoryId: 'cat2', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
       { id: 'p8', name: 'Bolo Temático Bob Esponja', description: 'Bolo personalizado com tema Bob Esponja, topo com nome e idade. Ideal para festas infantis.', price: 199.90, categoryId: 'cat1', image: `${FOTOS}/bolo-bob-esponja.png`, featured: true },
       { id: 'p10', name: 'Bolo Mesversário Super Mario', description: 'Bolo temático Super Mario para mesversário, com nome personalizado e detalhes em pasta.', price: 129.90, categoryId: 'cat1', image: `${FOTOS}/bolo-mario-mesversario.png`, featured: true },
       { id: 'p11', name: 'Bolo Temático Barril', description: 'Bolo personalizado em formato de barril com tema exclusivo, ideal para festas adultas.', price: 249.90, categoryId: 'cat1', image: `${FOTOS}/bolo-barril-heineken.png`, featured: true }
@@ -168,6 +170,11 @@ const Storage = (() => {
 
     if (currentVersion < 9) {
       data.products = defaultData.products;
+    }
+
+    if (currentVersion < 10) {
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
     }
 
     if (currentVersion < DATA_VERSION) {
