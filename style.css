@@ -769,6 +769,97 @@ em {
   line-height: 1.55;
 }
 
+.products-group-title--gallery {
+  background: linear-gradient(135deg, rgba(93, 64, 55, 0.12), rgba(233, 30, 99, 0.14));
+}
+
+.menu-gallery-showcase {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.menu-gallery-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--branco);
+  border: 1px solid rgba(233, 30, 99, 0.12);
+  box-shadow: 0 14px 34px rgba(93, 64, 55, 0.1);
+  cursor: pointer;
+  transition: var(--transicao);
+}
+
+.menu-gallery-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--sombra-hover);
+}
+
+.menu-gallery-card__image {
+  position: relative;
+  height: 285px;
+  overflow: hidden;
+  background: var(--creme);
+}
+
+.menu-gallery-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  transition: transform 0.6s ease;
+}
+
+.menu-gallery-card:hover .menu-gallery-card__image img {
+  transform: scale(1.08);
+}
+
+.menu-gallery-card__image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(93, 64, 55, 0.58));
+}
+
+.menu-gallery-card__image span {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 1;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--rosa-escuro);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.menu-gallery-card__body {
+  padding: 16px;
+}
+
+.menu-gallery-card__body h3 {
+  margin-bottom: 6px;
+  color: var(--marrom-escuro);
+  font-family: var(--fonte-titulo);
+  font-size: 1.2rem;
+}
+
+.menu-gallery-card__body p {
+  margin-bottom: 14px;
+  color: var(--texto-claro);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.menu-gallery-card__body .btn {
+  width: 100%;
+  justify-content: center;
+}
+
 .product-card {
   background: var(--branco);
   border-radius: var(--radius-lg);
@@ -1181,7 +1272,7 @@ em {
 .galeria__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: minmax(260px, auto);
+  grid-auto-rows: 260px;
   gap: 16px;
 }
 
@@ -1192,10 +1283,8 @@ em {
   cursor: pointer;
   background: var(--creme);
   min-height: 260px;
+  height: 260px;
 }
-
-.galeria__item:nth-child(1) { grid-column: span 2; grid-row: span 2; min-height: 100%; }
-.galeria__item:nth-child(5) { grid-column: span 2; }
 
 .galeria__item img {
   width: 100%;
@@ -2438,18 +2527,13 @@ em {
   .galeria__grid {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
-    grid-auto-rows: minmax(150px, auto);
+    grid-auto-rows: 150px;
   }
 
   .galeria__item,
   .galeria__item img {
     min-height: 150px;
-  }
-
-  .galeria__item:nth-child(1),
-  .galeria__item:nth-child(5) {
-    grid-column: span 1;
-    grid-row: span 1;
+    height: 150px;
   }
 
   /* Lightbox mobile */
@@ -2990,6 +3074,7 @@ em {
   .galeria__item,
   .galeria__item img {
     min-height: 140px;
+    height: 140px;
   }
 
   .contato__item {
@@ -3229,6 +3314,46 @@ em {
     font-size: 0.8rem;
   }
 
+  .menu-gallery-showcase {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .menu-gallery-card,
+  .menu-gallery-card:nth-child(1),
+  .menu-gallery-card:nth-child(8n) {
+    grid-column: span 1;
+  }
+
+  .menu-gallery-card__image {
+    height: clamp(160px, 48vw, 220px);
+  }
+
+  .menu-gallery-card__image span {
+    left: 8px;
+    bottom: 8px;
+    padding: 5px 8px;
+    font-size: 0.62rem;
+  }
+
+  .menu-gallery-card__body {
+    padding: 10px;
+  }
+
+  .menu-gallery-card__body h3 {
+    font-size: 0.98rem;
+  }
+
+  .menu-gallery-card__body p {
+    display: none;
+  }
+
+  .menu-gallery-card__body .btn {
+    min-height: 34px;
+    padding: 8px 6px;
+    font-size: 0.68rem;
+  }
+
   .product-card__img {
     height: clamp(178px, 54vw, 230px);
   }
@@ -3271,6 +3396,7 @@ em {
   .galeria__item,
   .galeria__item img {
     min-height: 128px;
+    height: 128px;
   }
 
   .review-card {

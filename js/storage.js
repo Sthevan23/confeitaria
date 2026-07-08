@@ -4,8 +4,8 @@
  */
 const Storage = (() => {
   const KEY = 'confeitaria_premium_data';
-  const DATA_VERSION = 25;
-  const REMOVED_CATEGORIES = ['cat4', 'cat5', 'cat6'];
+  const DATA_VERSION = 36;
+  const REMOVED_CATEGORIES = [];
   const REMOVED_PRODUCTS = ['p4', 'p5', 'p6', 'p10', 'p11', 'p12'];
   const FOTOS = 'fotos_bolos';
   const AMOSTRA = `${FOTOS}/bolos_amostra`;
@@ -50,7 +50,7 @@ const Storage = (() => {
       name: 'Gimarry Bolos e Doces',
       tagline: 'Não é só sobre bolos e sim memórias afetivas',
       logo: '',
-      banner: `${FOTOS}/bolo-elegante-flores.png`,
+      banner: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.11.jpeg`,
       sobreImage: `${FOTOS}/foto_da_loja.jpeg`,
       whatsapp: '5537988554691',
       instagram: 'https://www.instagram.com/confeitosgimarry/',
@@ -79,33 +79,27 @@ const Storage = (() => {
       { id: 'cat1', name: 'Bolos Personalizados', slug: 'bolos' },
       { id: 'cat2', name: 'Doces', slug: 'doces' },
       { id: 'cat3', name: 'Pronta Entrega', slug: 'pronta-entrega' },
-      { id: 'cat4', name: 'Bento Cake', slug: 'bento-cake' }
+      { id: 'cat4', name: 'Bento Cake', slug: 'bento-cake' },
+      { id: 'cat5', name: 'Bolos Destaques', slug: 'bolos-destaques' },
+      { id: 'cat6', name: 'Kit Bento e Doces', slug: 'kit-bento-doces' }
     ],
     products: [
-      { id: 'p1', name: 'Bolo Elegante com Flores', description: 'Bolo branco com textura rústica, flores naturais, pérolas comestíveis e monograma dourado personalizado.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-elegante-flores.png`, featured: true },
-      { id: 'p7', name: 'Bolo Matelassê com Brigadeiros', description: 'Acabamento matelassê em buttercream, laço de cetim e brigadeiros gourmet no topo.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-matelasse-brigadeiro.png`, featured: true },
-      { id: 'p9', name: 'Bolo Listras Pastel', description: 'Bolo alto com listras coloridas, perlas comestíveis e acabamento em rosetas de buttercream.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-listras-pastel.png`, featured: true },
-      { id: 'p16', name: 'Bolo Parabéns', description: 'Bolo da Linha Celebre, ideal para comemorações rápidas. Serve aproximadamente 7 fatias.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`, featured: true },
-      { id: 'p17', name: 'Bolo Comemore', description: 'Bolo da Linha Celebre com acabamento especial. Serve aproximadamente 9 fatias.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`, featured: true },
-      { id: 'p18', name: 'Bolo Celebrar', description: 'Bolo da Linha Celebre para celebrações especiais. Serve aproximadamente 13 fatias.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (2).jpeg`, featured: true },
+      { id: 'p1', name: 'Bolo Vintage Happy Birthday', description: 'Bolo branco estilo vintage com laços pretos, corações e mensagem Happy Birthday.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.11.jpeg`, featured: true },
+      { id: 'p7', name: 'Bolo Lilás Happy Birthday', description: 'Bolo lilás com acabamento delicado, brilho e topo Happy Birthday.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.12.jpeg`, featured: true },
+      { id: 'p9', name: 'Bolo Infantil Hello Kitty', description: 'Bolo infantil rosa e branco com tema Hello Kitty, nome e idade personalizados.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.13.jpeg`, featured: true },
       { id: 'p19', name: 'Bolo Brigadeiro com Morango', description: 'Bolo de pronta entrega com cobertura de chocolate, brigadeiros e morangos frescos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.36.jpeg`, featured: false },
-      { id: 'p20', name: 'Kit Bento Amor + Doces', description: 'Kit de pronta entrega com bento personalizado e docinhos sortidos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`, featured: false },
       { id: 'p21', name: 'Bolo Ninho com Morango', description: 'Bolo de pronta entrega com acabamento branco, creme ninho e morangos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (2).jpeg`, featured: false },
       { id: 'p22', name: 'Bolo Dois Amores com Morango', description: 'Bolo de pronta entrega com brigadeiros, leite ninho e morangos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (3).jpeg`, featured: false },
       { id: 'p23', name: 'Bolo Brigadeiro Chocolate', description: 'Bolo de pronta entrega com acabamento em chocolate e brigadeiros no topo.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38.jpeg`, featured: false },
       { id: 'p24', name: 'Bolo Ninho Cremoso', description: 'Bolo de pronta entrega com cobertura branca e docinhos de leite ninho.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (1).jpeg`, featured: false },
-      { id: 'p25', name: 'Kit Bento + Brigadeiros', description: 'Kit de pronta entrega com bento personalizado e brigadeiros.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (2).jpeg`, featured: false },
-      { id: 'p26', name: 'Bento Cake Personalizado', description: 'Bento cake de pronta entrega na marmita, ideal para presentear.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`, featured: false },
+      { id: 'p26', name: 'Bento Cake Personalizado', description: 'Bento cake de pronta entrega na marmita, ideal para presentear.', price: 40, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`, featured: false },
       { id: 'p27', name: 'Bolo Chocolate com Morango', description: 'Bolo de pronta entrega com brigadeiros e morangos no topo.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (4).jpeg`, featured: false },
       { id: 'p28', name: 'Bolo Brigadeiro com Amendoim', description: 'Bolo de pronta entrega com chocolate e brigadeiros de amendoim.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.39.jpeg`, featured: false },
-      { id: 'p2', name: 'Bolo Individual', description: 'Modelo individual de pronta entrega. Consulte os recheios disponíveis do dia.', price: 0, categoryId: 'cat3', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
-      { id: 'p14', name: 'Kit com 6 Docinhos', description: 'Bolo individual acompanhado de 6 docinhos. Consulte disponibilidade e recheios do dia.', price: 0, categoryId: 'cat3', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
-      { id: 'p15', name: 'Kit com 16 Doces', description: 'Kit especial com bolo individual e 16 doces para presentear ou comemorar.', price: 0, categoryId: 'cat3', image: `${FOTOS}/bento-cake-plantao.png`, featured: true },
-      { id: 'p8', name: 'Bolo Temático Bob Esponja', description: 'Bolo personalizado com tema Bob Esponja, topo com nome e idade. Ideal para festas infantis.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-bob-esponja.png`, featured: true },
-      { id: 'p10', name: 'Bolo Mesversário Super Mario', description: 'Bolo temático Super Mario para mesversário, com nome personalizado e detalhes em pasta.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-mario-mesversario.png`, featured: true },
-      { id: 'p11', name: 'Bolo Temático Barril', description: 'Bolo personalizado em formato de barril com tema exclusivo, ideal para festas adultas.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-barril-heineken.png`, featured: true },
-      { id: 'p29', name: 'Bolo Happy Birthday', description: 'Bolo personalizado com acabamento branco, detalhes em vermelho e topo Happy Birthday.', price: 0, categoryId: 'cat1', image: `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37.jpeg`, featured: false },
-      { id: 'p30', name: 'Bolo Cereja Personalizado', description: 'Bolo personalizado com decoração vermelha, laços verdes e mensagem especial no topo.', price: 0, categoryId: 'cat1', image: `${FOTOS}/WhatsApp Image 2026-07-08 at 08.58.37 (5).jpeg`, featured: false },
+      { id: 'p8', name: 'Bolo Mesversário Maçã', description: 'Bolo de mesversário com mini maçãs e escrita personalizada no topo.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.14.jpeg`, featured: true },
+      { id: 'p10', name: 'Bolo Vintage com Laços', description: 'Bolo branco estilo vintage com bicos trabalhados e laços rosa.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.15.jpeg`, featured: true },
+      { id: 'p11', name: 'Bolo Temático Rei Leão', description: 'Bolo infantil com tema Rei Leão, nome e idade personalizados.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.16.jpeg`, featured: true },
+      { id: 'p29', name: 'Bolo Temático Gatinha', description: 'Bolo em dois andares com tema de gatinha, nome e idade personalizados.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.10.04.jpeg`, featured: false },
+      { id: 'p30', name: 'Bolo Vintage com Laços Pretos', description: 'Bolo branco decorado com laços pretos, corações e acabamento delicado.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.10.05.jpeg`, featured: false },
       { id: 'p31', name: 'Bento Cake com Frase', description: 'Bento cake personalizado para escrever uma frase especial no topo.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27.jpeg`, featured: false },
       { id: 'p32', name: 'Bento Cake Romântico', description: 'Bento cake com frase personalizada para presentear com carinho.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (1).jpeg`, featured: false },
       { id: 'p33', name: 'Bento Cake Divertido', description: 'Bento cake com desenho e frase divertida escolhida por você.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (2).jpeg`, featured: false },
@@ -116,7 +110,18 @@ const Storage = (() => {
       { id: 'p38', name: 'Bento Cake Especial', description: 'Bento cake com decoração e mensagem personalizada.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (2).jpeg`, featured: false },
       { id: 'p39', name: 'Bento Cake Fofo', description: 'Bento cake com desenho simples e frase escolhida pelo cliente.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (3).jpeg`, featured: false },
       { id: 'p40', name: 'Bento Cake Criativo', description: 'Bento cake personalizado para frases engraçadas ou especiais.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (4).jpeg`, featured: false },
-      { id: 'p41', name: 'Bento Cake Surpresa', description: 'Bento cake para surpresa com mensagem personalizada no topo.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.29.jpeg`, featured: false }
+      { id: 'p41', name: 'Bento Cake Surpresa', description: 'Bento cake para surpresa com mensagem personalizada no topo.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.29.jpeg`, featured: false },
+      { id: 'p42', name: 'Bolo Destaque Branca de Neve', description: 'Bolo decorado em dois andares com tema Branca de Neve, flores, borboletas e topo personalizado.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.11.jpeg`, featured: false },
+      { id: 'p43', name: 'Bolo Destaque Floral', description: 'Modelo de bolo destaque para festas especiais, com acabamento delicado e decoração personalizada.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.41.jpeg`, featured: false },
+      { id: 'p44', name: 'Bolo Destaque Especial', description: 'Bolo personalizado de destaque para aniversários e comemorações marcantes.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.58.57.jpeg`, featured: false },
+      { id: 'p45', name: 'Bolo Destaque Encantado', description: 'Bolo decorado com detalhes especiais para uma mesa de festa inesquecível.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.55.35.jpeg`, featured: false },
+      { id: 'p46', name: 'Bolo Destaque Luxo', description: 'Modelo de bolo personalizado com acabamento elegante e presença marcante.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.58.03.jpeg`, featured: false },
+      { id: 'p47', name: 'Bolo Destaque Festa', description: 'Bolo de destaque para festas, feito sob encomenda com tema e cores personalizados.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.55.jpeg`, featured: false },
+      { id: 'p48', name: 'Bolo Destaque Delicado', description: 'Bolo personalizado com decoração delicada para comemorações especiais.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.57.09.jpeg`, featured: false },
+      { id: 'p49', name: 'Bolo Destaque Premium', description: 'Bolo especial da linha de destaques para pedidos personalizados.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.57.29.jpeg`, featured: false },
+      { id: 'p50', name: 'Bento Cake na Marmita', description: 'Bento cake individual na marmita. Sugestão: 2 a 3 fatias, peso aproximado de 300g.', price: 40, categoryId: 'cat6', image: `${FOTOS}/bolos_bentocake/bento_kits/Captura de tela 2026-07-08 150756.png`, featured: false },
+      { id: 'p51', name: 'Kit Bento + 6 Doces', description: 'Kit com bento cake personalizado acompanhado de 6 docinhos sortidos.', price: 55, categoryId: 'cat6', image: `${FOTOS}/bolos_bentocake/bento_kits/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`, featured: false },
+      { id: 'p52', name: 'Kit Bento Cake + 16 Doces', description: 'Kit com bento cake personalizado e 16 docinhos, ideal para presentear ou comemorar.', price: 65, categoryId: 'cat6', image: `${FOTOS}/bolos_bentocake/bento_kits/WhatsApp Image 2026-07-08 at 09.07.44.jpeg`, featured: false }
     ],
     clients: [
       { id: 'c1', name: 'Ana Paula Silva', email: 'ana@email.com', phone: '11987654321', address: 'Bairro Manoel Valinhas' },
@@ -166,6 +171,17 @@ const Storage = (() => {
       `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (3).jpeg`,
       `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (4).jpeg`,
       `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.29.jpeg`,
+      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.11.jpeg`,
+      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.41.jpeg`,
+      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.58.57.jpeg`,
+      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.55.35.jpeg`,
+      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.58.03.jpeg`,
+      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.55.jpeg`,
+      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.57.09.jpeg`,
+      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.57.29.jpeg`,
+      `${FOTOS}/bolos_bentocake/bento_kits/WhatsApp Image 2026-07-08 at 09.07.44.jpeg`,
+      `${FOTOS}/bolos_bentocake/bento_kits/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`,
+      `${FOTOS}/bolos_bentocake/bento_kits/Captura de tela 2026-07-08 150756.png`,
       ...amostraGallery
     ]
   };
@@ -333,6 +349,68 @@ const Storage = (() => {
         ...data.settings,
         sobreImage: defaultData.settings.sobreImage
       };
+    }
+
+    if (currentVersion < 26) {
+      data.categories = defaultData.categories;
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 27) {
+      data.categories = defaultData.categories;
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 28) {
+      data.settings = {
+        ...data.settings,
+        banner: defaultData.settings.banner
+      };
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 29) {
+      data.categories = defaultData.categories;
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 30) {
+      data.categories = defaultData.categories;
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 31) {
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 32) {
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 33) {
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 34) {
+      data.products = (data.products || defaultData.products).filter(product => product.id !== 'p20');
+    }
+
+    if (currentVersion < 35) {
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
+    }
+
+    if (currentVersion < 36) {
+      data.products = defaultData.products;
+      data.gallery = defaultData.gallery;
     }
 
     if (currentVersion < DATA_VERSION) {

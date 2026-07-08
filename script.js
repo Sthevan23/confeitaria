@@ -246,10 +246,12 @@ function initProducts() {
   const settings = Storage.getSettings();
   const products = Storage.getProducts();
   const categoriesWithProducts = categories.filter(cat => products.some(product => product.categoryId === cat.id));
-  const categoryOrder = ['cat3', 'cat4', 'cat2', 'cat1'];
+  const categoryOrder = ['cat5', 'cat3', 'cat6', 'cat4', 'cat2', 'cat1'];
+  const galleryCategory = { id: 'gallery', name: 'Galeria' };
   const orderedCategories = [
     ...categoryOrder.map(id => categoriesWithProducts.find(cat => cat.id === id)).filter(Boolean),
-    ...categoriesWithProducts.filter(cat => !categoryOrder.includes(cat.id))
+    ...categoriesWithProducts.filter(cat => !categoryOrder.includes(cat.id)),
+    galleryCategory
   ];
 
   function getCategoryName(categoryId) {
@@ -266,6 +268,12 @@ function initProducts() {
     }
     if (product.categoryId === 'cat4') {
       return 'Bento Cake';
+    }
+    if (product.categoryId === 'cat5') {
+      return 'Destaque';
+    }
+    if (product.categoryId === 'cat6') {
+      return 'Kit Bento';
     }
     return product.featured ? 'Destaque' : '';
   }
@@ -311,7 +319,7 @@ function initProducts() {
     const badgeClass = product.categoryId === 'cat3' ? ' product-card__badge--ready' : '';
 
     return `
-      <article class="product-card reveal visible" data-category="${product.categoryId}">
+      <article class="product-card reveal visible" data-category="${product.categoryId}" data-product-id="${product.id}">
         <div class="${getImageClass(product)}">
           <img src="${product.image}" alt="${product.name}">
           ${badge ? `<span class="product-card__badge${badgeClass}">${badge}</span>` : ''}
@@ -329,14 +337,56 @@ function initProducts() {
     `;
   }
 
+  function renderGalleryShowcase() {
+    const galleryImages = Storage.getGallery()
+      .filter((src, index, items) => items.indexOf(src) === index)
+      .map((src, index) => ({
+        id: `gallery-${index + 1}`,
+        name: `Modelo de bolo ${index + 1}`,
+        description: 'Inspiração da galeria para você encomendar um bolo personalizado nesse estilo.',
+        price: 0,
+        categoryId: 'gallery',
+        categoryName: 'Galeria',
+        image: src
+      }));
+
+    if (!galleryImages.length) return '';
+
+    return `
+      <div class="products-group-title products-group-title--gallery reveal visible" data-category="gallery">
+        <span>Galeria</span>
+        <p>Inspirações de bolos já feitos para você escolher um modelo e personalizar do seu jeito.</p>
+      </div>
+      <div class="menu-gallery-showcase reveal visible" data-category="gallery">
+        ${galleryImages.map((item, index) => `
+          <article class="menu-gallery-card" data-gallery-product='${JSON.stringify(item)}'>
+            <div class="menu-gallery-card__image">
+              <img src="${item.image}" alt="${item.name}" decoding="async">
+              <span>Inspiração ${String(index + 1).padStart(2, '0')}</span>
+            </div>
+            <div class="menu-gallery-card__body">
+              <h3>${item.name}</h3>
+              <p>Toque para montar esse modelo com massa, recheio e tamanho.</p>
+              <button type="button" class="btn btn--primary btn--sm">Encomendar modelo</button>
+            </div>
+          </article>
+        `).join('')}
+      </div>
+    `;
+  }
+
   grid.innerHTML = orderedCategories.map(category => {
+    if (category.id === 'gallery') {
+      return renderGalleryShowcase();
+    }
+
     const categoryProducts = products.filter(product => product.categoryId === category.id);
     if (!categoryProducts.length) return '';
 
     return `
       <div class="products-group-title reveal visible" data-category="${category.id}">
         <span>${category.name}</span>
-        <p>${category.id === 'cat3' ? 'Bolos prontos, kits e opção de montar para retirar no mesmo dia.' : category.id === 'cat4' ? 'Escolha o modelo e monte a frase que vai no topo do seu Bento Cake.' : 'Opções feitas sob encomenda para momentos especiais.'}</p>
+        <p>${category.id === 'cat3' ? 'Bolos prontos, kits e opção de montar para retirar no mesmo dia.' : category.id === 'cat4' ? 'Escolha o modelo e monte a frase que vai no topo do seu Bento Cake.' : category.id === 'cat5' ? 'Modelos especiais para inspirar sua encomenda personalizada.' : category.id === 'cat6' ? 'Kits com bento cake personalizado e docinhos para presentear.' : 'Opções feitas sob encomenda para momentos especiais.'}</p>
       </div>
       ${category.id === 'cat3' ? renderReadyDeliveryInfo() : ''}
       ${categoryProducts.map(renderProductCard).join('')}
@@ -344,7 +394,7 @@ function initProducts() {
   }).join('');
 
   const cards = grid.querySelectorAll('.product-card');
-  const groupTitles = grid.querySelectorAll('.products-group-title, .ready-delivery-info');
+  const groupTitles = grid.querySelectorAll('.products-group-title, .ready-delivery-info, .menu-gallery-showcase');
 
   // Filtros de categoria
   orderedCategories.forEach(cat => {
@@ -380,7 +430,8 @@ function initProducts() {
       card.style.display = match ? '' : 'none';
     });
     groupTitles.forEach(title => {
-      const match = category === 'all' || title.dataset.category === category;
+      const isGallery = title.dataset.category === 'gallery';
+      const match = isGallery ? category === 'gallery' : category === 'all' || title.dataset.category === category;
       title.style.display = match ? '' : 'none';
     });
   }
@@ -399,6 +450,7 @@ function initProducts() {
     const image = card.querySelector('.product-card__img');
 
     return {
+      id: card.dataset.productId || '',
       name: card.querySelector('.product-card__name')?.textContent.trim() || image.querySelector('img')?.alt || 'Bolo',
       description: card.querySelector('.product-card__desc')?.textContent.trim() || '',
       price: parseFloat(orderButton?.dataset.price || '0'),
@@ -409,6 +461,13 @@ function initProducts() {
   }
 
   grid.addEventListener('click', (e) => {
+    const galleryCard = e.target.closest('.menu-gallery-card');
+    if (galleryCard) {
+      const product = JSON.parse(galleryCard.dataset.galleryProduct || '{}');
+      openProductConfigurator(product);
+      return;
+    }
+
     const orderButton = e.target.closest('.btn-pedir');
     const image = e.target.closest('.product-card__img');
     if (!orderButton && !image) return;
@@ -492,7 +551,7 @@ function initFeatured() {
     return `
       <div class="featured-card reveal visible">
         <div class="featured-card__img">
-          <img src="${p.image}" alt="${p.name}" loading="lazy" width="160" height="200">
+          <img src="${p.image}" alt="${p.name}" decoding="async" width="160" height="200">
         </div>
         <div class="featured-card__body">
           <span class="featured-card__rank">#${i + 1} Mais Vendido</span>
@@ -580,6 +639,7 @@ function initGallery() {
 
 /* --- Lightbox --- */
 let currentLightboxIndex = 0;
+const FIXED_BENTO_KIT_IDS = ['p26'];
 const ORDER_SIZES = [
   { label: 'Bolo Parabéns', detail: 'serve 7 fatias', price: 65 },
   { label: 'Bolo Comemore', detail: 'serve 9 fatias', price: 75 },
@@ -639,6 +699,11 @@ function fillSizeOptions(product) {
   const container = document.getElementById('order-tamanho');
   if (!container) return;
 
+  if (isFixedBentoKit(product)) {
+    container.innerHTML = '';
+    return;
+  }
+
   const selectedSize = getInitialSize(product);
   const sizeOptions = Number(product.price) > 0
     ? ORDER_SIZES
@@ -686,22 +751,73 @@ function getSelectedSize() {
 }
 
 function getSelectedFlavors() {
-  const checked = [...document.querySelectorAll('#order-sabor input:checked')].map(input => input.value);
+  const checked = [...document.querySelectorAll('#order-sabor input:checked:not(:disabled)')].map(input => input.value);
   return checked.length ? checked : ['Brigadeiro'];
 }
 
+function isFixedBentoKit(product = currentOrderProduct) {
+  return product?.categoryId === 'cat6' || FIXED_BENTO_KIT_IDS.includes(product?.id);
+}
+
+function getFlavorLimit() {
+  return isFixedBentoKit() ? 1 : 2;
+}
+
 function enforceFlavorLimit() {
-  const inputs = [...document.querySelectorAll('#order-sabor input')];
-  const checked = inputs.filter(input => input.checked);
-  const limitReached = checked.length >= 2;
+  const inputs = [...document.querySelectorAll('#order-sabor input:not(:disabled)')];
+  const limit = getFlavorLimit();
+  let checked = inputs.filter(input => input.checked);
+
+  if (limit === 1) {
+    if (checked.length > 1) {
+      checked.slice(0, -1).forEach(input => {
+        input.checked = false;
+      });
+      checked = inputs.filter(input => input.checked);
+    }
+
+    if (!checked.length && inputs.length) {
+      inputs[0].checked = true;
+    }
+
+    inputs.forEach(input => {
+      input.disabled = false;
+    });
+    return;
+  }
+
+  if (checked.length > limit) {
+    checked.slice(limit).forEach(input => {
+      input.checked = false;
+    });
+    checked = inputs.filter(input => input.checked);
+  }
+
+  const limitReached = checked.length >= limit;
 
   inputs.forEach(input => {
     input.disabled = limitReached && !input.checked;
   });
 }
 
+function configureFlavorOptions(product) {
+  const allowedKitFlavors = ['Brigadeiro', 'Ninho'];
+  const isKitBento = isFixedBentoKit(product);
+  const labels = [...document.querySelectorAll('#order-sabor label')];
+
+  labels.forEach(label => {
+    const input = label.querySelector('input');
+    if (!input) return;
+
+    const shouldShow = !isKitBento || allowedKitFlavors.includes(input.value);
+    label.style.display = shouldShow ? '' : 'none';
+    input.disabled = !shouldShow;
+    if (!shouldShow) input.checked = false;
+  });
+}
+
 function resetFlavorSelection() {
-  const inputs = [...document.querySelectorAll('#order-sabor input')];
+  const inputs = [...document.querySelectorAll('#order-sabor input:not(:disabled)')];
   inputs.forEach((input, index) => {
     input.checked = index === 0;
     input.disabled = false;
@@ -726,30 +842,39 @@ function updateOrderLink() {
   const massa = document.getElementById('order-massa')?.value || 'Branca';
   const sabores = getSelectedFlavors();
   const size = getSelectedSize();
-  const price = size?.price || currentOrderProduct.price || 0;
+  const isKitBento = isFixedBentoKit();
+  const price = isKitBento ? currentOrderProduct.price : size?.price || currentOrderProduct.price || 0;
   const priceText = Number(price) > 0 ? Storage.formatCurrency(price) : 'Consultar';
   const frase = document.getElementById('order-frase')?.value.trim() || '';
   const readyDeliveryText = currentOrderProduct.categoryName === 'Pronta Entrega'
-    ? '\nObservação: consulte a disponibilidade dos recheios de pronta entrega. Para montar e retirar no mesmo dia, pedido com no mínimo 40 min de antecedência.'
+    ? '\nConsulte a disponibilidade dos recheios de pronta entrega. Para montar e retirar no mesmo dia, pedido com no mínimo 40 min de antecedência.'
     : '';
-  const phraseText = currentOrderProduct.categoryId === 'cat4'
+  const phraseText = currentOrderProduct.categoryId === 'cat4' || isKitBento
     ? `\nFrase no Bento Cake: ${frase || 'Vou enviar/combinar a frase'}`
     : '';
   const imageUrl = getPublicAssetUrl(currentOrderProduct.image);
-  const imageText = imageUrl ? `\nFoto/modelo escolhido: ${imageUrl}` : '';
+  const imageText = imageUrl ? `\nFoto/modelo escolhido:\n${imageUrl}` : '';
 
   document.getElementById('lightbox-price').textContent = priceText;
 
   const waMsg = encodeURIComponent(
-    `Olá! Vi no site da ${settings.name} e gostaria de encomendar:\n` +
-    `Bolo: ${currentOrderProduct.name}\n` +
-    `Massa: ${massa}\n` +
-    `Sabor/recheio: ${sabores.join(' + ')}\n` +
-    `Tamanho: ${size?.label || 'A combinar'} (${size?.detail || 'fatias a combinar'})\n` +
-    `Valor: ${priceText}` +
-    imageText +
-    phraseText +
-    readyDeliveryText
+    `PEDIDO RECEBIDO - ${settings.name.toUpperCase()}\n\n` +
+    `ITENS DO PEDIDO:\n\n` +
+    `* ITEM: ${currentOrderProduct.name}\n` +
+    `  Tamanho/modelo: ${isKitBento ? currentOrderProduct.name : size?.label || 'A combinar'}\n` +
+    `  Fatias/detalhes: ${isKitBento ? 'Modelo com valor fixo' : size?.detail || 'A combinar'}\n` +
+    `  Massa: ${massa}\n` +
+    `  Recheio: ${sabores.join(' + ')}\n` +
+    `  Valor: ${priceText}\n` +
+    `--------------------------------\n\n` +
+    `MODELO ESCOLHIDO:${imageText}\n` +
+    `${phraseText ? `${phraseText}\n` : ''}` +
+    `--------------------------------\n` +
+    `TOTAL A PAGAR: ${priceText}\n` +
+    `--------------------------------\n\n` +
+    `${readyDeliveryText ? `OBSERVAÇÕES:\n${readyDeliveryText}\n\n` : ''}` +
+    `Aguardo confirmação de disponibilidade e pagamento.\n\n` +
+    `Obrigado!`
   );
 
   document.getElementById('lightbox-order').href = `https://wa.me/${settings.whatsapp}?text=${waMsg}`;
@@ -760,6 +885,7 @@ function openProductConfigurator(product, fallbackImage = '', shouldOpen = true,
   const image = fallbackImage || product.image || '';
 
   currentOrderProduct = {
+    id: product.id || '',
     name: product.name,
     description: product.description || '',
     price: product.price || 0,
@@ -776,10 +902,17 @@ function openProductConfigurator(product, fallbackImage = '', shouldOpen = true,
 
   const phraseField = document.getElementById('order-phrase-field');
   const phraseInput = document.getElementById('order-frase');
-  const isBentoCake = product.categoryId === 'cat4' || categoryName === 'Bento Cake';
+  const isBentoCake = product.categoryId === 'cat4' || isFixedBentoKit(product) || categoryName === 'Bento Cake';
   if (phraseField) phraseField.style.display = isBentoCake ? 'grid' : 'none';
   if (phraseInput) phraseInput.value = '';
 
+  const sizeField = document.querySelector('.size-field');
+  if (sizeField) sizeField.style.display = isFixedBentoKit(product) ? 'none' : '';
+
+  const flavorHint = document.querySelector('.flavor-field legend small');
+  if (flavorHint) flavorHint.textContent = isFixedBentoKit(product) ? 'escolha 1' : 'escolha até 2';
+
+  configureFlavorOptions(product);
   fillSizeOptions(product);
   resetFlavorSelection();
   updateOrderLink();
