@@ -352,7 +352,7 @@ function initProducts() {
     filterContainer.appendChild(btn);
   });
 
-  // Links WhatsApp nos botões Pedir
+  // Links de fallback; o clique abre o configurador antes de enviar ao WhatsApp.
   document.querySelectorAll('.btn-pedir').forEach(btn => {
     const name = btn.dataset.product;
     const price = Number(btn.dataset.price);
@@ -391,13 +391,11 @@ function initProducts() {
     filterProducts(e.target.dataset.category);
   });
 
-  grid.addEventListener('click', (e) => {
-    const image = e.target.closest('.product-card__img');
-    if (!image) return;
-
-    const card = image.closest('.product-card');
+  function getProductFromCard(card) {
     const orderButton = card.querySelector('.btn-pedir');
-    const product = {
+    const image = card.querySelector('.product-card__img');
+
+    return {
       name: card.querySelector('.product-card__name')?.textContent.trim() || image.querySelector('img')?.alt || 'Bolo',
       description: card.querySelector('.product-card__desc')?.textContent.trim() || '',
       price: parseFloat(orderButton?.dataset.price || '0'),
@@ -405,7 +403,18 @@ function initProducts() {
       categoryName: card.querySelector('.product-card__category')?.textContent.trim() || 'Cardápio',
       image: image.querySelector('img')?.getAttribute('src') || ''
     };
+  }
 
+  grid.addEventListener('click', (e) => {
+    const orderButton = e.target.closest('.btn-pedir');
+    const image = e.target.closest('.product-card__img');
+    if (!orderButton && !image) return;
+
+    e.preventDefault();
+    const card = (orderButton || image).closest('.product-card');
+    if (!card) return;
+
+    const product = getProductFromCard(card);
     openProductConfigurator(product);
   });
 
@@ -495,10 +504,13 @@ function initFeatured() {
   }).join('');
 
   grid.addEventListener('click', (e) => {
+    const orderButton = e.target.closest('.featured-card .btn');
     const image = e.target.closest('.featured-card__img');
-    if (!image) return;
+    if (!orderButton && !image) return;
 
-    const index = Array.from(grid.querySelectorAll('.featured-card__img')).indexOf(image);
+    e.preventDefault();
+    const card = (orderButton || image).closest('.featured-card');
+    const index = Array.from(grid.querySelectorAll('.featured-card')).indexOf(card);
     const product = featured[index];
     if (product) openProductConfigurator(product);
   });

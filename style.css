@@ -618,26 +618,33 @@ em {
 
 .sobre__image-badge {
   position: absolute;
-  bottom: 24px;
-  left: 24px;
-  right: 24px;
+  bottom: 20px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 48px);
   background: var(--rosa-escuro);
   color: var(--branco);
-  padding: 16px 20px;
-  border-radius: var(--radius);
+  padding: 10px 16px;
+  border-radius: 14px;
   text-align: center;
 }
 
 .sobre__image-badge strong {
-  display: block;
-  font-size: 1.4rem;
-  margin-bottom: 4px;
+  display: inline-flex;
+  font-size: 1rem;
+  margin-bottom: 0;
 }
 
 .sobre__image-badge a {
   color: var(--branco);
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition: var(--transicao);
+  white-space: nowrap;
 }
 
 .sobre__image-badge a:hover {
@@ -646,8 +653,8 @@ em {
 }
 
 .sobre__image-badge span {
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 .sobre__insta-link {
