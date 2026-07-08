@@ -3352,7 +3352,7 @@ em {
     height: auto;
     max-height: 94dvh;
     display: grid;
-    grid-template-rows: minmax(180px, 34dvh) 1fr;
+    grid-template-rows: minmax(150px, 30dvh) minmax(0, 1fr);
     border-radius: 22px 22px 0 0;
     overflow: hidden;
   }
@@ -3374,7 +3374,7 @@ em {
 
   .lightbox__info {
     min-height: 0;
-    padding: 14px 16px calc(16px + env(safe-area-inset-bottom));
+    padding: 14px 16px calc(22px + env(safe-area-inset-bottom));
     overflow-y: auto;
     justify-content: flex-start;
     -webkit-overflow-scrolling: touch;
@@ -3396,14 +3396,14 @@ em {
   }
 
   .lightbox__desc {
-    font-size: 0.82rem;
-    line-height: 1.45;
-    margin-bottom: 12px;
+    font-size: 0.8rem;
+    line-height: 1.38;
+    margin-bottom: 10px;
   }
 
   .order-options {
-    gap: 10px;
-    margin-bottom: 14px;
+    gap: 9px;
+    margin-bottom: 12px;
   }
 
   .order-options > label,
@@ -3423,7 +3423,7 @@ em {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;
-    max-height: 132px;
+    max-height: 124px;
     padding: 1px 2px 5px;
   }
 
@@ -3439,7 +3439,7 @@ em {
   .size-options {
     grid-template-columns: 1fr;
     gap: 7px;
-    max-height: 188px;
+    max-height: 146px;
     padding: 1px 3px 5px 1px;
   }
 
@@ -3467,14 +3467,20 @@ em {
   }
 
   .lightbox__info .btn--full {
-    position: sticky;
-    bottom: 0;
-    z-index: 1;
+    position: static;
+    width: 100%;
+    margin-top: 8px;
     min-height: 46px;
     padding: 12px 14px;
     border-radius: 999px;
     font-size: 0.88rem;
-    box-shadow: 0 -8px 22px rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 22px rgba(233, 30, 99, 0.22);
+  }
+
+  .whatsapp-float {
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    transform: translateZ(0);
   }
 
   .lightbox__close {

@@ -4,7 +4,7 @@
  */
 const Storage = (() => {
   const KEY = 'confeitaria_premium_data';
-  const DATA_VERSION = 16;
+  const DATA_VERSION = 18;
   const REMOVED_CATEGORIES = ['cat4', 'cat5', 'cat6'];
   const REMOVED_PRODUCTS = ['p4', 'p5', 'p6', 'p10', 'p11', 'p12'];
   const FOTOS = 'fotos_bolos';
@@ -33,7 +33,7 @@ const Storage = (() => {
         'Só tenho a agradecer cada cliente que confia no meu trabalho e a várias que estão comigo desde o começo ♥ ♥'
       ],
       sobreText1: 'A <strong>Gimarry Bolos e Doces</strong> é uma confeitaria artesanal dedicada a criar bolos que vão muito além do sabor — são memórias afetivas em forma de doce. Cada receita carrega dedicação, criatividade e amor.',
-      sobreText2: 'Trabalhamos com bolos personalizados, doces especiais e <strong>bolos de pronta entrega todos os dias</strong>. Você também pode montar seu bolo para retirar no mesmo dia, com pedido feito com no mínimo 4 horas de antecedência. Siga @confeitosgimarry no Instagram!',
+      sobreText2: 'Trabalhamos com bolos personalizados, doces especiais e <strong>bolos de pronta entrega todos os dias</strong>. Você também pode montar seu bolo para retirar no mesmo dia, com pedido feito com no mínimo 40 min de antecedência. Siga @confeitosgimarry no Instagram!',
     },
     auth: {
       email: 'admin@gimarry.com.br',
@@ -45,9 +45,9 @@ const Storage = (() => {
       { id: 'cat3', name: 'Pronta Entrega', slug: 'pronta-entrega' }
     ],
     products: [
-      { id: 'p1', name: 'Bolo Elegante com Flores', description: 'Bolo branco com textura rústica, flores naturais, pérolas comestíveis e monograma dourado personalizado.', price: 0, categoryId: 'cat3', image: `${FOTOS}/bolo-elegante-flores.png`, featured: true },
+      { id: 'p1', name: 'Bolo Elegante com Flores', description: 'Bolo branco com textura rústica, flores naturais, pérolas comestíveis e monograma dourado personalizado.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-elegante-flores.png`, featured: true },
       { id: 'p7', name: 'Bolo Matelassê com Brigadeiros', description: 'Acabamento matelassê em buttercream, laço de cetim e brigadeiros gourmet no topo.', price: 0, categoryId: 'cat3', image: `${FOTOS}/bolo-matelasse-brigadeiro.png`, featured: true },
-      { id: 'p9', name: 'Bolo Listras Pastel', description: 'Bolo alto com listras coloridas, perlas comestíveis e acabamento em rosetas de buttercream.', price: 0, categoryId: 'cat3', image: `${FOTOS}/bolo-listras-pastel.png`, featured: true },
+      { id: 'p9', name: 'Bolo Listras Pastel', description: 'Bolo alto com listras coloridas, perlas comestíveis e acabamento em rosetas de buttercream.', price: 0, categoryId: 'cat1', image: `${FOTOS}/bolo-listras-pastel.png`, featured: true },
       { id: 'p16', name: 'Bolo Parabéns', description: 'Bolo da Linha Celebre, ideal para comemorações rápidas. Serve aproximadamente 7 fatias.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`, featured: true },
       { id: 'p17', name: 'Bolo Comemore', description: 'Bolo da Linha Celebre com acabamento especial. Serve aproximadamente 9 fatias.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`, featured: true },
       { id: 'p18', name: 'Bolo Celebrar', description: 'Bolo da Linha Celebre para celebrações especiais. Serve aproximadamente 13 fatias.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (2).jpeg`, featured: true },
@@ -91,7 +91,7 @@ const Storage = (() => {
     ],
     faq: [
       { id: 'f1', question: 'Como faço meu pedido?', answer: 'Faça seu pedido pelo WhatsApp (link no Instagram @confeitosgimarry) ou pelo botão "Pedir Agora" aqui no site. Confirmamos disponibilidade e prazo na hora.' },
-      { id: 'f2', question: 'Vocês têm bolos de pronta entrega?', answer: 'Sim! Temos bolos prontos todos os dias, com sabores escolhidos pela confeitaria conforme a disponibilidade. Você também pode montar seu bolo para retirar no mesmo dia, fazendo o pedido com no mínimo 4 horas de antecedência.' },
+      { id: 'f2', question: 'Vocês têm bolos de pronta entrega?', answer: 'Sim! Temos bolos prontos todos os dias, com sabores escolhidos pela confeitaria conforme a disponibilidade. Você também pode montar seu bolo para retirar no mesmo dia, fazendo o pedido com no mínimo 40 min de antecedência.' },
       { id: 'f3', question: 'Vocês fazem bolos personalizados?', answer: 'Sim! Criamos bolos temáticos e personalizados para aniversários, mesversários e festas. Entre em contato com antecedência para encomendas especiais.' },
       { id: 'f4', question: 'Quais formas de pagamento aceitam?', answer: 'Aceitamos PIX, cartão de crédito/débito e dinheiro na entrega. Consulte as opções no momento do pedido.' },
       { id: 'f5', question: 'Onde vocês ficam?', answer: 'Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas. Atendemos por delivery e retirada — confirme disponibilidade pelo WhatsApp.' }
@@ -231,6 +231,15 @@ const Storage = (() => {
     }
 
     if (currentVersion < 16) {
+      data.products = defaultData.products;
+    }
+
+    if (currentVersion < 17) {
+      data.settings = { ...data.settings, sobreText2: defaultData.settings.sobreText2 };
+      data.faq = defaultData.faq;
+    }
+
+    if (currentVersion < 18) {
       data.products = defaultData.products;
     }
 

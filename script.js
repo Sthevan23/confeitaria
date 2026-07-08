@@ -291,7 +291,7 @@ function initProducts() {
         <article>
           <i class="fas fa-wand-magic-sparkles"></i>
           <h4>Monte o seu bolo</h4>
-          <p>Você pode montar seu bolo para retirar no mesmo dia. Pedido com no mínimo 4 horas de antecedência.</p>
+          <p>Você pode montar seu bolo para retirar no mesmo dia. Pedido com no mínimo 40 min de antecedência.</p>
         </article>
         <article>
           <i class="fas fa-gift"></i>
@@ -358,7 +358,7 @@ function initProducts() {
     const price = Number(btn.dataset.price);
     const priceText = price > 0 ? ` — ${Storage.formatCurrency(price)}` : ' — consultar valor e disponibilidade';
     const readyDeliveryText = btn.dataset.category === 'cat3'
-      ? '\nConsulte a disponibilidade dos recheios de pronta entrega. Se eu quiser montar para retirar hoje, sei que o pedido precisa ser feito com no mínimo 4 horas de antecedência.'
+      ? '\nConsulte a disponibilidade dos recheios de pronta entrega. Se eu quiser montar para retirar hoje, sei que o pedido precisa ser feito com no mínimo 40 min de antecedência.'
       : '';
     const msg = encodeURIComponent(`Olá! Vi no site da ${settings.name} e gostaria de pedir: ${name}${priceText}${readyDeliveryText}`);
     btn.href = `https://wa.me/${settings.whatsapp}?text=${msg}`;
@@ -690,7 +690,7 @@ function updateOrderLink() {
   const price = size?.price || currentOrderProduct.price || 0;
   const priceText = Number(price) > 0 ? Storage.formatCurrency(price) : 'Consultar';
   const readyDeliveryText = currentOrderProduct.categoryName === 'Pronta Entrega'
-    ? '\nObservação: consulte a disponibilidade dos recheios de pronta entrega. Para montar e retirar no mesmo dia, pedido com no mínimo 4 horas de antecedência.'
+    ? '\nObservação: consulte a disponibilidade dos recheios de pronta entrega. Para montar e retirar no mesmo dia, pedido com no mínimo 40 min de antecedência.'
     : '';
 
   document.getElementById('lightbox-price').textContent = priceText;
