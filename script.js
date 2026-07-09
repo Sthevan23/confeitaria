@@ -240,6 +240,7 @@ function initScrollReveal() {
 
 /* --- Produtos --- */
 function initProducts() {
+  const PRODUCTS_PER_PAGE = 6;
   const categories = Storage.getCategories();
   const filterContainer = document.getElementById('category-filter');
   const grid = document.getElementById('products-grid');
@@ -253,6 +254,7 @@ function initProducts() {
     ...categoriesWithProducts.filter(cat => !categoryOrder.includes(cat.id)),
     galleryCategory
   ];
+  let activeCategory = 'all';
 
   function getCategoryName(categoryId) {
     return categories.find(cat => cat.id === categoryId)?.name || 'Cardápio';
@@ -313,13 +315,26 @@ function initProducts() {
     `;
   }
 
-  function renderProductCard(product) {
+  function renderLoadMoreButton(categoryId, totalItems) {
+    if (totalItems <= PRODUCTS_PER_PAGE) return '';
+    const remaining = totalItems - PRODUCTS_PER_PAGE;
+    return `
+      <div class="products-load-more reveal visible" data-category="${categoryId}">
+        <button type="button" class="products-load-more__btn" data-category="${categoryId}" data-shown="${PRODUCTS_PER_PAGE}" data-total="${totalItems}">
+          Ver mais <span>(+${remaining})</span>
+        </button>
+      </div>
+    `;
+  }
+
+  function renderProductCard(product, index = 0) {
     const categoryName = getCategoryName(product.categoryId);
     const badge = getBadge(product);
     const badgeClass = product.categoryId === 'cat3' ? ' product-card__badge--ready' : '';
+    const hiddenClass = index >= PRODUCTS_PER_PAGE ? ' product-card--paginated-hidden' : '';
 
     return `
-      <article class="product-card reveal visible" data-category="${product.categoryId}" data-product-id="${product.id}">
+      <article class="product-card reveal visible${hiddenClass}" data-category="${product.categoryId}" data-product-id="${product.id}" data-index="${index}">
         <div class="${getImageClass(product)}">
           <img src="${product.image}" alt="${product.name}">
           ${badge ? `<span class="product-card__badge${badgeClass}">${badge}</span>` : ''}
@@ -359,7 +374,7 @@ function initProducts() {
       </div>
       <div class="menu-gallery-showcase reveal visible" data-category="gallery">
         ${galleryImages.map((item, index) => `
-          <article class="menu-gallery-card" data-gallery-product='${JSON.stringify(item)}'>
+          <article class="menu-gallery-card${index >= PRODUCTS_PER_PAGE ? ' menu-gallery-card--paginated-hidden' : ''}" data-gallery-product='${JSON.stringify(item)}' data-category="gallery" data-index="${index}">
             <div class="menu-gallery-card__image">
               <img src="${item.image}" alt="${item.name}" decoding="async">
               <span>Inspiração ${String(index + 1).padStart(2, '0')}</span>
@@ -372,6 +387,7 @@ function initProducts() {
           </article>
         `).join('')}
       </div>
+      ${renderLoadMoreButton('gallery', galleryImages.length)}
     `;
   }
 
@@ -389,12 +405,14 @@ function initProducts() {
         <p>${category.id === 'cat3' ? 'Bolos prontos, kits e opção de montar para retirar no mesmo dia.' : category.id === 'cat4' ? 'Escolha o modelo e monte a frase que vai no topo do seu Bento Cake.' : category.id === 'cat5' ? 'Modelos especiais para inspirar sua encomenda personalizada.' : category.id === 'cat6' ? 'Kits com bento cake personalizado e docinhos para presentear.' : 'Opções feitas sob encomenda para momentos especiais.'}</p>
       </div>
       ${category.id === 'cat3' ? renderReadyDeliveryInfo() : ''}
-      ${categoryProducts.map(renderProductCard).join('')}
+      ${categoryProducts.map((product, index) => renderProductCard(product, index)).join('')}
+      ${renderLoadMoreButton(category.id, categoryProducts.length)}
     `;
   }).join('');
 
   const cards = grid.querySelectorAll('.product-card');
-  const groupTitles = grid.querySelectorAll('.products-group-title, .ready-delivery-info, .menu-gallery-showcase');
+  const galleryCards = grid.querySelectorAll('.menu-gallery-card');
+  const groupTitles = grid.querySelectorAll('.products-group-title, .ready-delivery-info, .menu-gallery-showcase, .products-load-more');
 
   // Filtros de categoria
   orderedCategories.forEach(cat => {
@@ -425,15 +443,69 @@ function initProducts() {
   }
 
   function filterProducts(category = 'all') {
+    activeCategory = category;
+
     cards.forEach(card => {
-      const match = category === 'all' || card.dataset.category === category;
-      card.style.display = match ? '' : 'none';
+      const matchCategory = category === 'all' || card.dataset.category === category;
+      const matchPage = !card.classList.contains('product-card--paginated-hidden');
+      card.style.display = matchCategory && matchPage ? '' : 'none';
     });
+
+    galleryCards.forEach(card => {
+      const matchCategory = category === 'gallery';
+      const matchPage = !card.classList.contains('menu-gallery-card--paginated-hidden');
+      card.style.display = matchCategory && matchPage ? '' : 'none';
+    });
+
     groupTitles.forEach(title => {
       const isGallery = title.dataset.category === 'gallery';
       const match = isGallery ? category === 'gallery' : category === 'all' || title.dataset.category === category;
-      title.style.display = match ? '' : 'none';
+
+      if (!match) {
+        title.style.display = 'none';
+        return;
+      }
+
+      if (title.classList.contains('products-load-more')) {
+        const btn = title.querySelector('.products-load-more__btn');
+        const shown = Number(btn?.dataset.shown || 0);
+        const total = Number(btn?.dataset.total || 0);
+        title.style.display = shown < total ? '' : 'none';
+        return;
+      }
+
+      title.style.display = '';
     });
+  }
+
+  function revealMoreItems(categoryId) {
+    const btn = grid.querySelector(`.products-load-more__btn[data-category="${categoryId}"]`);
+    if (!btn) return;
+
+    const shown = Number(btn.dataset.shown);
+    const total = Number(btn.dataset.total);
+    const nextShown = Math.min(shown + PRODUCTS_PER_PAGE, total);
+    const isGallery = categoryId === 'gallery';
+    const items = isGallery
+      ? grid.querySelectorAll(`.menu-gallery-card[data-category="${categoryId}"]`)
+      : grid.querySelectorAll(`.product-card[data-category="${categoryId}"]`);
+
+    items.forEach((item, index) => {
+      if (index < nextShown) {
+        item.classList.remove(isGallery ? 'menu-gallery-card--paginated-hidden' : 'product-card--paginated-hidden');
+      }
+    });
+
+    btn.dataset.shown = String(nextShown);
+    const remaining = total - nextShown;
+
+    if (remaining > 0) {
+      btn.innerHTML = `Ver mais <span>(+${remaining})</span>`;
+    } else {
+      btn.closest('.products-load-more')?.remove();
+    }
+
+    filterProducts(activeCategory);
   }
 
   filterProducts();
@@ -443,6 +515,13 @@ function initProducts() {
     filterContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     e.target.classList.add('active');
     filterProducts(e.target.dataset.category);
+  });
+
+  grid.addEventListener('click', (e) => {
+    const loadMoreBtn = e.target.closest('.products-load-more__btn');
+    if (!loadMoreBtn) return;
+    e.preventDefault();
+    revealMoreItems(loadMoreBtn.dataset.category);
   });
 
   function getProductFromCard(card) {
@@ -584,6 +663,7 @@ function initFeatured() {
 let galleryItems = [];
 
 function initGallery() {
+  const GALLERY_PER_PAGE = 8;
   const products = Storage.getProducts();
   const galleryImages = Storage.getGallery().map((src, index) => {
     const product = products.find(p => p.image === src);
@@ -605,12 +685,58 @@ function initGallery() {
   );
 
   const grid = document.getElementById('gallery-grid');
+  if (!grid) return;
+
+  let shownCount = Math.min(GALLERY_PER_PAGE, galleryItems.length);
 
   grid.innerHTML = galleryItems.map((item, i) => `
-    <div class="galeria__item reveal" data-index="${i}">
+    <div class="galeria__item reveal${i >= GALLERY_PER_PAGE ? ' galeria__item--hidden' : ''}" data-index="${i}">
       <img src="${item.src}" alt="${item.product.name}" decoding="async">
     </div>
   `).join('');
+
+  let loadMoreWrap = document.getElementById('gallery-load-more');
+  if (!loadMoreWrap) {
+    loadMoreWrap = document.createElement('div');
+    loadMoreWrap.id = 'gallery-load-more';
+    loadMoreWrap.className = 'galeria__load-more';
+    grid.insertAdjacentElement('afterend', loadMoreWrap);
+  }
+
+  function updateLoadMoreButton() {
+    const remaining = galleryItems.length - shownCount;
+    if (remaining <= 0) {
+      loadMoreWrap.innerHTML = '';
+      loadMoreWrap.hidden = true;
+      return;
+    }
+
+    loadMoreWrap.hidden = false;
+    loadMoreWrap.innerHTML = `
+      <button type="button" class="galeria__load-more-btn" id="gallery-load-more-btn">
+        Ver mais <span>(+${remaining})</span>
+      </button>
+    `;
+  }
+
+  function revealMoreGallery() {
+    const nextShown = Math.min(shownCount + GALLERY_PER_PAGE, galleryItems.length);
+    grid.querySelectorAll('.galeria__item').forEach((item, index) => {
+      if (index < nextShown) {
+        item.classList.remove('galeria__item--hidden');
+        item.classList.add('visible');
+      }
+    });
+    shownCount = nextShown;
+    updateLoadMoreButton();
+  }
+
+  updateLoadMoreButton();
+
+  loadMoreWrap.addEventListener('click', (e) => {
+    if (!e.target.closest('#gallery-load-more-btn')) return;
+    revealMoreGallery();
+  });
 
   grid.querySelectorAll('img').forEach(img => {
     img.addEventListener('error', () => {
