@@ -246,7 +246,7 @@ function initProducts() {
   const settings = Storage.getSettings();
   const products = Storage.getProducts();
   const categoriesWithProducts = categories.filter(cat => products.some(product => product.categoryId === cat.id));
-  const categoryOrder = ['cat5', 'cat3', 'cat6', 'cat4', 'cat2', 'cat1'];
+  const categoryOrder = ['cat3', 'cat6', 'cat4', 'cat1', 'cat5'];
   const galleryCategory = { id: 'gallery', name: 'Galeria' };
   const orderedCategories = [
     ...categoryOrder.map(id => categoriesWithProducts.find(cat => cat.id === id)).filter(Boolean),
