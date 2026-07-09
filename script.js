@@ -320,11 +320,37 @@ function initProducts() {
     const remaining = totalItems - PRODUCTS_PER_PAGE;
     return `
       <div class="products-load-more reveal visible" data-category="${categoryId}">
-        <button type="button" class="products-load-more__btn" data-category="${categoryId}" data-shown="${PRODUCTS_PER_PAGE}" data-total="${totalItems}">
+        <button type="button" class="products-load-more__btn" data-action="more" data-category="${categoryId}" data-shown="${PRODUCTS_PER_PAGE}" data-total="${totalItems}">
           Ver mais <span>(+${remaining})</span>
+        </button>
+        <button type="button" class="products-load-more__btn products-load-more__btn--collapse" data-action="collapse" data-category="${categoryId}" hidden>
+          Recolher
         </button>
       </div>
     `;
+  }
+
+  function updateCategoryPaginationButtons(categoryId) {
+    const wrap = grid.querySelector(`.products-load-more[data-category="${categoryId}"]`);
+    if (!wrap) return;
+
+    const moreBtn = wrap.querySelector('[data-action="more"]');
+    const collapseBtn = wrap.querySelector('[data-action="collapse"]');
+    if (!moreBtn || !collapseBtn) return;
+
+    const shown = Number(moreBtn.dataset.shown);
+    const total = Number(moreBtn.dataset.total);
+    const remaining = total - shown;
+
+    if (remaining > 0) {
+      moreBtn.hidden = false;
+      moreBtn.innerHTML = `Ver mais <span>(+${remaining})</span>`;
+    } else {
+      moreBtn.hidden = true;
+    }
+
+    collapseBtn.hidden = shown <= PRODUCTS_PER_PAGE;
+    wrap.style.display = remaining > 0 || shown > PRODUCTS_PER_PAGE ? '' : 'none';
   }
 
   function renderProductCard(product, index = 0) {
@@ -467,10 +493,11 @@ function initProducts() {
       }
 
       if (title.classList.contains('products-load-more')) {
-        const btn = title.querySelector('.products-load-more__btn');
-        const shown = Number(btn?.dataset.shown || 0);
-        const total = Number(btn?.dataset.total || 0);
-        title.style.display = shown < total ? '' : 'none';
+        updateCategoryPaginationButtons(title.dataset.category);
+        const moreBtn = title.querySelector('[data-action="more"]');
+        const shown = Number(moreBtn?.dataset.shown || 0);
+        const total = Number(moreBtn?.dataset.total || 0);
+        title.style.display = shown < total || shown > PRODUCTS_PER_PAGE ? '' : 'none';
         return;
       }
 
@@ -478,34 +505,46 @@ function initProducts() {
     });
   }
 
-  function revealMoreItems(categoryId) {
-    const btn = grid.querySelector(`.products-load-more__btn[data-category="${categoryId}"]`);
-    if (!btn) return;
+  function setCategoryVisibleCount(categoryId, nextShown) {
+    const moreBtn = grid.querySelector(`.products-load-more__btn[data-action="more"][data-category="${categoryId}"]`);
+    if (!moreBtn) return;
 
-    const shown = Number(btn.dataset.shown);
-    const total = Number(btn.dataset.total);
-    const nextShown = Math.min(shown + PRODUCTS_PER_PAGE, total);
+    const total = Number(moreBtn.dataset.total);
+    const shown = Math.min(Math.max(nextShown, PRODUCTS_PER_PAGE), total);
     const isGallery = categoryId === 'gallery';
     const items = isGallery
       ? grid.querySelectorAll(`.menu-gallery-card[data-category="${categoryId}"]`)
       : grid.querySelectorAll(`.product-card[data-category="${categoryId}"]`);
 
     items.forEach((item, index) => {
-      if (index < nextShown) {
-        item.classList.remove(isGallery ? 'menu-gallery-card--paginated-hidden' : 'product-card--paginated-hidden');
+      const hiddenClass = isGallery ? 'menu-gallery-card--paginated-hidden' : 'product-card--paginated-hidden';
+      if (index < shown) {
+        item.classList.remove(hiddenClass);
+      } else {
+        item.classList.add(hiddenClass);
       }
     });
 
-    btn.dataset.shown = String(nextShown);
-    const remaining = total - nextShown;
-
-    if (remaining > 0) {
-      btn.innerHTML = `Ver mais <span>(+${remaining})</span>`;
-    } else {
-      btn.closest('.products-load-more')?.remove();
-    }
-
+    moreBtn.dataset.shown = String(shown);
+    updateCategoryPaginationButtons(categoryId);
     filterProducts(activeCategory);
+
+    if (nextShown <= PRODUCTS_PER_PAGE) {
+      const title = grid.querySelector(`.products-group-title[data-category="${categoryId}"]`);
+      title?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function revealMoreItems(categoryId) {
+    const moreBtn = grid.querySelector(`.products-load-more__btn[data-action="more"][data-category="${categoryId}"]`);
+    if (!moreBtn) return;
+    const shown = Number(moreBtn.dataset.shown);
+    const total = Number(moreBtn.dataset.total);
+    setCategoryVisibleCount(categoryId, Math.min(shown + PRODUCTS_PER_PAGE, total));
+  }
+
+  function collapseCategoryItems(categoryId) {
+    setCategoryVisibleCount(categoryId, PRODUCTS_PER_PAGE);
   }
 
   filterProducts();
@@ -518,10 +557,14 @@ function initProducts() {
   });
 
   grid.addEventListener('click', (e) => {
-    const loadMoreBtn = e.target.closest('.products-load-more__btn');
-    if (!loadMoreBtn) return;
+    const actionBtn = e.target.closest('.products-load-more__btn');
+    if (!actionBtn) return;
     e.preventDefault();
-    revealMoreItems(loadMoreBtn.dataset.category);
+    if (actionBtn.dataset.action === 'collapse') {
+      collapseCategoryItems(actionBtn.dataset.category);
+      return;
+    }
+    revealMoreItems(actionBtn.dataset.category);
   });
 
   function getProductFromCard(card) {
@@ -705,7 +748,9 @@ function initGallery() {
 
   function updateLoadMoreButton() {
     const remaining = galleryItems.length - shownCount;
-    if (remaining <= 0) {
+    const canCollapse = shownCount > GALLERY_PER_PAGE;
+
+    if (remaining <= 0 && !canCollapse) {
       loadMoreWrap.innerHTML = '';
       loadMoreWrap.hidden = true;
       return;
@@ -713,28 +758,53 @@ function initGallery() {
 
     loadMoreWrap.hidden = false;
     loadMoreWrap.innerHTML = `
-      <button type="button" class="galeria__load-more-btn" id="gallery-load-more-btn">
-        Ver mais <span>(+${remaining})</span>
-      </button>
+      ${remaining > 0 ? `
+        <button type="button" class="galeria__load-more-btn" id="gallery-load-more-btn" data-action="more">
+          Ver mais <span>(+${remaining})</span>
+        </button>
+      ` : ''}
+      ${canCollapse ? `
+        <button type="button" class="galeria__load-more-btn galeria__load-more-btn--collapse" id="gallery-collapse-btn" data-action="collapse">
+          Recolher
+        </button>
+      ` : ''}
     `;
   }
 
-  function revealMoreGallery() {
-    const nextShown = Math.min(shownCount + GALLERY_PER_PAGE, galleryItems.length);
+  function setGalleryVisibleCount(nextShown) {
+    shownCount = Math.min(Math.max(nextShown, GALLERY_PER_PAGE), galleryItems.length);
     grid.querySelectorAll('.galeria__item').forEach((item, index) => {
-      if (index < nextShown) {
+      if (index < shownCount) {
         item.classList.remove('galeria__item--hidden');
         item.classList.add('visible');
+      } else {
+        item.classList.add('galeria__item--hidden');
       }
     });
-    shownCount = nextShown;
     updateLoadMoreButton();
+
+    if (nextShown <= GALLERY_PER_PAGE) {
+      document.getElementById('galeria')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function revealMoreGallery() {
+    setGalleryVisibleCount(shownCount + GALLERY_PER_PAGE);
+  }
+
+  function collapseGallery() {
+    setGalleryVisibleCount(GALLERY_PER_PAGE);
   }
 
   updateLoadMoreButton();
 
   loadMoreWrap.addEventListener('click', (e) => {
-    if (!e.target.closest('#gallery-load-more-btn')) return;
+    const btn = e.target.closest('[data-action]');
+    if (!btn || !loadMoreWrap.contains(btn)) return;
+    if (btn.dataset.action === 'collapse') {
+      collapseGallery();
+      return;
+    }
     revealMoreGallery();
   });
 
