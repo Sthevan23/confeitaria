@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — Gimarry Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Login — Flor de Açúcar Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin.css?v=20">
 </head>
 <body class="login-page">
 
@@ -16,9 +17,9 @@
     <div class="login__visual">
       <div class="login__overlay"></div>
       <div class="login__visual-content">
-        <i class="fas fa-birthday-cake"></i>
-        <h1>Gimarry</h1>
-        <p>Bolos e Doces</p>
+        <i class="fas fa-leaf"></i>
+        <h1>Flor de Açúcar</h1>
+        <p>Painel · Pedidos e Financeiro</p>
       </div>
     </div>
 
@@ -47,7 +48,7 @@
             </label>
             <a href="#" id="forgot-password" class="login__forgot">Recuperar senha</a>
           </div>
-          <button type="submit" class="btn btn--primary btn--full">
+          <button type="submit" class="btn btn--primary btn--full" id="login-btn">
             <i class="fas fa-sign-in-alt"></i> Entrar
           </button>
           <p class="login__error" id="login-error"></p>
@@ -55,9 +56,8 @@
 
         <a href="../index.html" class="login__back"><i class="fas fa-arrow-left"></i> Voltar ao site</a>
 
-        <div class="login__hint">
-          <p><strong>Demo:</strong> admin@gimarry.com.br / admin123</p>
-        </div>
+        <p class="login__private-note"><i class="fas fa-key"></i> Demo: <strong>contato@flordeacucar.com.br</strong> · senha <strong>demo123</strong></p>
+        <p class="login__private-note"><i class="fas fa-cloud"></i> Pedidos e financeiro sincronizam entre celulares após o login.</p>
       </div>
     </div>
   </div>
@@ -79,14 +79,12 @@
     </div>
   </div>
 
-  <script src="../js/storage.js"></script>
+  <script src="../js/storage.js?v=20"></script>
   <script>
-    // Verificar se já está logado
     if (sessionStorage.getItem('admin_logged') === 'true') {
       window.location.href = 'index.html';
     }
 
-    // Toggle senha
     document.querySelector('.toggle-password').addEventListener('click', function () {
       const input = document.getElementById('password');
       const icon = this.querySelector('i');
@@ -95,24 +93,36 @@
       icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
     });
 
-    // Login
-    document.getElementById('login-form').addEventListener('submit', (e) => {
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const errorEl = document.getElementById('login-error');
+      const btn = document.getElementById('login-btn');
 
-      if (Storage.login(email, password)) {
-        sessionStorage.setItem('admin_logged', 'true');
-        sessionStorage.setItem('admin_email', email);
-        window.location.href = 'index.html';
-      } else {
+      errorEl.style.display = 'none';
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+
+      try {
+        const ok = await Storage.loginAsync(email, password);
+        if (ok) {
+          sessionStorage.setItem('admin_logged', 'true');
+          sessionStorage.setItem('admin_email', email);
+          window.location.href = 'index.html';
+          return;
+        }
         errorEl.textContent = 'E-mail ou senha incorretos.';
         errorEl.style.display = 'block';
+      } catch (err) {
+        errorEl.textContent = 'Erro de conexão. Tente de novo.';
+        errorEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
       }
     });
 
-    // Recuperar senha
     const modal = document.getElementById('recover-modal');
     document.getElementById('forgot-password').addEventListener('click', (e) => {
       e.preventDefault();
@@ -124,7 +134,7 @@
     document.getElementById('recover-form').addEventListener('submit', (e) => {
       e.preventDefault();
       modal.classList.remove('active');
-      alert('Instruções de recuperação enviadas para o e-mail informado. (Simulação)');
+      alert('Peça a senha ao responsável da confeitaria.');
     });
   </script>
 </body>

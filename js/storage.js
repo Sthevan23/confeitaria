@@ -1,188 +1,182 @@
-/**
- * storage.js — Camada de dados simulada com LocalStorage
- * Compartilhada entre o site público e o painel administrativo
+﻿/**
+ * storage.js — Demo Flor de Açúcar + painel financeiro
+ * LocalStorage + sincronização opcional (api/data.php)
  */
 const Storage = (() => {
-  const KEY = 'confeitaria_premium_data';
-  const DATA_VERSION = 36;
-  const REMOVED_CATEGORIES = [];
-  const REMOVED_PRODUCTS = ['p4', 'p5', 'p6', 'p10', 'p11', 'p12'];
-  const FOTOS = 'fotos_bolos';
-  const AMOSTRA = `${FOTOS}/bolos_amostra`;
+  const KEY = 'confeitaria_demo_financeiro';
+  const DATA_VERSION = 1;
+  const IMG_VER = 'v10';
 
-  function imageSet(time, lastNumber) {
-    const base = `${AMOSTRA}/WhatsApp Image 2026-07-08 at ${time}.jpeg`;
-    const numbered = Array.from({ length: lastNumber }, (_, index) =>
-      `${AMOSTRA}/WhatsApp Image 2026-07-08 at ${time} (${index + 1}).jpeg`
-    );
+  const API = (() => {
+    const path = window.location.pathname || '';
+    if (path.includes('/admin/')) {
+      return path.replace(/\/admin\/.*$/, '/api/data.php');
+    }
+    if (path.endsWith('/')) {
+      return path + 'api/data.php';
+    }
+    return path.replace(/\/[^/]*$/, '/api/data.php');
+  })();
 
-    return [base, ...numbered];
-  }
+  let cloudEnabled = false;
+  let lastRemoteJson = '';
+  let pollTimer = null;
 
-  const amostraGallery = [
-    ...imageSet('13.08.11', 1),
-    ...imageSet('13.08.12', 4),
-    ...imageSet('13.08.13', 3),
-    ...imageSet('13.08.14', 4),
-    ...imageSet('13.08.15', 4),
-    ...imageSet('13.08.16', 5),
-    ...imageSet('13.08.17', 1),
-    ...imageSet('13.10.04', 1),
-    ...imageSet('13.10.05', 4),
-    ...imageSet('13.10.06', 4),
-    ...imageSet('13.10.07', 4),
-    ...imageSet('13.10.08', 4),
-    ...imageSet('13.10.09', 4),
-    ...imageSet('13.10.10', 3),
-    ...imageSet('13.13.05', 0),
-    ...imageSet('13.13.06', 3),
-    ...imageSet('13.13.07', 5),
-    ...imageSet('13.13.08', 4),
-    ...imageSet('13.13.09', 4),
-    ...imageSet('13.13.10', 4),
-    ...imageSet('13.13.11', 4),
-    ...imageSet('13.13.12', 4),
-    ...imageSet('13.13.13', 2)
-  ];
+  const img = (file) => `imagens/${file}?${IMG_VER}`;
+
+  const IMG = {
+    hero: img('hero.jpg'),
+    loja: img('loja.jpg'),
+    bolo1: img('bolo1.jpg'),
+    bolo2: img('bolo2.jpg'),
+    bolo3: img('bolo3.jpg'),
+    bolo4: img('bolo4.jpg'),
+    bolo5: img('bolo5.jpg'),
+    bolo6: img('bolo6.jpg'),
+    bolo7: img('bolo7.jpg'),
+    bolo8: img('bolo8.jpg'),
+    pronto1: img('pronto1.jpg'),
+    pronto2: img('pronto2.jpg'),
+    pronto3: img('pronto3.jpg'),
+    pronto4: img('pronto4.jpg'),
+    bento1: img('bento1.jpg'),
+    bento2: img('bento2.jpg'),
+    bento3: img('bento3.jpg'),
+    bento4: img('bento4.jpg'),
+    doces1: img('doces1.jpg'),
+    doces2: img('doces2.jpg'),
+    destaque1: img('destaque1.jpg'),
+    destaque2: img('destaque2.jpg'),
+    destaque3: img('destaque3.jpg'),
+    destaque4: img('destaque4.jpg'),
+    galeria1: img('galeria1.jpg'),
+    galeria2: img('galeria2.jpg'),
+    galeria3: img('galeria3.jpg'),
+    galeria4: img('galeria4.jpg'),
+    galeria5: img('galeria5.jpg'),
+    galeria6: img('galeria6.jpg'),
+    galeria7: img('galeria7.jpg'),
+    galeria8: img('galeria8.jpg'),
+    galeria9: img('galeria9.jpg'),
+    galeria10: img('galeria10.jpg'),
+    galeria11: img('galeria11.jpg'),
+    galeria12: img('galeria12.jpg')
+  };
 
   const defaultData = {
     settings: {
-      name: 'Gimarry Bolos e Doces',
-      tagline: 'Não é só sobre bolos e sim memórias afetivas',
+      name: 'Flor de Açúcar',
+      tagline: 'Encomenda ou pronta entrega — escolha o bolo e feche pelo WhatsApp em minutos.',
       logo: '',
-      banner: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.11.jpeg`,
-      sobreImage: `${FOTOS}/foto_da_loja.jpeg`,
-      whatsapp: '5537988554691',
-      instagram: 'https://www.instagram.com/confeitosgimarry/',
-      instagramUser: '@confeitosgimarry',
+      banner: IMG.hero,
+      sobreImage: IMG.loja,
+      whatsapp: '5531999999999',
+      instagram: 'https://www.instagram.com/',
+      instagramUser: '@flordeacucar',
       facebook: '',
-      email: 'confeitosgimarry@email.com',
-      address: 'Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas',
-      hours: 'Bolos de pronta entrega disponíveis diariamente. Consulte os recheios do dia.',
-      followers: '17,8 mil',
-      posts: '1.352',
-      mapEmbed: 'https://www.google.com/maps?q=Rua+Nossa+Senhora+das+Gra%C3%A7as,+361,+Manoel+Valinhas&output=embed',
-      heroBadge: 'Confeitaria artesanal · Pronta entrega diária',
+      email: 'contato@flordeacucar.com.br',
+      address: 'Rua das Flores, 120 — Centro',
+      hours: 'Seg a Sáb · 9h às 19h · Dom · 9h às 13h',
+      followers: '2,4 mil',
+      posts: '186',
+      mapEmbed: 'https://www.google.com/maps?q=Belo+Horizonte,+MG&output=embed',
+      heroBadge: 'Pronta entrega hoje · Retire em 40 min',
       heroStory: [
-        'Tudo começou como um complemento de salário, uma vontade de passar mais tempo com a minha filha e sem muita pretensão, mas o que fazemos com o coração o universo dá um jeito de fazer dar certo.',
-        'Alguns anos depois estamos aqui com muita gratidão, continuando a fazer cada bolo com todo carinho e respeito, pois sabemos que estamos levando alegria em forma de bolo.',
-        'Só tenho a agradecer cada cliente que confia no meu trabalho e a várias que estão comigo desde o começo ♥ ♥'
+        'Cada bolo é feito sob encomenda: massa leve, recheio generoso e acabamento à mão.',
+        'Você escolhe o modelo, monta as opções e finaliza pelo WhatsApp — simples e rápido.',
+        'Ideal para aniversários, presentes, cafés e celebrações do dia a dia.'
       ],
-      sobreText1: 'A <strong>Gimarry Bolos e Doces</strong> é uma confeitaria artesanal dedicada a criar bolos que vão muito além do sabor — são memórias afetivas em forma de doce. Cada receita carrega dedicação, criatividade e amor.',
-      sobreText2: 'Trabalhamos com bolos personalizados, doces especiais e <strong>bolos de pronta entrega todos os dias</strong>. Você também pode montar seu bolo para retirar no mesmo dia, com pedido feito com no mínimo 40 min de antecedência. Siga @confeitosgimarry no Instagram!',
+      sobreText1: 'A <strong>Flor de Açúcar</strong> faz bolos artesanais sob encomenda e com opções de pronta entrega. Do bento cake ao bolo de festa, tudo pensado para impressionar.',
+      sobreText2: 'Atendimento pelo WhatsApp, retirada no balcão e combinações de massa, recheio e tamanho do seu jeito.'
     },
     auth: {
-      email: 'admin@gimarry.com.br',
-      password: 'admin123'
+      email: 'contato@flordeacucar.com.br',
+      password: 'demo123'
     },
     categories: [
-      { id: 'cat1', name: 'Bolos Personalizados', slug: 'bolos' },
-      { id: 'cat2', name: 'Doces', slug: 'doces' },
+      { id: 'cat1', name: 'Personalizados', slug: 'bolos' },
+      { id: 'cat2', name: 'Clássicos', slug: 'classicos' },
       { id: 'cat3', name: 'Pronta Entrega', slug: 'pronta-entrega' },
       { id: 'cat4', name: 'Bento Cake', slug: 'bento-cake' },
-      { id: 'cat5', name: 'Bolos Destaques', slug: 'bolos-destaques' },
-      { id: 'cat6', name: 'Kit Bento e Doces', slug: 'kit-bento-doces' }
+      { id: 'cat5', name: 'Destaques', slug: 'bolos-destaques' },
+      { id: 'cat6', name: 'Kits', slug: 'kits-bento' }
     ],
     products: [
-      { id: 'p1', name: 'Bolo Vintage Happy Birthday', description: 'Bolo branco estilo vintage com laços pretos, corações e mensagem Happy Birthday.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.11.jpeg`, featured: true },
-      { id: 'p7', name: 'Bolo Lilás Happy Birthday', description: 'Bolo lilás com acabamento delicado, brilho e topo Happy Birthday.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.12.jpeg`, featured: true },
-      { id: 'p9', name: 'Bolo Infantil Hello Kitty', description: 'Bolo infantil rosa e branco com tema Hello Kitty, nome e idade personalizados.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.13.jpeg`, featured: true },
-      { id: 'p19', name: 'Bolo Brigadeiro com Morango', description: 'Bolo de pronta entrega com cobertura de chocolate, brigadeiros e morangos frescos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.36.jpeg`, featured: false },
-      { id: 'p21', name: 'Bolo Ninho com Morango', description: 'Bolo de pronta entrega com acabamento branco, creme ninho e morangos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (2).jpeg`, featured: false },
-      { id: 'p22', name: 'Bolo Dois Amores com Morango', description: 'Bolo de pronta entrega com brigadeiros, leite ninho e morangos.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (3).jpeg`, featured: false },
-      { id: 'p23', name: 'Bolo Brigadeiro Chocolate', description: 'Bolo de pronta entrega com acabamento em chocolate e brigadeiros no topo.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38.jpeg`, featured: false },
-      { id: 'p24', name: 'Bolo Ninho Cremoso', description: 'Bolo de pronta entrega com cobertura branca e docinhos de leite ninho.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (1).jpeg`, featured: false },
-      { id: 'p26', name: 'Bento Cake Personalizado', description: 'Bento cake de pronta entrega na marmita, ideal para presentear.', price: 40, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`, featured: false },
-      { id: 'p27', name: 'Bolo Chocolate com Morango', description: 'Bolo de pronta entrega com brigadeiros e morangos no topo.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (4).jpeg`, featured: false },
-      { id: 'p28', name: 'Bolo Brigadeiro com Amendoim', description: 'Bolo de pronta entrega com chocolate e brigadeiros de amendoim.', price: 0, categoryId: 'cat3', image: `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.39.jpeg`, featured: false },
-      { id: 'p8', name: 'Bolo Mesversário Maçã', description: 'Bolo de mesversário com mini maçãs e escrita personalizada no topo.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.14.jpeg`, featured: true },
-      { id: 'p10', name: 'Bolo Vintage com Laços', description: 'Bolo branco estilo vintage com bicos trabalhados e laços rosa.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.15.jpeg`, featured: true },
-      { id: 'p11', name: 'Bolo Temático Rei Leão', description: 'Bolo infantil com tema Rei Leão, nome e idade personalizados.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.08.16.jpeg`, featured: true },
-      { id: 'p29', name: 'Bolo Temático Gatinha', description: 'Bolo em dois andares com tema de gatinha, nome e idade personalizados.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.10.04.jpeg`, featured: false },
-      { id: 'p30', name: 'Bolo Vintage com Laços Pretos', description: 'Bolo branco decorado com laços pretos, corações e acabamento delicado.', price: 0, categoryId: 'cat1', image: `${AMOSTRA}/WhatsApp Image 2026-07-08 at 13.10.05.jpeg`, featured: false },
-      { id: 'p31', name: 'Bento Cake com Frase', description: 'Bento cake personalizado para escrever uma frase especial no topo.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27.jpeg`, featured: false },
-      { id: 'p32', name: 'Bento Cake Romântico', description: 'Bento cake com frase personalizada para presentear com carinho.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (1).jpeg`, featured: false },
-      { id: 'p33', name: 'Bento Cake Divertido', description: 'Bento cake com desenho e frase divertida escolhida por você.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (2).jpeg`, featured: false },
-      { id: 'p34', name: 'Bento Cake Minimalista', description: 'Bento cake delicado com frase curta e acabamento personalizado.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (3).jpeg`, featured: false },
-      { id: 'p35', name: 'Bento Cake Aniversário', description: 'Bento cake para aniversário com mensagem feita do seu jeito.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (4).jpeg`, featured: false },
-      { id: 'p36', name: 'Bento Cake Presente', description: 'Bento cake para presentear com uma frase especial.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28.jpeg`, featured: false },
-      { id: 'p37', name: 'Bento Cake Carinhoso', description: 'Bento cake personalizado com frase afetiva para datas especiais.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (1).jpeg`, featured: false },
-      { id: 'p38', name: 'Bento Cake Especial', description: 'Bento cake com decoração e mensagem personalizada.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (2).jpeg`, featured: false },
-      { id: 'p39', name: 'Bento Cake Fofo', description: 'Bento cake com desenho simples e frase escolhida pelo cliente.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (3).jpeg`, featured: false },
-      { id: 'p40', name: 'Bento Cake Criativo', description: 'Bento cake personalizado para frases engraçadas ou especiais.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (4).jpeg`, featured: false },
-      { id: 'p41', name: 'Bento Cake Surpresa', description: 'Bento cake para surpresa com mensagem personalizada no topo.', price: 0, categoryId: 'cat4', image: `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.29.jpeg`, featured: false },
-      { id: 'p42', name: 'Bolo Destaque Branca de Neve', description: 'Bolo decorado em dois andares com tema Branca de Neve, flores, borboletas e topo personalizado.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.11.jpeg`, featured: false },
-      { id: 'p43', name: 'Bolo Destaque Floral', description: 'Modelo de bolo destaque para festas especiais, com acabamento delicado e decoração personalizada.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.41.jpeg`, featured: false },
-      { id: 'p44', name: 'Bolo Destaque Especial', description: 'Bolo personalizado de destaque para aniversários e comemorações marcantes.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.58.57.jpeg`, featured: false },
-      { id: 'p45', name: 'Bolo Destaque Encantado', description: 'Bolo decorado com detalhes especiais para uma mesa de festa inesquecível.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.55.35.jpeg`, featured: false },
-      { id: 'p46', name: 'Bolo Destaque Luxo', description: 'Modelo de bolo personalizado com acabamento elegante e presença marcante.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.58.03.jpeg`, featured: false },
-      { id: 'p47', name: 'Bolo Destaque Festa', description: 'Bolo de destaque para festas, feito sob encomenda com tema e cores personalizados.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.55.jpeg`, featured: false },
-      { id: 'p48', name: 'Bolo Destaque Delicado', description: 'Bolo personalizado com decoração delicada para comemorações especiais.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.57.09.jpeg`, featured: false },
-      { id: 'p49', name: 'Bolo Destaque Premium', description: 'Bolo especial da linha de destaques para pedidos personalizados.', price: 0, categoryId: 'cat5', image: `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.57.29.jpeg`, featured: false },
-      { id: 'p50', name: 'Bento Cake na Marmita', description: 'Bento cake individual na marmita. Sugestão: 2 a 3 fatias, peso aproximado de 300g.', price: 40, categoryId: 'cat6', image: `${FOTOS}/bolos_bentocake/bento_kits/Captura de tela 2026-07-08 150756.png`, featured: false },
-      { id: 'p51', name: 'Kit Bento + 6 Doces', description: 'Kit com bento cake personalizado acompanhado de 6 docinhos sortidos.', price: 55, categoryId: 'cat6', image: `${FOTOS}/bolos_bentocake/bento_kits/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`, featured: false },
-      { id: 'p52', name: 'Kit Bento Cake + 16 Doces', description: 'Kit com bento cake personalizado e 16 docinhos, ideal para presentear ou comemorar.', price: 65, categoryId: 'cat6', image: `${FOTOS}/bolos_bentocake/bento_kits/WhatsApp Image 2026-07-08 at 09.07.44.jpeg`, featured: false }
+      { id: 'p1', name: 'Bolo de Casamento', description: 'Elegante para casamentos, com acabamento limpo e flores.', price: 270, categoryId: 'cat1', image: IMG.bolo1, featured: true, fromPrice: true },
+      { id: 'p2', name: 'Bolo de Chocolate', description: 'Camadas de chocolate com cobertura cremosa e visual marcante.', price: 95, categoryId: 'cat1', image: IMG.bolo2, featured: true, fromPrice: true },
+      { id: 'p3', name: 'Bolo de Aniversário', description: 'Festivo e personalizado para comemorações especiais.', price: 95, categoryId: 'cat1', image: IMG.bolo3, featured: true, fromPrice: true },
+      { id: 'p4', name: 'Bolo com Frutas', description: 'Decoração com frutas frescas e creme suave.', price: 140, categoryId: 'cat1', image: IMG.bolo4, featured: false, fromPrice: true },
+      { id: 'p5', name: 'Bolo Floral', description: 'Acabamento delicado com flores e tons suaves.', price: 180, categoryId: 'cat1', image: IMG.bolo5, featured: false, fromPrice: true },
+      { id: 'p6', name: 'Bolo Naked Cake', description: 'Estilo rústico com camadas aparentes e frutas.', price: 160, categoryId: 'cat1', image: IMG.bolo6, featured: true, fromPrice: true },
+      { id: 'p19', name: 'Bolo Red Velvet', description: 'Clássico red velvet com cream cheese.', price: 150, categoryId: 'cat1', image: IMG.bolo7, featured: false, fromPrice: true },
+      { id: 'p20', name: 'Bolo Decorado Premium', description: 'Modelo especial para festas e ensaios.', price: 220, categoryId: 'cat1', image: IMG.bolo8, featured: false, fromPrice: true },
+      { id: 'p7', name: 'Bolo do Dia — Chocolate', description: 'Pronta entrega · retire hoje com 40 min de antecedência.', price: 65, categoryId: 'cat3', image: IMG.pronto1, featured: false },
+      { id: 'p8', name: 'Bolo do Dia — Baunilha', description: 'Pronta entrega · cobertura clara e finalização suave.', price: 75, categoryId: 'cat3', image: IMG.pronto2, featured: false },
+      { id: 'p9', name: 'Bolo do Dia — Frutas', description: 'Pronta entrega · frutas e chantilly.', price: 95, categoryId: 'cat3', image: IMG.pronto3, featured: false },
+      { id: 'p21', name: 'Bolo do Dia — Brigadeiro', description: 'Pronta entrega · acabamento em chocolate.', price: 70, categoryId: 'cat3', image: IMG.pronto4, featured: false },
+      { id: 'p10', name: 'Bento Cake Frase', description: 'Mini bolo com frase personalizada no topo — presente perfeito.', price: 40, categoryId: 'cat4', image: IMG.bento1, featured: false },
+      { id: 'p11', name: 'Bento Cake Presente', description: 'Ideal para surpresas e datas especiais.', price: 40, categoryId: 'cat4', image: IMG.bento2, featured: false },
+      { id: 'p22', name: 'Bento Cake Fofo', description: 'Mini bolo delicado para presentear.', price: 40, categoryId: 'cat4', image: IMG.bento3, featured: false },
+      { id: 'p23', name: 'Bento Cake Especial', description: 'Versão especial com decoração artesanal.', price: 45, categoryId: 'cat4', image: IMG.bento4, featured: false },
+      { id: 'p12', name: 'Bolo Colorido', description: 'Bolo festivo com camadas coloridas e cobertura cremosa.', price: 120, categoryId: 'cat2', image: IMG.doces1, featured: false, fromPrice: true },
+      { id: 'p13', name: 'Bolo de Frutas Vermelhas', description: 'Elegante com morangos, framboesas e blueberries.', price: 160, categoryId: 'cat2', image: IMG.doces2, featured: false, fromPrice: true },
+      { id: 'p14', name: 'Bolo Destaque Jardim', description: 'Modelo premium com visual sofisticado.', price: 200, categoryId: 'cat5', image: IMG.destaque1, featured: false, fromPrice: true },
+      { id: 'p15', name: 'Bolo Destaque Celebração', description: 'Para mesas de festa e momentos especiais.', price: 190, categoryId: 'cat5', image: IMG.destaque2, featured: false, fromPrice: true },
+      { id: 'p24', name: 'Bolo Destaque Luxo', description: 'Acabamento elegante e presença marcante.', price: 240, categoryId: 'cat5', image: IMG.destaque3, featured: false, fromPrice: true },
+      { id: 'p25', name: 'Bolo Destaque Festa', description: 'Ideal para aniversários e comemorações.', price: 180, categoryId: 'cat5', image: IMG.destaque4, featured: false, fromPrice: true },
+      { id: 'p16', name: 'Bento Cake na Marmita', description: 'Bento individual · aprox. 300g · 2 a 3 fatias.', price: 40, categoryId: 'cat6', image: IMG.bento1, featured: false },
+      { id: 'p17', name: 'Kit 2 Bento Cakes', description: 'Dois mini bolos para presentear ou compartilhar.', price: 75, categoryId: 'cat6', image: IMG.bento2, featured: false },
+      { id: 'p18', name: 'Kit Bento Especial', description: 'Bento cake especial com decoração artesanal.', price: 65, categoryId: 'cat6', image: IMG.bento3, featured: false }
     ],
     clients: [
-      { id: 'c1', name: 'Ana Paula Silva', email: 'ana@email.com', phone: '11987654321', address: 'Bairro Manoel Valinhas' },
-      { id: 'c2', name: 'Carlos Mendes', email: 'carlos@email.com', phone: '11976543210', address: 'Bairro Manoel Valinhas' },
-      { id: 'c3', name: 'Mariana Costa', email: 'mariana@email.com', phone: '11965432109', address: 'Bairro Manoel Valinhas' }
+      { id: 'c1', name: 'Ana Paula Silva', email: 'ana@email.com', phone: '31987654321', address: 'Centro' },
+      { id: 'c2', name: 'Carlos Mendes', email: 'carlos@email.com', phone: '31976543210', address: 'Savassi' },
+      { id: 'c3', name: 'Mariana Costa', email: 'mariana@email.com', phone: '31965432109', address: 'Funcionários' },
+      { id: 'c4', name: 'Pedro Alves', email: 'pedro@email.com', phone: '31954321098', address: 'Lourdes' },
+      { id: 'c5', name: 'Fernanda Rocha', email: 'fernanda@email.com', phone: '31943210987', address: 'Pampulha' }
     ],
     orders: [
-      { id: 'o1', number: 'PED-2026-001', clientId: 'c1', clientName: 'Ana Paula Silva', items: [{ productId: 'p1', name: 'Bolo Elegante com Flores', qty: 1, price: 189.90 }], total: 189.90, status: 'finalizado', date: '2026-07-01T14:30:00' },
-      { id: 'o2', number: 'PED-2026-002', clientId: 'c2', clientName: 'Carlos Mendes', items: [{ productId: 'p2', name: 'Bentô Cake Personalizado', qty: 2, price: 45.00 }, { productId: 'p7', name: 'Bolo Matelassê com Brigadeiros', qty: 1, price: 169.90 }], total: 259.90, status: 'preparo', date: '2026-07-05T10:15:00' },
-      { id: 'o3', number: 'PED-2026-003', clientId: 'c3', clientName: 'Mariana Costa', items: [{ productId: 'p10', name: 'Bolo Mesversário Super Mario', qty: 1, price: 129.90 }], total: 129.90, status: 'entrega', date: '2026-07-06T16:00:00' },
-      { id: 'o4', number: 'PED-2026-004', clientId: 'c1', clientName: 'Ana Paula Silva', items: [{ productId: 'p8', name: 'Bolo Temático Bob Esponja', qty: 1, price: 199.90 }], total: 199.90, status: 'novo', date: '2026-07-07T09:00:00' },
-      { id: 'o5', number: 'PED-2026-005', clientId: 'c2', clientName: 'Carlos Mendes', items: [{ productId: 'p11', name: 'Bolo Temático Barril', qty: 1, price: 249.90 }], total: 249.90, status: 'novo', date: '2026-07-07T11:00:00' },
-      { id: 'o6', number: 'PED-2026-006', clientId: 'c3', clientName: 'Mariana Costa', items: [{ productId: 'p9', name: 'Bolo Listras Pastel', qty: 1, price: 149.90 }], total: 149.90, status: 'finalizado', date: '2026-07-07T10:30:00' }
+      { id: 'o1', number: 'PED-2026-001', clientId: 'c1', clientName: 'Ana Paula Silva', clientWhatsapp: '31987654321', items: [{ productId: 'p2', name: 'Bolo de Chocolate', qty: 1, price: 95 }], total: 95, status: 'finalizado', date: '2026-02-12T14:30:00', notes: '', source: 'demo' },
+      { id: 'o2', number: 'PED-2026-002', clientId: 'c2', clientName: 'Carlos Mendes', clientWhatsapp: '31976543210', items: [{ productId: 'p10', name: 'Bento Cake Frase', qty: 2, price: 40 }], total: 80, status: 'finalizado', date: '2026-02-20T11:00:00', notes: '', source: 'demo' },
+      { id: 'o3', number: 'PED-2026-003', clientId: 'c3', clientName: 'Mariana Costa', clientWhatsapp: '31965432109', items: [{ productId: 'p7', name: 'Bolo do Dia — Chocolate', qty: 1, price: 65 }, { productId: 'p16', name: 'Bento Cake na Marmita', qty: 1, price: 40 }], total: 105, status: 'finalizado', date: '2026-03-05T16:00:00', notes: '', source: 'demo' },
+      { id: 'o4', number: 'PED-2026-004', clientId: 'c4', clientName: 'Pedro Alves', clientWhatsapp: '31954321098', items: [{ productId: 'p1', name: 'Bolo de Casamento', qty: 1, price: 270 }], total: 270, status: 'finalizado', date: '2026-03-18T10:00:00', notes: '', source: 'demo' },
+      { id: 'o5', number: 'PED-2026-005', clientId: 'c5', clientName: 'Fernanda Rocha', clientWhatsapp: '31943210987', items: [{ productId: 'p3', name: 'Bolo de Aniversário', qty: 1, price: 95 }], total: 95, status: 'finalizado', date: '2026-04-08T15:00:00', notes: '', source: 'demo' },
+      { id: 'o6', number: 'PED-2026-006', clientId: 'c1', clientName: 'Ana Paula Silva', clientWhatsapp: '31987654321', items: [{ productId: 'p14', name: 'Bolo Destaque Jardim', qty: 1, price: 200 }], total: 200, status: 'finalizado', date: '2026-04-22T12:00:00', notes: '', source: 'demo' },
+      { id: 'o7', number: 'PED-2026-007', clientId: 'c2', clientName: 'Carlos Mendes', clientWhatsapp: '31976543210', items: [{ productId: 'p11', name: 'Bento Cake Presente', qty: 3, price: 40 }], total: 120, status: 'finalizado', date: '2026-05-03T09:30:00', notes: '', source: 'demo' },
+      { id: 'o8', number: 'PED-2026-008', clientId: 'c3', clientName: 'Mariana Costa', clientWhatsapp: '31965432109', items: [{ productId: 'p6', name: 'Bolo Naked Cake', qty: 1, price: 160 }], total: 160, status: 'finalizado', date: '2026-05-15T14:00:00', notes: '', source: 'demo' },
+      { id: 'o9', number: 'PED-2026-009', clientId: 'c4', clientName: 'Pedro Alves', clientWhatsapp: '31954321098', items: [{ productId: 'p8', name: 'Bolo do Dia — Baunilha', qty: 2, price: 75 }], total: 150, status: 'finalizado', date: '2026-05-28T17:00:00', notes: '', source: 'demo' },
+      { id: 'o10', number: 'PED-2026-010', clientId: 'c5', clientName: 'Fernanda Rocha', clientWhatsapp: '31943210987', items: [{ productId: 'p5', name: 'Bolo Floral', qty: 1, price: 180 }], total: 180, status: 'finalizado', date: '2026-06-06T11:00:00', notes: '', source: 'demo' },
+      { id: 'o11', number: 'PED-2026-011', clientId: 'c1', clientName: 'Ana Paula Silva', clientWhatsapp: '31987654321', items: [{ productId: 'p17', name: 'Kit 2 Bento Cakes', qty: 1, price: 75 }, { productId: 'p10', name: 'Bento Cake Frase', qty: 1, price: 40 }], total: 115, status: 'finalizado', date: '2026-06-14T13:00:00', notes: '', source: 'demo' },
+      { id: 'o12', number: 'PED-2026-012', clientId: 'c2', clientName: 'Carlos Mendes', clientWhatsapp: '31976543210', items: [{ productId: 'p20', name: 'Bolo Decorado Premium', qty: 1, price: 220 }], total: 220, status: 'finalizado', date: '2026-06-25T16:30:00', notes: '', source: 'demo' },
+      { id: 'o13', number: 'PED-2026-013', clientId: 'c3', clientName: 'Mariana Costa', clientWhatsapp: '31965432109', items: [{ productId: 'p7', name: 'Bolo do Dia — Chocolate', qty: 1, price: 65 }], total: 65, status: 'finalizado', date: '2026-07-02T10:00:00', notes: '', source: 'demo' },
+      { id: 'o14', number: 'PED-2026-014', clientId: 'c4', clientName: 'Pedro Alves', clientWhatsapp: '31954321098', items: [{ productId: 'p2', name: 'Bolo de Chocolate', qty: 1, price: 95 }, { productId: 'p22', name: 'Bento Cake Fofo', qty: 2, price: 40 }], total: 175, status: 'finalizado', date: '2026-07-10T15:00:00', notes: '', source: 'demo' },
+      { id: 'o15', number: 'PED-2026-015', clientId: 'c5', clientName: 'Fernanda Rocha', clientWhatsapp: '31943210987', items: [{ productId: 'p15', name: 'Bolo Destaque Celebração', qty: 1, price: 190 }], total: 190, status: 'finalizado', date: '2026-07-15T12:00:00', notes: '', source: 'demo' },
+      { id: 'o16', number: 'PED-2026-016', clientId: 'c1', clientName: 'Ana Paula Silva', clientWhatsapp: '31987654321', items: [{ productId: 'p9', name: 'Bolo do Dia — Frutas', qty: 1, price: 95 }], total: 95, status: 'finalizado', date: '2026-07-18T09:00:00', notes: '', source: 'demo' },
+      { id: 'o17', number: 'PED-2026-017', clientId: 'c2', clientName: 'Carlos Mendes', clientWhatsapp: '31976543210', items: [{ productId: 'p10', name: 'Bento Cake Frase', qty: 2, price: 40 }], total: 80, status: 'preparo', date: '2026-07-16T10:15:00', notes: '', source: 'demo' },
+      { id: 'o18', number: 'PED-2026-018', clientId: 'c3', clientName: 'Mariana Costa', clientWhatsapp: '31965432109', items: [{ productId: 'p7', name: 'Bolo do Dia — Chocolate', qty: 1, price: 65 }], total: 65, status: 'entrega', date: '2026-07-17T16:00:00', notes: '', source: 'demo' },
+      { id: 'o19', number: 'PED-2026-019', clientId: 'c1', clientName: 'Ana Paula Silva', clientWhatsapp: '31987654321', items: [{ productId: 'p3', name: 'Bolo de Aniversário', qty: 1, price: 95 }], total: 95, status: 'novo', date: '2026-07-18T08:30:00', notes: '', source: 'demo' }
     ],
     reviews: [
-      { id: 'r1', name: 'Juliana Ferreira', text: 'O bolo elegante com flores foi simplesmente perfeito! A Gimarry transformou nossa celebração em uma memória afetiva linda. Já encomendei várias vezes!', rating: 5, avatar: 'JF' },
-      { id: 'r2', name: 'Roberto Almeida', text: 'Encomendei um bolo temático para o aniversário da minha filha. Todos elogiaram! Atendimento excelente pelo Instagram.', rating: 5, avatar: 'RA' },
-      { id: 'r3', name: 'Camila Santos', text: 'O bentô cake personalizado foi lindo demais! Presente perfeito. A Gimarry capricha em cada detalhe!', rating: 5, avatar: 'CS' },
-      { id: 'r4', name: 'Fernando Lima', text: 'Peguei um bolo de pronta entrega e ficou maravilhoso! Sabor e visual impecáveis. Recomendo demais!', rating: 5, avatar: 'FL' }
+      { id: 'r1', name: 'Juliana Ferreira', text: 'O bolo ficou lindo e o sabor impecável. Pedi pelo WhatsApp e resolvi em minutos!', rating: 5, avatar: 'JF' },
+      { id: 'r2', name: 'Roberto Almeida', text: 'Encomendei um temático para minha filha. Entrega no horário e acabamento perfeito.', rating: 5, avatar: 'RA' },
+      { id: 'r3', name: 'Camila Santos', text: 'O bento cake com frase foi o presente mais fofo. Já virei cliente fiel.', rating: 5, avatar: 'CS' },
+      { id: 'r4', name: 'Fernando Lima', text: 'Precisei no mesmo dia: pronta entrega deliciosa e retirada rapidinha.', rating: 5, avatar: 'FL' }
     ],
     faq: [
-      { id: 'f1', question: 'Como faço meu pedido?', answer: 'Faça seu pedido pelo WhatsApp (link no Instagram @confeitosgimarry) ou pelo botão "Pedir Agora" aqui no site. Confirmamos disponibilidade e prazo na hora.' },
-      { id: 'f2', question: 'Vocês têm bolos de pronta entrega?', answer: 'Sim! Temos bolos prontos todos os dias, com sabores escolhidos pela confeitaria conforme a disponibilidade. Você também pode montar seu bolo para retirar no mesmo dia, fazendo o pedido com no mínimo 40 min de antecedência.' },
-      { id: 'f3', question: 'Vocês fazem bolos personalizados?', answer: 'Sim! Criamos bolos temáticos e personalizados para aniversários, mesversários e festas. Entre em contato com antecedência para encomendas especiais.' },
-      { id: 'f4', question: 'Quais formas de pagamento aceitam?', answer: 'Aceitamos PIX, cartão de crédito/débito e dinheiro na entrega. Consulte as opções no momento do pedido.' },
-      { id: 'f5', question: 'Onde vocês ficam?', answer: 'Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas. Atendemos por delivery e retirada — confirme disponibilidade pelo WhatsApp.' }
+      { id: 'f1', question: 'Como faço meu pedido?', answer: 'Escolha o bolo no cardápio, monte massa, recheio e tamanho e envie pelo WhatsApp. Confirmamos disponibilidade e prazo na hora.' },
+      { id: 'f2', question: 'Vocês têm pronta entrega?', answer: 'Sim! Temos bolos do dia. Para montar e retirar no mesmo dia, peça com no mínimo 40 minutos de antecedência.' },
+      { id: 'f3', question: 'Fazem bolos personalizados?', answer: 'Sim. Criamos bolos temáticos e sob encomenda. Para temas especiais, peça com antecedência.' },
+      { id: 'f4', question: 'Quais formas de pagamento?', answer: 'PIX, cartão e dinheiro. Confirmamos a forma de pagamento no WhatsApp ao fechar o pedido.' },
+      { id: 'f5', question: 'Qual o prazo e a retirada?', answer: 'Pronta entrega: a partir de 40 min. Encomendas: combinamos o prazo no atendimento. Retirada na Rua das Flores, 120 — Centro.' }
     ],
     gallery: [
-      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.36.jpeg`,
-      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`,
-      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (2).jpeg`,
-      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (3).jpeg`,
-      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38.jpeg`,
-      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (1).jpeg`,
-      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (2).jpeg`,
-      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg`,
-      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (4).jpeg`,
-      `${FOTOS}/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.39.jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27.jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (1).jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (2).jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (3).jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.27 (4).jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28.jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (1).jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (2).jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (3).jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.28 (4).jpeg`,
-      `${FOTOS}/bolos_bentocake/WhatsApp Image 2026-07-08 at 13.05.29.jpeg`,
-      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.11.jpeg`,
-      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.41.jpeg`,
-      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.58.57.jpeg`,
-      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.55.35.jpeg`,
-      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.58.03.jpeg`,
-      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.56.55.jpeg`,
-      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.57.09.jpeg`,
-      `${FOTOS}/bolos_destaques/WhatsApp Image 2026-07-08 at 12.57.29.jpeg`,
-      `${FOTOS}/bolos_bentocake/bento_kits/WhatsApp Image 2026-07-08 at 09.07.44.jpeg`,
-      `${FOTOS}/bolos_bentocake/bento_kits/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg`,
-      `${FOTOS}/bolos_bentocake/bento_kits/Captura de tela 2026-07-08 150756.png`,
-      ...amostraGallery
+      IMG.bolo1, IMG.bolo2, IMG.bolo3, IMG.bolo4, IMG.bolo5, IMG.bolo6, IMG.bolo7, IMG.bolo8,
+      IMG.pronto1, IMG.pronto2, IMG.pronto3, IMG.pronto4,
+      IMG.bento1, IMG.bento2, IMG.bento3, IMG.bento4,
+      IMG.destaque1, IMG.destaque2, IMG.destaque3, IMG.destaque4,
+      IMG.galeria1, IMG.galeria2, IMG.galeria3, IMG.galeria4,
+      IMG.galeria5, IMG.galeria6, IMG.galeria7, IMG.galeria8,
+      IMG.galeria9, IMG.galeria10, IMG.galeria11, IMG.galeria12
     ]
   };
 
@@ -191,234 +185,21 @@ const Storage = (() => {
       localStorage.setItem(KEY, JSON.stringify({ ...defaultData, version: DATA_VERSION }));
       return;
     }
-
     const data = JSON.parse(localStorage.getItem(KEY));
-    const currentVersion = data.version || 1;
-
-    if (currentVersion < 2) {
-      data.categories = (data.categories || []).filter(c => !REMOVED_CATEGORIES.includes(c.id));
-      data.products = (data.products || []).filter(
-        p => !REMOVED_PRODUCTS.includes(p.id) && !REMOVED_CATEGORIES.includes(p.categoryId)
-      );
-      data.orders = (data.orders || []).map(order => {
-        const items = order.items.filter(i => !REMOVED_PRODUCTS.includes(i.productId));
-        if (items.length === 0) return null;
-        return {
-          ...order,
-          items,
-          total: items.reduce((sum, i) => sum + i.price * i.qty, 0)
-        };
-      }).filter(Boolean);
-    }
-
-    if (currentVersion < 3) {
+    if ((data.version || 0) < DATA_VERSION) {
+      data.settings = { ...defaultData.settings, ...(data.settings || {}) };
       data.products = defaultData.products;
+      data.categories = defaultData.categories;
       data.gallery = defaultData.gallery;
-      data.orders = defaultData.orders;
       data.reviews = defaultData.reviews;
       data.faq = defaultData.faq;
-      data.settings = { ...data.settings, banner: defaultData.settings.banner, sobreImage: defaultData.settings.sobreImage };
-    }
-
-    if (currentVersion < 4) {
-      data.settings = { ...defaultData.settings, whatsapp: data.settings?.whatsapp || defaultData.settings.whatsapp };
-      data.categories = defaultData.categories;
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-      data.orders = defaultData.orders;
-      data.reviews = defaultData.reviews;
-      data.faq = defaultData.faq;
-      data.auth = defaultData.auth;
-    }
-
-    if (currentVersion < 5) {
-      data.settings = { ...data.settings, heroStory: defaultData.settings.heroStory };
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 6) {
-      data.settings = {
-        ...data.settings,
-        address: defaultData.settings.address,
-        mapEmbed: defaultData.settings.mapEmbed,
-        sobreText2: defaultData.settings.sobreText2
-      };
-      data.faq = defaultData.faq;
-    }
-
-    if (currentVersion < 7) {
-      data.settings = {
-        ...data.settings,
-        instagram: defaultData.settings.instagram,
-        instagramUser: defaultData.settings.instagramUser,
-        sobreText2: defaultData.settings.sobreText2
-      };
-    }
-
-    if (currentVersion < 8) {
-      data.settings = {
-        ...data.settings,
-        whatsapp: defaultData.settings.whatsapp
-      };
-    }
-
-    if (currentVersion < 9) {
-      data.products = defaultData.products;
-    }
-
-    if (currentVersion < 10) {
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 11) {
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 12) {
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 13) {
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 14) {
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 15) {
-      data.settings = { ...data.settings, hours: defaultData.settings.hours, sobreText2: defaultData.settings.sobreText2 };
-      data.products = defaultData.products;
-      data.faq = defaultData.faq;
-    }
-
-    if (currentVersion < 16) {
-      data.products = defaultData.products;
-    }
-
-    if (currentVersion < 17) {
-      data.settings = { ...data.settings, sobreText2: defaultData.settings.sobreText2 };
-      data.faq = defaultData.faq;
-    }
-
-    if (currentVersion < 18) {
-      data.products = defaultData.products;
-    }
-
-    if (currentVersion < 19) {
-      data.categories = defaultData.categories;
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 20) {
-      data.products = (data.products || defaultData.products).map(product =>
-        product.id === 'p7' ? { ...product, categoryId: 'cat1' } : product
-      );
-    }
-
-    if (currentVersion < 21) {
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 22) {
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 23) {
-      data.settings = {
-        ...data.settings,
-        banner: defaultData.settings.banner
-      };
-    }
-
-    if (currentVersion < 24) {
-      data.settings = {
-        ...data.settings,
-        banner: defaultData.settings.banner
-      };
-    }
-
-    if (currentVersion < 25) {
-      data.settings = {
-        ...data.settings,
-        sobreImage: defaultData.settings.sobreImage
-      };
-    }
-
-    if (currentVersion < 26) {
-      data.categories = defaultData.categories;
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 27) {
-      data.categories = defaultData.categories;
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 28) {
-      data.settings = {
-        ...data.settings,
-        banner: defaultData.settings.banner
-      };
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 29) {
-      data.categories = defaultData.categories;
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 30) {
-      data.categories = defaultData.categories;
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 31) {
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 32) {
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 33) {
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 34) {
-      data.products = (data.products || defaultData.products).filter(product => product.id !== 'p20');
-    }
-
-    if (currentVersion < 35) {
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < 36) {
-      data.products = defaultData.products;
-      data.gallery = defaultData.gallery;
-    }
-
-    if (currentVersion < DATA_VERSION) {
+      if (!data.orders || !data.orders.length) data.orders = defaultData.orders;
+      if (!data.clients || !data.clients.length) data.clients = defaultData.clients;
+      data.auth = data.auth || defaultData.auth;
       data.version = DATA_VERSION;
       localStorage.setItem(KEY, JSON.stringify(data));
     }
   }
-
   function getAll() {
     init();
     return JSON.parse(localStorage.getItem(KEY));
@@ -426,6 +207,196 @@ const Storage = (() => {
 
   function save(data) {
     localStorage.setItem(KEY, JSON.stringify(data));
+    pushToCloud(data);
+  }
+
+  function getAdminPassword() {
+    return sessionStorage.getItem('admin_password') || '';
+  }
+
+  function setAdminPassword(password) {
+    if (password) sessionStorage.setItem('admin_password', password);
+    else sessionStorage.removeItem('admin_password');
+  }
+
+  function isCloudEnabled() {
+    return cloudEnabled;
+  }
+
+  function notifyUpdated() {
+    window.dispatchEvent(new CustomEvent('storage-updated'));
+  }
+
+  async function fetchWithTimeout(url, options = {}, ms = 2500) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), ms);
+    try {
+      return await fetch(url, { ...options, signal: controller.signal, cache: 'no-store' });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function probeCloud() {
+    if (location.protocol === 'file:') {
+      cloudEnabled = false;
+      return false;
+    }
+    try {
+      const res = await fetchWithTimeout(API + '?ping=' + Date.now());
+      const type = (res.headers.get('content-type') || '').toLowerCase();
+      cloudEnabled = res.ok && type.includes('json');
+      return cloudEnabled;
+    } catch (e) {
+      cloudEnabled = false;
+      return false;
+    }
+  }
+
+  async function pullPublic() {
+    if (!(await probeCloud())) return false;
+    try {
+      const res = await fetchWithTimeout(API + '?t=' + Date.now());
+      if (!res.ok) return false;
+      const remote = await res.json();
+      if (remote.empty) return false;
+
+      const local = getAll();
+      const merged = {
+        ...local,
+        version: remote.version || local.version,
+        settings: remote.settings || local.settings,
+        categories: remote.categories || local.categories,
+        products: remote.products || local.products,
+        reviews: remote.reviews || local.reviews,
+        faq: remote.faq || local.faq,
+        gallery: remote.gallery || local.gallery
+      };
+      localStorage.setItem(KEY, JSON.stringify(merged));
+      lastRemoteJson = JSON.stringify(merged);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function pullFull() {
+    const password = getAdminPassword();
+    if (!password || !(await probeCloud())) return false;
+    try {
+      const res = await fetchWithTimeout(API + '?full=1&t=' + Date.now(), {
+        headers: { 'X-Admin-Password': password }
+      });
+      if (!res.ok) return false;
+      const remote = await res.json();
+      if (!remote || !remote.settings) return false;
+      const json = JSON.stringify(remote);
+      if (json === lastRemoteJson) return true;
+      localStorage.setItem(KEY, json);
+      lastRemoteJson = json;
+      notifyUpdated();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function pushToCloud(data) {
+    if (location.protocol === 'file:') return false;
+    const password = getAdminPassword() || (data.auth && data.auth.password) || '';
+    if (!password) return false;
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Password': password
+        },
+        body: JSON.stringify({ data })
+      });
+      if (res.ok) {
+        lastRemoteJson = JSON.stringify(data);
+        cloudEnabled = true;
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function loginRemote(email, password) {
+    if (!(await probeCloud())) {
+      // Offline / local: usa senha local
+      const ok = loginLocal(email, password);
+      if (ok) setAdminPassword(password);
+      return ok;
+    }
+
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'login', email, password })
+      });
+      const result = await res.json();
+
+      if (res.status === 404) {
+        // Servidor ainda sem dados: tenta local e faz upload inicial
+        if (loginLocal(email, password)) {
+          setAdminPassword(password);
+          await pushToCloud(getAll());
+          return true;
+        }
+        return false;
+      }
+
+      if (!res.ok || !result.ok) return false;
+
+      localStorage.setItem(KEY, JSON.stringify(result.data));
+      lastRemoteJson = JSON.stringify(result.data);
+      setAdminPassword(password);
+      cloudEnabled = true;
+      return true;
+    } catch (e) {
+      if (loginLocal(email, password)) {
+        setAdminPassword(password);
+        return true;
+      }
+      return false;
+    }
+  }
+
+  function loginLocal(email, password) {
+    const { auth } = getAll();
+    return auth.email === email && auth.password === password;
+  }
+
+  function startCloudPolling(intervalMs = 5000) {
+    stopCloudPolling();
+    if (!getAdminPassword()) return;
+    pollTimer = setInterval(() => {
+      pullFull();
+    }, intervalMs);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') pullFull();
+    });
+  }
+
+  function stopCloudPolling() {
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
+  }
+
+  async function initCloud({ full = false } = {}) {
+    init();
+    const ok = full ? await pullFull() : await pullPublic();
+    if (!ok && full && getAdminPassword()) {
+      await pushToCloud(getAll());
+    }
+    return cloudEnabled;
   }
 
   function getSettings() { return getAll().settings; }
@@ -468,14 +439,20 @@ const Storage = (() => {
   function getGallery() { return getAll().gallery; }
 
   function login(email, password) {
-    const { auth } = getAll();
-    return auth.email === email && auth.password === password;
+    return loginLocal(email, password);
   }
 
-  function updatePassword(newPassword) {
+  async function loginAsync(email, password) {
+    return loginRemote(email, password);
+  }
+
+  function updatePassword(currentPassword, newPassword) {
     const data = getAll();
+    if (data.auth.password !== currentPassword) return false;
     data.auth.password = newPassword;
     save(data);
+    setAdminPassword(newPassword);
+    return true;
   }
 
   function generateId(prefix) {
@@ -543,6 +520,131 @@ const Storage = (() => {
     return Object.values(months);
   }
 
+  /** Pedidos finalizados filtrados por perÃ­odo: all | today | month */
+  function getFinishedOrdersByPeriod(period = 'all') {
+    const finished = getOrders().filter(o => o.status === 'finalizado');
+    if (period === 'today') {
+      const today = new Date().toISOString().split('T')[0];
+      return finished.filter(o => o.date.startsWith(today));
+    }
+    if (period === 'month') {
+      const month = new Date().toISOString().slice(0, 7);
+      return finished.filter(o => o.date.startsWith(month));
+    }
+    return finished;
+  }
+
+  /**
+   * Agrega bolos/produtos vendidos a partir de pedidos finalizados.
+   * Retorna lista ordenada por faturamento (maior primeiro).
+   */
+  function getProductSalesBreakdown(period = 'all') {
+    const orders = getFinishedOrdersByPeriod(period);
+    const map = {};
+
+    orders.forEach(order => {
+      (order.items || []).forEach(item => {
+        const key = item.productId || item.name;
+        if (!map[key]) {
+          map[key] = {
+            productId: item.productId || null,
+            name: item.name || 'Produto',
+            qty: 0,
+            revenue: 0
+          };
+        }
+        const qty = Number(item.qty) || 0;
+        const price = Number(item.price) || 0;
+        map[key].qty += qty;
+        map[key].revenue += qty * price;
+        map[key].name = item.name || map[key].name;
+      });
+    });
+
+    return Object.values(map)
+      .map(row => ({
+        ...row,
+        avgPrice: row.qty > 0 ? row.revenue / row.qty : 0
+      }))
+      .sort((a, b) => b.revenue - a.revenue);
+  }
+
+  function getSalesPeriodStats(period = 'all') {
+    const orders = getFinishedOrdersByPeriod(period);
+    const breakdown = getProductSalesBreakdown(period);
+    return {
+      orderCount: orders.length,
+      totalRevenue: orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0),
+      cakesSold: breakdown.reduce((sum, row) => sum + row.qty, 0),
+      products: breakdown
+    };
+  }
+
+  /** Pedido vindo do site pÃºblico (cliente preenche nome + WhatsApp) */
+  async function createPublicOrder({ fullName, whatsapp, items, total, notes }) {
+    const phone = String(whatsapp || '').replace(/\D/g, '');
+    const name = String(fullName || '').trim();
+    if (!name || phone.length < 10 || !items || !items.length) {
+      return { ok: false, error: 'Dados incompletos' };
+    }
+
+    const data = getAll();
+    let client = (data.clients || []).find(c => String(c.phone || '').replace(/\D/g, '') === phone);
+    if (!client) {
+      client = {
+        id: generateId('c'),
+        name,
+        email: '',
+        phone,
+        address: ''
+      };
+      data.clients = data.clients || [];
+      data.clients.push(client);
+    } else {
+      client.name = name;
+      client.phone = phone;
+    }
+
+    const year = new Date().getFullYear();
+    const num = String((data.orders || []).length + 1).padStart(3, '0');
+    const order = {
+      id: generateId('o'),
+      number: `PED-${year}-${num}`,
+      clientId: client.id,
+      clientName: name,
+      clientWhatsapp: phone,
+      items,
+      total: Number(total) || items.reduce((s, i) => s + (Number(i.price) || 0) * (Number(i.qty) || 1), 0),
+      status: 'novo',
+      date: new Date().toISOString(),
+      notes: notes || '',
+      source: 'site'
+    };
+
+    data.orders = data.orders || [];
+    data.orders.push(order);
+    localStorage.setItem(KEY, JSON.stringify(data));
+
+    // Tenta gravar na Hostinger (vÃ¡rios celulares)
+    try {
+      if (location.protocol !== 'file:') {
+        await fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'create_order',
+            order,
+            client
+          })
+        });
+      }
+    } catch (e) {
+      /* local jÃ¡ salvou */
+    }
+
+    return { ok: true, order };
+  }
+
   return {
     init, getAll, save,
     getSettings, saveSettings,
@@ -551,11 +653,17 @@ const Storage = (() => {
     getClients, saveClients,
     getOrders, saveOrders,
     getReviews, getFaq, getGallery,
-    login, updatePassword,
+    login, loginAsync, updatePassword,
     generateId, generateOrderNumber,
     getCategoryName, formatCurrency,
-    getDashboardStats, getMonthlyRevenue
+    getDashboardStats, getMonthlyRevenue,
+    getFinishedOrdersByPeriod, getProductSalesBreakdown, getSalesPeriodStats,
+    initCloud, pullFull, pullPublic, pushToCloud,
+    isCloudEnabled, setAdminPassword, getAdminPassword,
+    startCloudPolling, stopCloudPolling, notifyUpdated,
+    createPublicOrder
   };
 })();
 
 Storage.init();
+

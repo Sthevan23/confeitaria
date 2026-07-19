@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Gimarry Bolos e Doces — Rua Nossa Senhora das Graças, 361, Bairro Manoel Valinhas. Bolos artesanais e pronta entrega diária.">
-  <meta name="keywords" content="gimarry, confeitosgimarry, bolos, doces, pronta entrega, confeitaria artesanal, Manoel Valinhas">
-  <meta name="author" content="Gimarry Bolos e Doces">
-  <meta property="og:title" content="Gimarry Bolos e Doces — Confeitaria Artesanal">
-  <meta property="og:description" content="Não é só sobre bolos e sim memórias afetivas. Peça pelo WhatsApp!">
+  <meta name="description" content="Flor de Açúcar — confeitaria artesanal. Bolos sob encomenda, pronta entrega e atendimento pelo WhatsApp.">
+  <meta name="author" content="Flor de Açúcar">
+  <meta name="theme-color" content="#0e5244">
+  <meta property="og:title" content="Flor de Açúcar — Confeitaria Artesanal">
+  <meta property="og:description" content="Bolos artesanais sob encomenda e pronta entrega. Peça pelo WhatsApp.">
   <meta property="og:type" content="website">
-  <title>Gimarry Bolos e Doces — Confeitaria Artesanal</title>
+  <meta property="og:locale" content="pt_BR">
+  <title>Flor de Açúcar — Confeitaria Artesanal</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230e5244'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23d9926f'/%3E%3C/svg%3E">
   <script>
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     if (window.location.hash) {
@@ -18,34 +20,27 @@
     window.scrollTo(0, 0);
   </script>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <!-- Estilos -->
-  <link rel="stylesheet" href="style.css?v=27">
+  <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 
-  <!-- Loading inicial -->
   <div id="loader" class="loader" aria-hidden="true">
     <div class="loader__inner">
-      <div class="loader__icon"><i class="fas fa-birthday-cake"></i></div>
-      <p class="loader__text" id="loader-text">Gimarry Bolos e Doces</p>
+      <div class="loader__mark"></div>
+      <p class="loader__text" id="loader-text">Flor de Açúcar</p>
       <div class="loader__bar"><div class="loader__progress"></div></div>
     </div>
   </div>
 
-  <!-- Header -->
   <header id="header" class="header">
     <div class="container header__container">
       <a href="#inicio" class="header__logo">
-        <i class="fas fa-birthday-cake"></i>
-        <span id="logo-text" class="logo-text">Gimarry Bolos e Doces</span>
+        <span class="header__mark" aria-hidden="true"></span>
+        <span id="logo-text" class="logo-text">Flor de Açúcar</span>
       </a>
 
       <nav class="header__nav" id="nav-menu" aria-label="Menu principal">
@@ -53,15 +48,14 @@
           <li><a href="#inicio" class="header__link active">Início</a></li>
           <li><a href="#sobre" class="header__link">Sobre</a></li>
           <li><a href="#produtos" class="header__link">Cardápio</a></li>
-          <li><a href="#destaques" class="header__link">Destaques</a></li>
           <li><a href="#galeria" class="header__link">Galeria</a></li>
           <li><a href="#avaliacoes" class="header__link">Avaliações</a></li>
           <li><a href="#contato" class="header__link">Contato</a></li>
-          <li class="header__nav-cta"><a href="#produtos" class="btn btn--primary btn--full">Fazer Pedido</a></li>
+          <li class="header__nav-cta"><a href="#produtos" class="btn btn--primary btn--full">Fazer pedido</a></li>
         </ul>
       </nav>
 
-      <a href="#produtos" class="btn btn--primary header__cta">Fazer Pedido</a>
+      <a href="#produtos" class="btn btn--primary header__cta">Fazer pedido</a>
 
       <button class="header__toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -69,287 +63,129 @@
     </div>
   </header>
 
-  <!-- Overlay menu mobile -->
   <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
 
   <main>
-    <!-- Hero -->
     <section id="inicio" class="hero">
-      <div class="hero__bg" id="hero-bg"></div>
-      <div class="hero__overlay"></div>
-      <div class="container hero__content reveal">
-        <span class="hero__badge" id="hero-badge"><i class="fas fa-star"></i> Confeitaria artesanal · Pronta entrega diária</span>
-        <h1 class="hero__title">Não é só sobre bolos e sim <em>memórias afetivas</em></h1>
-        <div class="hero__story" id="hero-story">
-          <p>Tudo começou como um complemento de salário, uma vontade de passar mais tempo com a minha filha e sem muita pretensão, mas o que fazemos com o coração o universo dá um jeito de fazer dar certo.</p>
-          <p>Alguns anos depois estamos aqui com muita gratidão, continuando a fazer cada bolo com todo carinho e respeito, pois sabemos que estamos levando alegria em forma de bolo.</p>
-          <p>Só tenho a agradecer cada cliente que confia no meu trabalho e a várias que estão comigo desde o começo <span class="hero__hearts">♥ </span></p>
+      <div class="hero__bg" id="hero-bg" style="background-image: url('imagens/hero.jpg?v10')"></div>
+      <div class="hero__veil"></div>
+      <div class="container hero__content">
+        <span class="hero__badge hero-anim" id="hero-badge"><i class="fas fa-bolt"></i> Pronta entrega hoje · Retire em 40 min</span>
+        <p class="hero__brand hero-anim hero-anim--delay-1" id="hero-brand">Flor de Açúcar</p>
+        <h1 class="hero__title hero-anim hero-anim--delay-2">
+          Bolos que deixam a vida mais
+          <span class="hero__rotate" aria-hidden="true">
+            <span>doce</span>
+            <span>especial</span>
+            <span>inesquecível</span>
+            <span>doce</span>
+          </span>
+        </h1>
+        <p class="hero__lead hero-anim hero-anim--delay-3" id="hero-lead">Encomenda ou pronta entrega — escolha o bolo e feche pelo WhatsApp em minutos.</p>
+        <div class="hero__actions hero-anim hero-anim--delay-3">
+          <a href="#produtos" class="btn btn--primary btn--lg btn--pulse">Ver cardápio</a>
+          <a href="#" class="btn btn--whatsapp btn--lg" id="hero-whatsapp"><i class="fab fa-whatsapp"></i> Pedir pelo WhatsApp</a>
         </div>
-        <div class="hero__actions">
-          <a href="#produtos" class="btn btn--primary btn--lg"><i class="fas fa-book-open"></i> Ver Cardápio</a>
-          <a href="#" class="btn btn--outline btn--lg" id="hero-whatsapp"><i class="fab fa-whatsapp"></i> Pedir Agora</a>
-          <a href="https://www.instagram.com/confeitosgimarry/" class="btn btn--outline btn--lg" id="hero-instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> @confeitosgimarry</a>
-        </div>
-        <div class="hero__stats">
-         
-        </div>
+        <ul class="hero__trust hero-anim hero-anim--delay-3">
+          <li><i class="fas fa-check"></i> PIX e cartão</li>
+          <li><i class="fas fa-check"></i> Retirada no dia</li>
+          <li><i class="fas fa-check"></i> Feito sob encomenda</li>
+        </ul>
       </div>
-      <div class="hero__scroll"><a href="#sobre" aria-label="Rolar para baixo"><i class="fas fa-chevron-down"></i></a></div>
+      <a href="#sobre" class="hero__scroll" aria-label="Rolar para baixo"><i class="fas fa-chevron-down"></i></a>
     </section>
 
-    <!-- Sobre -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track bg-gradient-animate">
+        <div class="marquee__rolling">
+          <span>Bolos artesanais</span>
+          <span>·</span>
+          <span>Pronta entrega</span>
+          <span>·</span>
+          <span>Pedidos no WhatsApp</span>
+          <span>·</span>
+          <span>Encomendas personalizadas</span>
+          <span>·</span>
+          <span>Bento cake</span>
+          <span>·</span>
+          <span>Retire em 40 min</span>
+          <span>·</span>
+          <span>Bolos artesanais</span>
+          <span>·</span>
+          <span>Pronta entrega</span>
+          <span>·</span>
+          <span>Pedidos no WhatsApp</span>
+          <span>·</span>
+          <span>Encomendas personalizadas</span>
+          <span>·</span>
+          <span>Bento cake</span>
+          <span>·</span>
+          <span>Retire em 40 min</span>
+          <span>·</span>
+        </div>
+      </div>
+    </div>
+
     <section id="sobre" class="section sobre">
       <div class="container">
         <div class="section__header reveal">
-          <span class="section__tag">Nossa História</span>
-          <h2 class="section__title">Paixão em cada <em>detalhe</em></h2>
-          <p class="section__subtitle">Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas</p>
+          <span class="section__tag">A confeitaria</span>
+          <h2 class="section__title">Feitos à mão, <em>com cuidado</em></h2>
+          <p class="section__subtitle" id="sobre-address">Rua das Flores, 120 — Centro</p>
         </div>
 
         <div class="sobre__grid">
-          <div class="sobre__content reveal">
-            <p class="sobre__text" id="sobre-text1">A <strong>Gimarry Bolos e Doces</strong> é uma confeitaria artesanal dedicada a criar bolos que vão muito além do sabor — são memórias afetivas em forma de doce.</p>
-            <p class="sobre__text" id="sobre-text2">Trabalhamos com bolos personalizados, doces especiais e <strong>bolos de pronta entrega todos os dias</strong>. Você também pode montar seu bolo para retirar no mesmo dia, com pedido feito com no mínimo 40 min de antecedência. Siga <strong>@confeitosgimarry</strong> no Instagram!</p>
+          <div class="sobre__content reveal reveal--left">
+            <p class="sobre__text" id="sobre-text1">A <strong>Flor de Açúcar</strong> faz bolos artesanais sob encomenda e com opções de pronta entrega. Do bento cake ao bolo de festa, tudo pensado para impressionar.</p>
+            <p class="sobre__text" id="sobre-text2">Atendimento pelo WhatsApp, retirada no balcão e combinações de massa, recheio e tamanho do seu jeito.</p>
 
-            <div class="sobre__cards">
-              <div class="sobre__card">
-                <div class="sobre__card-icon"><i class="fas fa-home"></i></div>
-                <h3>Confeitaria Artesanal</h3>
-                <p>Bolos feitos à mão com dedicação, criatividade e ingredientes selecionados.</p>
+            <div class="sobre__points">
+              <div class="sobre__point">
+                <i class="fas fa-leaf"></i>
+                <div>
+                  <h3>Artesanal</h3>
+                  <p>Massas, recheios e acabamentos feitos sob encomenda.</p>
+                </div>
               </div>
-              <div class="sobre__card">
-                <div class="sobre__card-icon"><i class="fas fa-clock"></i></div>
-                <h3>Pronta Entrega</h3>
-                <p>Bolos prontos todos os dias. Consulte os recheios disponíveis ou monte o seu bolo com 40 min de antecedência.</p>
+              <div class="sobre__point">
+                <i class="fas fa-bolt"></i>
+                <div>
+                  <h3>Mesmo dia</h3>
+                  <p>Pronta entrega com retirada a partir de 40 minutos.</p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="sobre__image reveal">
-            <img id="sobre-img" src="fotos_bolos/foto_da_loja.jpeg" alt="Loja Gimarry Bolos e Doces" loading="lazy">
-            <div class="sobre__image-badge">
-              <a href="https://www.instagram.com/confeitosgimarry/" id="sobre-instagram" target="_blank" rel="noopener">
-                <strong><i class="fab fa-instagram"></i></strong>
-                <span>@confeitosgimarry</span>
-              </a>
-            </div>
+          <div class="sobre__image reveal reveal--right reveal--scale">
+            <img id="sobre-img" src="imagens/loja.jpg?v9" alt="Confeitaria Flor de Açúcar" loading="lazy">
+            <a href="https://www.instagram.com/" id="sobre-instagram" class="sobre__insta" target="_blank" rel="noopener">
+              <i class="fab fa-instagram"></i> @flordeacucar
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Produtos -->
     <section id="produtos" class="section produtos">
       <div class="container">
         <div class="section__header reveal">
           <span class="section__tag">Cardápio</span>
-          <h2 class="section__title">Nossos <em>Produtos</em></h2>
-          <p class="section__subtitle">Bolos prontos do dia, kits e encomendas para todos os momentos</p>
+          <h2 class="section__title">Nossos <em>bolos</em></h2>
+          <p class="section__subtitle">Pronta entrega, bento cakes e encomendas personalizadas</p>
         </div>
 
-        <!-- Filtro de categorias -->
         <div class="produtos__filter reveal" id="category-filter">
           <button class="filter-btn active" data-category="all">Todos</button>
         </div>
 
-        <!-- Grid de produtos -->
-        <div class="produtos__grid" id="products-grid">
-
-          <article class="product-card" data-category="cat1">
-            <div class="product-card__img">
-              <img src="fotos_bolos/bolos_amostra/WhatsApp Image 2026-07-08 at 13.08.11.jpeg" alt="Bolo Vintage Happy Birthday">
-              <span class="product-card__badge">Destaque</span>
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Bolos Personalizados</span>
-              <h3 class="product-card__name">Bolo Vintage Happy Birthday</h3>
-              <p class="product-card__desc">Bolo branco estilo vintage com laços pretos, corações e mensagem Happy Birthday.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Elegante com Flores" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat1">
-            <div class="product-card__img">
-              <img src="fotos_bolos/bolos_amostra/WhatsApp Image 2026-07-08 at 13.08.12.jpeg" alt="Bolo Lilás Happy Birthday">
-              <span class="product-card__badge">Destaque</span>
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Bolos Personalizados</span>
-              <h3 class="product-card__name">Bolo Lilás Happy Birthday</h3>
-              <p class="product-card__desc">Bolo lilás com acabamento delicado, brilho e topo Happy Birthday.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Matelassê com Brigadeiros" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat1">
-            <div class="product-card__img">
-              <img src="fotos_bolos/bolos_amostra/WhatsApp Image 2026-07-08 at 13.08.13.jpeg" alt="Bolo Infantil Hello Kitty">
-              <span class="product-card__badge">Destaque</span>
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Bolos Personalizados</span>
-              <h3 class="product-card__name">Bolo Infantil Hello Kitty</h3>
-              <p class="product-card__desc">Bolo infantil rosa e branco com tema Hello Kitty, nome e idade personalizados.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Listras Pastel" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat3">
-            <div class="product-card__img product-card__img--celebre-left">
-              <img src="fotos_bolos/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (3).jpeg" alt="Bolo Parabéns da Linha Celebre">
-              <span class="product-card__badge product-card__badge--ready">Linha Celebre</span>
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Pronta Entrega</span>
-              <h3 class="product-card__name">Bolo Parabéns</h3>
-              <p class="product-card__desc">Bolo da Linha Celebre, ideal para comemorações rápidas. Serve aproximadamente 7 fatias.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Parabéns - Linha Celebre" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat3">
-            <div class="product-card__img product-card__img--celebre-center">
-              <img src="fotos_bolos/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.37 (1).jpeg" alt="Bolo Comemore da Linha Celebre">
-              <span class="product-card__badge product-card__badge--ready">Linha Celebre</span>
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Pronta Entrega</span>
-              <h3 class="product-card__name">Bolo Comemore</h3>
-              <p class="product-card__desc">Bolo da Linha Celebre com acabamento especial. Serve aproximadamente 9 fatias.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Comemore - Linha Celebre" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat3">
-            <div class="product-card__img product-card__img--celebre-right">
-              <img src="fotos_bolos/pronto_entrega/WhatsApp Image 2026-07-08 at 08.58.38 (2).jpeg" alt="Bolo Celebrar da Linha Celebre">
-              <span class="product-card__badge product-card__badge--ready">Linha Celebre</span>
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Pronta Entrega</span>
-              <h3 class="product-card__name">Bolo Celebrar</h3>
-              <p class="product-card__desc">Bolo da Linha Celebre para celebrações especiais. Serve aproximadamente 13 fatias.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Celebrar - Linha Celebre" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat2">
-            <div class="product-card__img">
-              <img src="fotos_bolos/bento-cake-plantao.png" alt="Bentô Cake Personalizado">
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Doces</span>
-              <h3 class="product-card__name">Bento Cake na Marmita</h3>
-              <p class="product-card__desc">Bento cake personalizado na marmita. Sugestão: 2 a 3 fatias, peso aproximado de 300g.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bento Cake na Marmita" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat2">
-            <div class="product-card__img">
-              <img src="fotos_bolos/bento-cake-plantao.png" alt="Kit Bento com 6 doces">
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Doces</span>
-              <h3 class="product-card__name">Kit Bento + 6 Doces</h3>
-              <p class="product-card__desc">Bento cake personalizado acompanhado de 6 docinhos sortidos.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Kit Bento + 6 Doces" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat2">
-            <div class="product-card__img">
-              <img src="fotos_bolos/bento-cake-plantao.png" alt="Kit Bento Cake com 16 doces">
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Doces</span>
-              <h3 class="product-card__name">Kit Bento Cake + 16 Doces</h3>
-              <p class="product-card__desc">Kit especial com bento cake personalizado e 16 docinhos para presentear ou comemorar.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Kit Bento Cake + 16 Doces" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat1">
-            <div class="product-card__img">
-              <img src="fotos_bolos/bolos_amostra/WhatsApp Image 2026-07-08 at 13.08.14.jpeg" alt="Bolo Mesversário Maçã">
-              <span class="product-card__badge">Destaque</span>
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Bolos Personalizados</span>
-              <h3 class="product-card__name">Bolo Mesversário Maçã</h3>
-              <p class="product-card__desc">Bolo de mesversário com mini maçãs e escrita personalizada no topo.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Temático Bob Esponja" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat1">
-            <div class="product-card__img">
-              <img src="fotos_bolos/bolos_amostra/WhatsApp Image 2026-07-08 at 13.08.15.jpeg" alt="Bolo Vintage com Laços">
-              <span class="product-card__badge">Destaque</span>
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Bolos Personalizados</span>
-              <h3 class="product-card__name">Bolo Vintage com Laços</h3>
-              <p class="product-card__desc">Bolo branco estilo vintage com bicos trabalhados e laços rosa.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Mesversário Super Mario" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-category="cat1">
-            <div class="product-card__img">
-              <img src="fotos_bolos/bolos_amostra/WhatsApp Image 2026-07-08 at 13.08.16.jpeg" alt="Bolo Temático Rei Leão">
-            </div>
-            <div class="product-card__body">
-              <span class="product-card__category">Bolos Personalizados</span>
-              <h3 class="product-card__name">Bolo Temático Rei Leão</h3>
-              <p class="product-card__desc">Bolo infantil com tema Rei Leão, nome e idade personalizados.</p>
-              <div class="product-card__footer">
-                <span class="product-card__price">Consultar</span>
-                <a href="#" class="btn btn--primary btn--sm btn-pedir" data-product="Bolo Temático Barril" data-price="0" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Pedir</a>
-              </div>
-            </div>
-          </article>
-
-        </div>
+        <div class="produtos__grid" id="products-grid"></div>
 
         <div class="cardapio-extra reveal">
           <div class="cardapio-extra__header">
-            <span class="section__tag">Tabela</span>
-            <h3>Opções para Encomenda</h3>
-            <p>Escolha massa, recheio, tamanho e doces. Finalizamos seu pedido pelo WhatsApp.</p>
+            <span class="section__tag">Monte o seu</span>
+            <h3>Encomende do seu jeito</h3>
+            <p>Escolha tamanho, massa e recheio. A gente confirma e fecha pelo WhatsApp.</p>
           </div>
 
           <div class="cardapio-extra__grid">
@@ -385,15 +221,12 @@
                 <label><input type="checkbox" name="extra-recheio" value="Brigadeiro branco"><span>Brigadeiro branco</span></label>
                 <label><input type="checkbox" name="extra-recheio" value="Brigadeiro & morango"><span>Brigadeiro & morango</span></label>
                 <label><input type="checkbox" name="extra-recheio" value="Doce de leite"><span>Doce de leite</span></label>
-                <label><input type="checkbox" name="extra-recheio" value="Doce de leite/abacaxi"><span>Doce de leite/abacaxi</span></label>
-                <label><input type="checkbox" name="extra-recheio" value="Paçoca"><span>Paçoca</span></label>
-                <label><input type="checkbox" name="extra-recheio" value="Coco"><span>Coco</span></label>
                 <label><input type="checkbox" name="extra-recheio" value="Ninho"><span>Ninho</span></label>
-                <label><input type="checkbox" name="extra-recheio" value="Caramelo salgado"><span>Caramelo salgado</span></label>
-                <label><input type="checkbox" name="extra-recheio" value="Creme de avelã"><span>Creme de avelã</span></label>
-                <label><input type="checkbox" name="extra-recheio" value="Ouro Branco"><span>Ouro Branco</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Coco"><span>Coco</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Paçoca"><span>Paçoca</span></label>
                 <label><input type="checkbox" name="extra-recheio" value="Pistache"><span>Pistache</span></label>
                 <label><input type="checkbox" name="extra-recheio" value="Ferrero"><span>Ferrero</span></label>
+                <label><input type="checkbox" name="extra-recheio" value="Creme de avelã"><span>Creme de avelã</span></label>
               </div>
             </article>
 
@@ -403,8 +236,6 @@
                 <li><label><input type="checkbox" name="extra-bombom" value="Brigadeiro"><span>Brigadeiro</span><strong>R$ 190,00</strong></label></li>
                 <li><label><input type="checkbox" name="extra-bombom" value="Maracujá"><span>Maracujá</span><strong>R$ 190,00</strong></label></li>
                 <li><label><input type="checkbox" name="extra-bombom" value="Leite em pó"><span>Leite em pó</span><strong>R$ 190,00</strong></label></li>
-                <li><label><input type="checkbox" name="extra-bombom" value="Coco"><span>Coco</span><strong>R$ 190,00</strong></label></li>
-                <li><label><input type="checkbox" name="extra-bombom" value="Morango"><span>Morango</span><strong>R$ 190,00</strong></label></li>
                 <li><label><input type="checkbox" name="extra-bombom" value="Nutella"><span>Nutella</span><strong>R$ 230,00</strong></label></li>
               </ul>
             </article>
@@ -415,45 +246,59 @@
                 <li><label><input type="checkbox" name="extra-docinho" value="Brigadeiro"><span>Brigadeiro</span><strong>R$ 130,00</strong></label></li>
                 <li><label><input type="checkbox" name="extra-docinho" value="Beijinho"><span>Beijinho</span><strong>R$ 130,00</strong></label></li>
                 <li><label><input type="checkbox" name="extra-docinho" value="Leite em pó"><span>Leite em pó</span><strong>R$ 130,00</strong></label></li>
-                <li><label><input type="checkbox" name="extra-docinho" value="Ele/Ela"><span>Ele/Ela</span><strong>R$ 130,00</strong></label></li>
                 <li><label><input type="checkbox" name="extra-docinho" value="Morango"><span>Morango</span><strong>R$ 130,00</strong></label></li>
-                <li><label><input type="checkbox" name="extra-docinho" value="Amendoim"><span>Amendoim</span><strong>R$ 130,00</strong></label></li>
               </ul>
             </article>
           </div>
 
+          <div class="customer-fields customer-fields--menu">
+            <p class="customer-fields__title">Seus dados (obrigatório)</p>
+            <div class="customer-fields__row">
+              <label class="order-field">
+                Nome
+                <input type="text" id="menu-cliente-nome" placeholder="Seu nome" required autocomplete="given-name">
+              </label>
+              <label class="order-field">
+                Sobrenome
+                <input type="text" id="menu-cliente-sobrenome" placeholder="Seu sobrenome" required autocomplete="family-name">
+              </label>
+            </div>
+            <label class="order-field">
+              WhatsApp
+              <input type="tel" id="menu-cliente-whatsapp" placeholder="DDD + número" required autocomplete="tel" inputmode="tel">
+            </label>
+            <p class="customer-fields__hint" id="menu-customer-error" hidden></p>
+          </div>
+
           <a href="#" class="btn btn--primary btn--lg cardapio-extra__cta" id="menu-whatsapp">
-            <i class="fab fa-whatsapp"></i> Fazer Pedido pelo WhatsApp
+            <i class="fab fa-whatsapp"></i> Encomendar pelo WhatsApp
           </a>
         </div>
       </div>
     </section>
 
-    <!-- Destaques -->
     <section id="destaques" class="section destaques">
       <div class="container">
         <div class="section__header reveal">
-          <span class="section__tag">Mais Vendidos</span>
-          <h2 class="section__title">Nossos <em>Destaques</em></h2>
-          <p class="section__subtitle">Os favoritos dos nossos clientes</p>
+          <span class="section__tag">Destaques</span>
+          <h2 class="section__title">Os mais <em>pedidos</em></h2>
+          <p class="section__subtitle">Seleção dos modelos preferidos pelos clientes</p>
         </div>
         <div class="destaques__grid" id="featured-grid"></div>
       </div>
     </section>
 
-    <!-- Galeria -->
     <section id="galeria" class="section galeria">
       <div class="container">
         <div class="section__header reveal">
-          <span class="section__tag">Inspiração</span>
-          <h2 class="section__title">Nossa <em>Galeria</em></h2>
-          <p class="section__subtitle">Um vislumbre das nossas criações</p>
+          <span class="section__tag">Galeria</span>
+          <h2 class="section__title">Ideias para a <em>sua festa</em></h2>
+          <p class="section__subtitle">Inspirações reais para encomendar com confiança</p>
         </div>
         <div class="galeria__grid" id="gallery-grid"></div>
       </div>
     </section>
 
-    <!-- Lightbox -->
     <div class="lightbox" id="lightbox" aria-hidden="true">
       <button class="lightbox__close" id="lightbox-close" aria-label="Fechar"><i class="fas fa-times"></i></button>
       <button class="lightbox__prev" id="lightbox-prev" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
@@ -483,15 +328,12 @@
                 <label><input type="checkbox" value="Brigadeiro branco"><span>Brigadeiro branco</span></label>
                 <label><input type="checkbox" value="Brigadeiro & morango"><span>Brigadeiro & morango</span></label>
                 <label><input type="checkbox" value="Doce de leite"><span>Doce de leite</span></label>
-                <label><input type="checkbox" value="Doce de leite/abacaxi"><span>Doce de leite/abacaxi</span></label>
-                <label><input type="checkbox" value="Paçoca"><span>Paçoca</span></label>
-                <label><input type="checkbox" value="Coco"><span>Coco</span></label>
                 <label><input type="checkbox" value="Ninho"><span>Ninho</span></label>
-                <label><input type="checkbox" value="Caramelo salgado"><span>Caramelo salgado</span></label>
-                <label><input type="checkbox" value="Creme de avelã"><span>Creme de avelã</span></label>
-                <label><input type="checkbox" value="Ouro Branco"><span>Ouro Branco</span></label>
+                <label><input type="checkbox" value="Coco"><span>Coco</span></label>
+                <label><input type="checkbox" value="Paçoca"><span>Paçoca</span></label>
                 <label><input type="checkbox" value="Pistache"><span>Pistache</span></label>
                 <label><input type="checkbox" value="Ferrero"><span>Ferrero</span></label>
+                <label><input type="checkbox" value="Creme de avelã"><span>Creme de avelã</span></label>
               </div>
             </fieldset>
 
@@ -505,23 +347,41 @@
               <textarea id="order-frase" rows="3" maxlength="90" placeholder="Digite a frase que você quer no Bento Cake"></textarea>
               <small>Exemplo: Feliz aniversário, te amo!</small>
             </label>
+
+            <div class="customer-fields">
+              <p class="customer-fields__title">Seus dados (obrigatório)</p>
+              <div class="customer-fields__row">
+                <label class="order-field">
+                  Nome
+                  <input type="text" id="order-cliente-nome" placeholder="Nome" required autocomplete="given-name">
+                </label>
+                <label class="order-field">
+                  Sobrenome
+                  <input type="text" id="order-cliente-sobrenome" placeholder="Sobrenome" required autocomplete="family-name">
+                </label>
+              </div>
+              <label class="order-field">
+                WhatsApp
+                <input type="tel" id="order-cliente-whatsapp" placeholder="DDD + número" required autocomplete="tel" inputmode="tel">
+              </label>
+            </div>
+            <p class="customer-fields__hint" id="order-customer-error" hidden></p>
           </form>
 
-          <a href="#" class="btn btn--primary btn--full" id="lightbox-order" target="_blank" rel="noopener">
-            <i class="fab fa-whatsapp"></i> Encomendar com essas opções
+          <a href="#" class="btn btn--primary btn--full" id="lightbox-order">
+            <i class="fab fa-whatsapp"></i> Confirmar pedido no WhatsApp
           </a>
         </div>
       </div>
       <button class="lightbox__next" id="lightbox-next" aria-label="Próxima"><i class="fas fa-chevron-right"></i></button>
     </div>
 
-    <!-- Avaliações -->
     <section id="avaliacoes" class="section avaliacoes">
       <div class="container">
         <div class="section__header reveal">
           <span class="section__tag">Depoimentos</span>
           <h2 class="section__title">O que dizem nossos <em>clientes</em></h2>
-          <p class="section__subtitle">A satisfação de quem provou nossas delícias</p>
+          <p class="section__subtitle">Quem já experimentou recomenda</p>
         </div>
 
         <div class="avaliacoes__carousel reveal">
@@ -535,59 +395,64 @@
       </div>
     </section>
 
-    <!-- Como Funciona -->
     <section id="como-funciona" class="section como-funciona">
       <div class="container">
         <div class="section__header reveal">
           <span class="section__tag">Simples e Rápido</span>
-          <h2 class="section__title">Como <em>Funciona</em></h2>
-          <p class="section__subtitle">Seu pedido em 3 passos fáceis</p>
+          <h2 class="section__title">Como <em>funciona</em></h2>
+          <p class="section__subtitle">Seu pedido em três passos</p>
         </div>
 
         <div class="passos">
-          <div class="passo reveal">
-            <div class="passo__number">1</div>
-            <div class="passo__icon"><i class="fas fa-shopping-basket"></i></div>
-            <h3>Escolha os produtos</h3>
-            <p>Navegue pelo nosso cardápio e selecione suas delícias favoritas.</p>
+          <div class="passo reveal reveal--scale">
+            <span class="passo__number">01</span>
+            <h3>Escolha</h3>
+            <p>Veja o cardápio e toque no bolo que mais combinou.</p>
           </div>
-          <div class="passo__line reveal"></div>
-          <div class="passo reveal">
-            <div class="passo__number">2</div>
-            <div class="passo__icon"><i class="fas fa-mobile-alt"></i></div>
-            <h3>Faça o pedido</h3>
-            <p>Entre em contato pelo WhatsApp e confirme seu pedido com nossa equipe.</p>
+          <div class="passo reveal reveal--scale">
+            <span class="passo__number">02</span>
+            <h3>Monte</h3>
+            <p>Defina massa, recheio e tamanho — enviamos tudo no WhatsApp.</p>
           </div>
-          <div class="passo__line reveal"></div>
-          <div class="passo reveal">
-            <div class="passo__number">3</div>
-            <div class="passo__icon"><i class="fas fa-truck"></i></div>
-            <h3>Receba em casa</h3>
-            <p>Entregamos com cuidado e pontualidade, direto na sua porta.</p>
+          <div class="passo reveal reveal--scale">
+            <span class="passo__number">03</span>
+            <h3>Retire</h3>
+            <p>No mesmo dia (40 min) ou na data combinada da encomenda.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FAQ -->
+    <section class="cta-band reveal">
+      <div class="container cta-band__inner">
+        <div>
+          <span class="section__tag">Atendimento</span>
+          <h2>Vamos preparar o seu bolo</h2>
+          <p>Fale conosco no WhatsApp para confirmar prazo, sabor e retirada.</p>
+        </div>
+        <a href="#" class="btn btn--primary btn--lg" id="cta-band-whatsapp">
+          <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+        </a>
+      </div>
+    </section>
+
     <section id="faq" class="section faq">
       <div class="container">
         <div class="section__header reveal">
           <span class="section__tag">Dúvidas</span>
-          <h2 class="section__title">Perguntas <em>Frequentes</em></h2>
-          <p class="section__subtitle">Tudo o que você precisa saber</p>
+          <h2 class="section__title">Antes de <em>pedir</em></h2>
+          <p class="section__subtitle">Respostas rápidas para você fechar com tranquilidade</p>
         </div>
         <div class="faq__list" id="faq-list"></div>
       </div>
     </section>
 
-    <!-- Contato -->
     <section id="contato" class="section contato">
       <div class="container">
         <div class="section__header reveal">
-          <span class="section__tag">Fale Conosco</span>
-          <h2 class="section__title">Entre em <em>Contato</em></h2>
-          <p class="section__subtitle">Estamos prontos para atender você</p>
+          <span class="section__tag">Atendimento</span>
+          <h2 class="section__title">Fale com a <em>gente</em></h2>
+          <p class="section__subtitle">WhatsApp é o caminho mais rápido para garantir seu bolo</p>
         </div>
 
         <div class="contato__grid">
@@ -596,14 +461,14 @@
               <div class="contato__icon"><i class="fab fa-whatsapp"></i></div>
               <div>
                 <h4>WhatsApp</h4>
-                <a href="https://wa.me/5537988554691" id="contact-whatsapp">(37) 98855-4691</a>
+                <a href="https://wa.me/5531999999999" id="contact-whatsapp">(31) 99999-9999</a>
               </div>
             </div>
             <div class="contato__item">
               <div class="contato__icon"><i class="fab fa-instagram"></i></div>
               <div>
                 <h4>Instagram</h4>
-                <a href="https://www.instagram.com/confeitosgimarry/" id="contact-instagram" target="_blank" rel="noopener">@confeitosgimarry</a>
+                <a href="https://www.instagram.com/" id="contact-instagram" target="_blank" rel="noopener">@flordeacucar</a>
               </div>
             </div>
             <div class="contato__item" id="contact-facebook-wrap">
@@ -617,45 +482,44 @@
               <div class="contato__icon"><i class="fas fa-map-marker-alt"></i></div>
               <div>
                 <h4>Localização</h4>
-                <p id="contact-address">Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas</p>
+                <p id="contact-address">Rua das Flores, 120 — Centro</p>
               </div>
             </div>
             <div class="contato__item">
               <div class="contato__icon"><i class="fas fa-clock"></i></div>
               <div>
-                <h4>Pronta Entrega</h4>
-                <p id="contact-hours">Bolos de pronta entrega disponíveis diariamente. Consulte os recheios do dia.</p>
+                <h4>Horário</h4>
+                <p id="contact-hours">Seg a Sáb · 9h às 19h · Dom · 9h às 13h</p>
               </div>
             </div>
           </div>
 
           <div class="contato__map reveal">
-            <iframe id="contact-map" src="" title="Localização Gimarry Bolos e Doces" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe id="contact-map" src="" title="Localização Flor de Açúcar" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Rodapé -->
   <footer class="footer">
     <div class="container">
       <div class="footer__grid">
         <div class="footer__brand">
           <a href="#inicio" class="footer__logo">
-            <i class="fas fa-birthday-cake"></i>
-            <span id="footer-logo-text">Gimarry Bolos e Doces</span>
+            <span class="header__mark" aria-hidden="true"></span>
+            <span id="footer-logo-text">Flor de Açúcar</span>
           </a>
-          <p id="footer-tagline">Não é só sobre bolos e sim memórias afetivas. Rua Nossa Senhora das Graças, 361 — Bairro Manoel Valinhas.</p>
+          <p id="footer-tagline">Bolos artesanais para encomenda e pronta entrega.</p>
           <div class="footer__social">
             <a href="#" id="footer-whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-            <a href="https://www.instagram.com/confeitosgimarry/" id="footer-instagram" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.instagram.com/" id="footer-instagram" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
             <a href="#" id="footer-facebook" aria-label="Facebook" target="_blank" rel="noopener" style="display:none"><i class="fab fa-facebook"></i></a>
           </div>
         </div>
 
         <div class="footer__links">
-          <h4>Links Úteis</h4>
+          <h4>Links</h4>
           <ul>
             <li><a href="#inicio">Início</a></li>
             <li><a href="#sobre">Sobre</a></li>
@@ -667,16 +531,12 @@
 
         <div class="footer__links">
           <h4>Categorias</h4>
-          <ul id="footer-categories">
-            <li><a href="#produtos">Bolos Personalizados</a></li>
-            <li><a href="#produtos">Doces</a></li>
-            <li><a href="#produtos">Pronta Entrega</a></li>
-          </ul>
+          <ul id="footer-categories"></ul>
         </div>
 
         <div class="footer__newsletter">
           <h4>Newsletter</h4>
-          <p>Receba novidades e promoções exclusivas.</p>
+          <p>Novidades e promoções no seu e-mail.</p>
           <form class="footer__form" id="newsletter-form">
             <input type="email" placeholder="Seu e-mail" required aria-label="E-mail para newsletter">
             <button type="submit" aria-label="Inscrever"><i class="fas fa-paper-plane"></i></button>
@@ -685,25 +545,23 @@
       </div>
 
       <div class="footer__bottom">
-        <p>&copy; <span id="footer-year"></span> <span id="footer-name">Gimarry Bolos e Doces</span>. Todos os direitos reservados.</p>
-        <a href="admin/login.html" class="footer__admin"><i class="fas fa-lock"></i> Admin</a>
+        <p>&copy; <span id="footer-year"></span> <span id="footer-name">Flor de Açúcar</span>. Todos os direitos reservados. · <a href="admin/login.html">Área admin</a></p>
       </div>
     </div>
   </footer>
 
-  <!-- Botão WhatsApp flutuante -->
   <a href="#" class="whatsapp-float" id="whatsapp-float" aria-label="Falar no WhatsApp" target="_blank" rel="noopener">
     <i class="fab fa-whatsapp"></i>
     <span class="whatsapp-float__tooltip">Fale conosco!</span>
   </a>
 
-  <!-- Botão voltar ao topo -->
   <button class="back-to-top" id="back-to-top" aria-label="Voltar ao topo">
     <i class="fas fa-arrow-up"></i>
   </button>
 
-  <!-- Scripts -->
-  <script src="js/storage.js?v=36"></script>
-  <script src="script.js?v=40"></script>
+  <a href="#" id="hero-instagram" class="visually-hidden" target="_blank" rel="noopener">Instagram</a>
+
+  <script src="js/storage.js?v=20"></script>
+  <script src="script.js?v=20"></script>
 </body>
 </html>

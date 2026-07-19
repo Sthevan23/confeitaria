@@ -3,20 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Admin — Gimarry Bolos e Doces</title>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel Admin — Flor de Açúcar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin.css?v=20">
+  <script>
+    if (sessionStorage.getItem('admin_logged') !== 'true') {
+      location.replace('login.html');
+    }
+  </script>
 </head>
 <body>
 
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar__header">
-      <i class="fas fa-birthday-cake"></i>
-      <span>Gimarry</span>
+      <i class="fas fa-leaf"></i>
+      <span>Flor de Açúcar</span>
     </div>
     <nav class="sidebar__nav">
       <a href="#" class="sidebar__link active" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
@@ -40,7 +46,10 @@
       <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Menu"><i class="fas fa-bars"></i></button>
       <h1 class="admin-header__title" id="page-title">Dashboard</h1>
       <div class="admin-header__user">
-        <span id="admin-email">admin@gimarry.com.br</span>
+        <span class="sync-badge" id="sync-badge" title="Status da sincronização">
+          <i class="fas fa-cloud"></i> <span id="sync-badge-text">Local</span>
+        </span>
+        <span id="admin-email">contato@flordeacucar.com.br</span>
         <div class="admin-header__avatar"><i class="fas fa-user"></i></div>
       </div>
     </header>
@@ -49,7 +58,7 @@
     <section class="admin-page active" id="page-dashboard">
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-card__icon" style="background:#F8BBD0;color:#E91E63"><i class="fas fa-shopping-bag"></i></div>
+          <div class="stat-card__icon" style="background:#e8f0ed;color:#0e5244"><i class="fas fa-shopping-bag"></i></div>
           <div class="stat-card__info">
             <span class="stat-card__label">Total de Pedidos</span>
             <strong class="stat-card__value" id="stat-orders">0</strong>
@@ -80,18 +89,39 @@
 
       <div class="dashboard-grid">
         <div class="card">
-          <div class="card__header"><h3>Pedidos Recentes</h3></div>
+          <div class="card__header">
+            <h3>Pedidos Recentes</h3>
+            <button type="button" class="btn btn--secondary btn--sm" onclick="navigateTo('pedidos')">Ver todos</button>
+          </div>
           <div class="table-responsive">
             <table class="table" id="recent-orders-table">
-              <thead><tr><th>Nº</th><th>Cliente</th><th>Valor</th><th>Status</th><th>Data</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Nº</th>
+                  <th>Cliente</th>
+                  <th>Itens</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
               <tbody></tbody>
             </table>
           </div>
+          <p class="fin-empty" id="dashboard-orders-empty" hidden>Nenhum pedido cadastrado ainda.</p>
         </div>
         <div class="card">
           <div class="card__header"><h3>Status dos Pedidos</h3></div>
           <div class="status-summary" id="status-summary"></div>
         </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card__header">
+          <h3>Detalhes dos pedidos</h3>
+          <span class="card__subtitle">Clique em um pedido para ver imagens e informações completas</span>
+        </div>
+        <div class="dashboard-orders" id="dashboard-orders-list"></div>
       </div>
     </section>
 
@@ -163,16 +193,18 @@
       <div class="card">
         <div class="table-responsive">
           <table class="table" id="clients-table">
-            <thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Endereço</th><th>Ações</th></tr></thead>
+            <thead><tr><th>Nome</th><th>E-mail</th><th>WhatsApp</th><th>Endereço</th><th>Ações</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- Financeiro -->
+    <!-- Financeiro (somente admin autenticado) -->
     <section class="admin-page" id="page-financeiro">
-      <div class="stats-grid stats-grid--3">
+      <p class="fin-note"><i class="fas fa-lock"></i> Área restrita — considera apenas pedidos com status <strong>Finalizado</strong>.</p>
+
+      <div class="stats-grid stats-grid--4">
         <div class="stat-card">
           <div class="stat-card__icon" style="background:#E8F5E9;color:#4CAF50"><i class="fas fa-wallet"></i></div>
           <div class="stat-card__info">
@@ -181,7 +213,7 @@
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-card__icon" style="background:#F8BBD0;color:#E91E63"><i class="fas fa-calendar-day"></i></div>
+          <div class="stat-card__icon" style="background:#f3e8e1;color:#d9926f"><i class="fas fa-calendar-day"></i></div>
           <div class="stat-card__info">
             <span class="stat-card__label">Vendas do Dia</span>
             <strong class="stat-card__value" id="fin-today">R$ 0</strong>
@@ -194,7 +226,46 @@
             <strong class="stat-card__value" id="fin-month">R$ 0</strong>
           </div>
         </div>
+        <div class="stat-card">
+          <div class="stat-card__icon" style="background:#FFF3E0;color:#FF9800"><i class="fas fa-birthday-cake"></i></div>
+          <div class="stat-card__info">
+            <span class="stat-card__label">Bolos Vendidos</span>
+            <strong class="stat-card__value" id="fin-cakes">0</strong>
+          </div>
+        </div>
       </div>
+
+      <div class="page-actions page-actions--between">
+        <div class="filter-tabs" id="fin-period-tabs" role="tablist">
+          <button type="button" class="filter-tab active" data-period="all">Todos</button>
+          <button type="button" class="filter-tab" data-period="today">Hoje</button>
+          <button type="button" class="filter-tab" data-period="month">Este mês</button>
+        </div>
+        <span class="fin-period-summary" id="fin-period-summary"></span>
+      </div>
+
+      <div class="card">
+        <div class="card__header">
+          <h3>Bolos que saíram</h3>
+          <span class="card__subtitle">Quantidade e faturamento por produto</span>
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="fin-products-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Bolo / Produto</th>
+                <th>Qtd. vendida</th>
+                <th>Preço médio</th>
+                <th>Faturamento</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="fin-empty" id="fin-products-empty" hidden>Nenhum bolo vendido neste período. Finalize pedidos em <strong>Pedidos</strong> para aparecer aqui.</p>
+      </div>
+
       <div class="card">
         <div class="card__header"><h3>Gráfico de Faturamento (Últimos 6 meses)</h3></div>
         <div class="chart-container">
@@ -263,6 +334,30 @@
           <button type="submit" class="btn btn--primary"><i class="fas fa-save"></i> Salvar Configurações</button>
         </form>
       </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card__header">
+          <h3>Acesso do Admin</h3>
+          <span class="card__subtitle">Altere a senha para proteger o financeiro</span>
+        </div>
+        <form id="password-form" class="settings-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="set-current-password">Senha atual</label>
+              <input type="password" id="set-current-password" required autocomplete="current-password">
+            </div>
+            <div class="form-group">
+              <label for="set-new-password">Nova senha</label>
+              <input type="password" id="set-new-password" required minlength="6" autocomplete="new-password">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="set-confirm-password">Confirmar nova senha</label>
+            <input type="password" id="set-confirm-password" required minlength="6" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn--primary"><i class="fas fa-key"></i> Alterar Senha</button>
+        </form>
+      </div>
     </section>
   </main>
 
@@ -280,7 +375,7 @@
   <div class="toast-admin" id="toast-admin"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="../js/storage.js"></script>
-  <script src="admin.js"></script>
+  <script src="../js/storage.js?v=20"></script>
+  <script src="admin.js?v=20"></script>
 </body>
 </html>
