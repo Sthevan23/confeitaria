@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="style.css?v=22">
+  <link rel="stylesheet" href="style.css?v=24">
 </head>
 <body>
 
@@ -320,26 +320,44 @@
               </select>
             </label>
 
-            <fieldset class="flavor-field">
-              <legend>Sabor / recheio <small>escolha até 2</small></legend>
-              <div class="flavor-options" id="order-sabor">
-                <label><input type="checkbox" value="Brigadeiro" checked><span>Brigadeiro</span></label>
-                <label><input type="checkbox" value="Brigadeiro branco"><span>Brigadeiro branco</span></label>
-                <label><input type="checkbox" value="Brigadeiro & morango"><span>Brigadeiro & morango</span></label>
-                <label><input type="checkbox" value="Doce de leite"><span>Doce de leite</span></label>
-                <label><input type="checkbox" value="Ninho"><span>Ninho</span></label>
-                <label><input type="checkbox" value="Coco"><span>Coco</span></label>
-                <label><input type="checkbox" value="Paçoca"><span>Paçoca</span></label>
-                <label><input type="checkbox" value="Pistache"><span>Pistache</span></label>
-                <label><input type="checkbox" value="Ferrero"><span>Ferrero</span></label>
-                <label><input type="checkbox" value="Creme de avelã"><span>Creme de avelã</span></label>
+            <div class="order-acc is-open" data-acc="flavor" id="acc-flavor">
+              <button type="button" class="order-acc__head" aria-expanded="true">
+                <span class="order-acc__title">Sabor / recheio</span>
+                <span class="order-acc__summary" id="acc-flavor-summary">escolha até 2</span>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+              </button>
+              <div class="order-acc__body">
+                <fieldset class="flavor-field">
+                  <legend class="visually-hidden">Sabor / recheio</legend>
+                  <div class="flavor-options" id="order-sabor">
+                    <label><input type="checkbox" value="Brigadeiro" checked><span>Brigadeiro</span></label>
+                    <label><input type="checkbox" value="Brigadeiro branco"><span>Brigadeiro branco</span></label>
+                    <label><input type="checkbox" value="Brigadeiro & morango"><span>Brigadeiro & morango</span></label>
+                    <label><input type="checkbox" value="Doce de leite"><span>Doce de leite</span></label>
+                    <label><input type="checkbox" value="Ninho"><span>Ninho</span></label>
+                    <label><input type="checkbox" value="Coco"><span>Coco</span></label>
+                    <label><input type="checkbox" value="Paçoca"><span>Paçoca</span></label>
+                    <label><input type="checkbox" value="Pistache"><span>Pistache</span></label>
+                    <label><input type="checkbox" value="Ferrero"><span>Ferrero</span></label>
+                    <label><input type="checkbox" value="Creme de avelã"><span>Creme de avelã</span></label>
+                  </div>
+                </fieldset>
               </div>
-            </fieldset>
+            </div>
 
-            <fieldset class="size-field">
-              <legend>Tamanho e fatias <small>toque em uma opção</small></legend>
-              <div class="size-options" id="order-tamanho"></div>
-            </fieldset>
+            <div class="order-acc is-open" data-acc="size" id="acc-size">
+              <button type="button" class="order-acc__head" aria-expanded="true">
+                <span class="order-acc__title">Tamanho e fatias</span>
+                <span class="order-acc__summary" id="acc-size-summary">toque em uma opção</span>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+              </button>
+              <div class="order-acc__body">
+                <fieldset class="size-field">
+                  <legend class="visually-hidden">Tamanho e fatias</legend>
+                  <div class="size-options" id="order-tamanho"></div>
+                </fieldset>
+              </div>
+            </div>
 
             <label class="order-field order-phrase-field" id="order-phrase-field">
               Monte sua frase
@@ -347,24 +365,32 @@
               <small>Exemplo: Feliz aniversário, te amo!</small>
             </label>
 
-            <div class="customer-fields">
-              <p class="customer-fields__title">Seus dados (obrigatório)</p>
-              <div class="customer-fields__row">
-                <label class="order-field">
-                  Nome
-                  <input type="text" id="order-cliente-nome" placeholder="Nome" required autocomplete="given-name">
-                </label>
-                <label class="order-field">
-                  Sobrenome
-                  <input type="text" id="order-cliente-sobrenome" placeholder="Sobrenome" required autocomplete="family-name">
-                </label>
+            <div class="order-acc is-open" data-acc="customer" id="acc-customer">
+              <button type="button" class="order-acc__head" aria-expanded="true">
+                <span class="order-acc__title">Seus dados</span>
+                <span class="order-acc__summary" id="acc-customer-summary">obrigatório</span>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+              </button>
+              <div class="order-acc__body">
+                <div class="customer-fields">
+                  <div class="customer-fields__row">
+                    <label class="order-field">
+                      Nome
+                      <input type="text" id="order-cliente-nome" placeholder="Nome" required autocomplete="given-name">
+                    </label>
+                    <label class="order-field">
+                      Sobrenome
+                      <input type="text" id="order-cliente-sobrenome" placeholder="Sobrenome" required autocomplete="family-name">
+                    </label>
+                  </div>
+                  <label class="order-field">
+                    WhatsApp
+                    <input type="tel" id="order-cliente-whatsapp" placeholder="DDD + número" required autocomplete="tel" inputmode="tel">
+                  </label>
+                </div>
+                <p class="customer-fields__hint" id="order-customer-error" hidden></p>
               </div>
-              <label class="order-field">
-                WhatsApp
-                <input type="tel" id="order-cliente-whatsapp" placeholder="DDD + número" required autocomplete="tel" inputmode="tel">
-              </label>
             </div>
-            <p class="customer-fields__hint" id="order-customer-error" hidden></p>
           </form>
 
           <a href="#" class="btn btn--primary btn--full" id="lightbox-order">
@@ -555,6 +581,6 @@
 
   <a href="#" id="hero-instagram" class="visually-hidden" target="_blank" rel="noopener">Instagram</a>
 
-  <script type="module" src="js/site/main.js?v=23"></script>
+  <script type="module" src="js/site/main.js?v=24"></script>
 </body>
 </html>

@@ -929,8 +929,126 @@ function initLightbox() {
     if (event.target.matches('input[type="checkbox"]')) {
       enforceFlavorLimit();
       updateOrderLink();
+      updateFlavorAccordion(true);
     }
   });
+
+  document.getElementById('order-tamanho')?.addEventListener('change', () => {
+    updateOrderLink();
+    updateSizeAccordion(true);
+  });
+
+  ['order-cliente-nome', 'order-cliente-sobrenome', 'order-cliente-whatsapp'].forEach((id) => {
+    const el = document.getElementById(id);
+    el?.addEventListener('input', () => updateCustomerAccordion(false));
+    el?.addEventListener('blur', () => updateCustomerAccordion(true));
+  });
+
+  document.querySelectorAll('.order-acc__head').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const acc = btn.closest('.order-acc');
+      if (!acc) return;
+      const open = !acc.classList.contains('is-open');
+      setAccordionOpen(acc, open);
+    });
+  });
+}
+
+function setAccordionOpen(acc, open) {
+  if (!acc) return;
+  acc.classList.toggle('is-open', open);
+  const head = acc.querySelector('.order-acc__head');
+  if (head) head.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
+function updateFlavorAccordion(autoCollapse = false) {
+  const acc = document.getElementById('acc-flavor');
+  const summary = document.getElementById('acc-flavor-summary');
+  if (!acc || !summary) return;
+
+  const flavors = getSelectedFlavors();
+  const limit = getFlavorLimit();
+  summary.textContent = flavors.join(' · ');
+  acc.classList.toggle('is-done', flavors.length > 0);
+
+  if (autoCollapse && flavors.length >= limit) {
+    setAccordionOpen(acc, false);
+    const sizeAcc = document.getElementById('acc-size');
+    if (sizeAcc && !sizeAcc.classList.contains('is-done')) {
+      setAccordionOpen(sizeAcc, true);
+    }
+  }
+}
+
+function updateSizeAccordion(autoCollapse = false) {
+  const acc = document.getElementById('acc-size');
+  const summary = document.getElementById('acc-size-summary');
+  if (!acc || !summary) return;
+
+  if (isFixedBentoKit()) {
+    acc.hidden = true;
+    return;
+  }
+  acc.hidden = false;
+
+  const size = getSelectedSize();
+  if (!size) {
+    summary.textContent = 'toque em uma opção';
+    acc.classList.remove('is-done');
+    return;
+  }
+
+  const priceText = size.price > 0 ? Storage.formatCurrency(size.price) : 'Consultar';
+  summary.textContent = `${size.label} · ${priceText}`;
+  acc.classList.add('is-done');
+
+  if (autoCollapse) {
+    setAccordionOpen(acc, false);
+    const customerAcc = document.getElementById('acc-customer');
+    if (customerAcc) setAccordionOpen(customerAcc, true);
+  }
+}
+
+function updateCustomerAccordion(autoCollapse = false) {
+  const acc = document.getElementById('acc-customer');
+  const summary = document.getElementById('acc-customer-summary');
+  if (!acc || !summary) return;
+
+  const nome = (document.getElementById('order-cliente-nome')?.value || '').trim();
+  const sobrenome = (document.getElementById('order-cliente-sobrenome')?.value || '').trim();
+  const whatsapp = (document.getElementById('order-cliente-whatsapp')?.value || '').replace(/\D/g, '');
+  const complete = nome && sobrenome && whatsapp.length >= 10;
+
+  if (complete) {
+    summary.textContent = `${nome} ${sobrenome} · ${whatsapp}`;
+    acc.classList.add('is-done');
+    if (autoCollapse) setAccordionOpen(acc, false);
+  } else if (nome || sobrenome || whatsapp) {
+    summary.textContent = [nome, sobrenome].filter(Boolean).join(' ') || 'continue preenchendo';
+    acc.classList.remove('is-done');
+  } else {
+    summary.textContent = 'obrigatório';
+    acc.classList.remove('is-done');
+  }
+}
+
+function resetOrderAccordions() {
+  const flavorAcc = document.getElementById('acc-flavor');
+  const sizeAcc = document.getElementById('acc-size');
+  const customerAcc = document.getElementById('acc-customer');
+
+  [flavorAcc, sizeAcc, customerAcc].forEach((acc) => {
+    if (!acc) return;
+    acc.classList.remove('is-done');
+    setAccordionOpen(acc, true);
+  });
+
+  updateFlavorAccordion(false);
+  updateSizeAccordion(false);
+  updateCustomerAccordion(false);
+
+  // Abre só o recheio no início; tamanho e dados começam abertos no mobile fica longo —
+  // mantém os três abertos na abertura, encolhem ao selecionar.
 }
 
 function updateLightboxContent(index) {
@@ -1228,15 +1346,20 @@ function openProductConfigurator(product, fallbackImage = '', shouldOpen = true,
   if (phraseInput) phraseInput.value = '';
 
   const sizeField = document.querySelector('.size-field');
+  const sizeAcc = document.getElementById('acc-size');
   if (sizeField) sizeField.style.display = isFixedBentoKit(product) ? 'none' : '';
+  if (sizeAcc) sizeAcc.hidden = isFixedBentoKit(product);
 
-  const flavorHint = document.querySelector('.flavor-field legend small');
-  if (flavorHint) flavorHint.textContent = isFixedBentoKit(product) ? 'escolha 1' : 'escolha até 2';
+  const flavorHint = document.querySelector('#acc-flavor-summary');
+  if (flavorHint && !document.getElementById('acc-flavor')?.classList.contains('is-done')) {
+    flavorHint.textContent = isFixedBentoKit(product) ? 'escolha 1' : 'escolha até 2';
+  }
 
   configureFlavorOptions(product);
   fillSizeOptions(product);
   resetFlavorSelection();
   updateOrderLink();
+  resetOrderAccordions();
 
   document.getElementById('lightbox-prev').style.display = showNavigation ? '' : 'none';
   document.getElementById('lightbox-next').style.display = showNavigation ? '' : 'none';
